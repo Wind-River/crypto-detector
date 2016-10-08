@@ -1,0 +1,94 @@
+#/* <legal-notice>
+#*
+#* Copyright (c) 2016 Wind River Systems, Inc.
+#*
+#* This software has been developed and maintained under the Wind River
+#* CodeSwap program. The right to copy, distribute, modify, or otherwise
+#* make use of this software may be licensed only pursuant to the terms
+#* of an applicable Wind River license agreement.
+#*
+#* <credits>
+#*   { Kamyar Kaviani,  kamyar.kaviani@windriver.com}
+#* </credits>
+#*
+#* </legal-notice>
+#*/
+
+#
+#  List of regular expression patterns to detect encryption API usage
+#
+# \b is a special symbol that matches beginning or end of a token (word)
+#
+# "language" can be one of:
+# 	"all" (any text file),
+# 	"source" (any source code file),
+# 	"c" (C or C++),
+# 	"python",
+# 	"java",
+# 	"shell",
+# 	"perl",
+# 	"javascript",
+# 	"scala",
+# 	"haskell",
+# 	"pascal"
+#
+# You can add any additional information to the match specification, such as encryption_library, library_version, etc.
+#
+
+[{"match_type": "algorithm/asymmetric/ECC", "language": "c", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+	"\belliptic_curve_t\b"
+
+
+[{"match_type": "algorithm/asymmetric/ECC", "language": "c", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+	"\bDL_PublicKey_EC"
+	"\bDL_PrivateKey_EC"
+
+[{"match_type": "algorithm/asymmetric/DiffieHellman", "language": "c", "encryption_library": "OpenSSL", "encryption_api_usage": "call"}]}]
+	"\bDH_generate_key"
+	"\bDH_new"
+	"\bDH_free"
+	"\bDH_compute_key"
+
+
+[{"match_type": "algorithm/symmetric/block-cipher/BTEA", "language": "c", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]}]
+	"\bBTEA_Info\b"
+
+
+[{"match_type": "algorithm/symmetric/block-cipher/Blowfish", "language": "c", "encryption_library": "OpenSSL", "encryption_api_usage": "include"}]}]
+	"\bbf_locl\.h\b"
+
+
+[{"match_type": "algorithm/symmetric/block-cipher/IDEA", "language": "c", "encryption_library": "Crypto++", "encryption_api_usage": "include"}]}]
+	"\bidea\.h\b"
+
+
+[{"match_type": "algorithm/symmetric/block-cipher/GOST", "language": "c", "encryption_library": "Crypto++", "encryption_api_usage": "include"}]}]
+	"\bgost\.h\b"
+
+
+[{"match_type": "algorithm/symmetric/block-cipher/Camellia", "language": "c", "encryption_library": "Crypto++", "encryption_api_usage": "include"}]}]
+	"\bcamellia\.h\b"
+
+[{"match_type": "algorithm/symmetric/block-cipher/Feistel", "language": "c", "encryption_library": "Crypto++", "encryption_api_usage": "include"}]}]
+	"\blubyrack\.h\b"
+
+[{"match_type": "algorithm/symmetric/block-cipher/SAFER", "language": "c", "encryption_library": "Crypto++", "encryption_api_usage": "include"}]}]
+	"\bsafer\.h\b"
+
+[{"match_type": "algorithm/symmetric/block-cipher/Skipjack", "language": "c", "encryption_library": "Crypto++", "encryption_api_usage": "include"}]}]
+	"\bskipjack\.h\b"
+
+[{"match_type": "algorithm/asymmetric/DiffieHellman", "language": "c", "encryption_library": "OpenSSL", "encryption_api_usage": "include"}]}]
+	"\bdh\.h\b"
+
+[{"match_type": "algorithm/asymmetric/ECC", "language": "c", "encryption_library": "OpenSSL", "encryption_api_usage": "include"}]}]
+	"\bec(?:dsa|dh)?\.h\b"
+
+[{"match_type": "library/OpenSSL", "language": "c", "encryption_library": "OpenSSL", "encryption_api_usage": "include"}]}]
+	"\bevp\.h\b"
+
+[{"match_type": "library/Botan", "language": "c", "encryption_library": "BOTAN", "encryption_api_usage": "include"}]}]
+	"\bbotan\.h\b"
+
+[{"match_type": "library/Crypto++", "language": "c", "encryption_library": "Crypto++", "encryption_api_usage": "include"}]}]
+	"\bcryptlib\.h\b"
