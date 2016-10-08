@@ -1,4 +1,4 @@
-#Encryption Identification Scanner#
+# Crypto Detector #
 
 ## Overview ##
 
