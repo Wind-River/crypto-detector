@@ -93,6 +93,8 @@ class Regex(object):
             if not keywords[match_spec_string]:
                 continue
 
+            non_capturing_group = ""
+
             for pattern in keywords[match_spec_string]:
                 if pattern[0] != "\"" or pattern[-1] != "\"" or len(pattern) < 2:
                     raise InvalidRegexException("In file " + keyword_list_path \
@@ -107,15 +109,17 @@ class Regex(object):
                 # replace end-of-token symbol
                 pattern.replace("\\b", r"\b")
 
-                self.regex[match_language] += "(" + pattern + ")|"
-                self.group_names[match_language].append(match_spec)
+                non_capturing_group += "(?:" + pattern + ")|"
 
-                # apply 'source' and 'all' patterns to all languages
-                if match_language in ["source", "all"]:
-                    for language in languages:
-                        if language not in ["source", "all"]:
-                            self.regex[language] += "(" + pattern + ")|"
-                            self.group_names[language].append(match_spec)
+            self.regex[match_language] += "(" + non_capturing_group[:-1] + ")|"
+            self.group_names[match_language].append(match_spec)
+
+            # apply 'source' and 'all' patterns to all languages
+            if match_language in ["source", "all"]:
+                for language in languages:
+                    if language not in ["source", "all"]:
+                        self.regex[language] += "(" + non_capturing_group[:-1] + ")|"
+                        self.group_names[language].append(match_spec)
 
         # compile
         for language in languages:
