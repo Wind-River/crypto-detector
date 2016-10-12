@@ -33,7 +33,8 @@ class KeywordSearch(Method):
     }
 
     def __init__(self):
-        self.regex = Regex()
+        self.regex = Regex(ignore_case=KeywordSearch.options["ignore_case"], \
+            ignore_match_types=Method.ignore_match_types)
         self.regex.compile_pattern_list(join(dirname(realpath(__file__)), "keyword_list.txt"))
 
     def supports_scanning_file(self, language):

@@ -33,7 +33,8 @@ class APIFinder(Method):
     }
 
     def __init__(self):
-        self.regex = Regex()
+        self.regex = Regex(ignore_case=APIFinder.options["ignore_case"], \
+            ignore_match_types=Method.ignore_match_types)
         self.regex.compile_pattern_list(join(dirname(realpath(__file__)), "api_patterns.txt"))
 
 
