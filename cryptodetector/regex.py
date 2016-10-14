@@ -109,6 +109,15 @@ class Regex(object):
                 # replace end-of-token symbol
                 pattern.replace("\\b", r"\b")
 
+                # validate
+                try:
+                    re.compile(pattern)
+                except re.error as error:
+                    raise InvalidRegexException("In file " + keyword_list_path \
+                    + ", and in section " \
+                    + "[" + match_spec_string + "]\n\nInvalid regular expression: '" \
+                    + pattern + "'\n\n" + str(error))
+
                 non_capturing_group += "(?:" + pattern + ")|"
 
             self.regex[match_language] += "(" + non_capturing_group[:-1] + ")|"
