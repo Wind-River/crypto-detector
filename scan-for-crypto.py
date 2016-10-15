@@ -23,9 +23,9 @@ Encryption Identification Scanner command line interface
 
 import sys
 
-if sys.version_info[0] < 3 or (sys.version_info[0] == 3 and sys.version_info[1] < 5):
+if sys.version_info[0] < 3 or (sys.version_info[0] == 3 and sys.version_info[1] < 4):
     print("Unsupported Python version " + str(sys.version))
-    print("\nRequires Python version 3.5 or later.")
+    print("\nRequires Python version 3.4 or later.")
     sys.exit(1)
 
 from cryptodetector import CryptoDetector, Output, Options
