@@ -51,8 +51,6 @@
 
 [{"match_type": "algorithm/asymmetric/ECC", "language": "all"}]
 	"Elliptic.?Curve"
-	"_ECC_"
-	"\bECC_"
 	"ECDSA_"
 	"ECDSA"
 	"ECDH"
@@ -349,7 +347,7 @@
 	"\bMQV_Domain"
 
 [{"match_type": "generic", "language": "all"}]
-	"crypt"
+	"[ck]rypt"
 	"\bcipher"
 	"_cipher"
 	"\bgenerateWorkingKey"
