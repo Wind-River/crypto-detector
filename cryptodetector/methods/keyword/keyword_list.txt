@@ -22,9 +22,9 @@
 # Use \bword\b to search for whole-words
 #
 # "language" can be one of:
-# 	"all" (any text file),
-# 	"source" (any source code file),
-# 	"c" (C or C++),
+# 	"all" \(any text file),
+# 	"source" \(any source code file),
+# 	"c" \(C or C++),
 # 	"python",
 # 	"java",
 # 	"shell",
@@ -35,7 +35,11 @@
 # 	"pascal"
 
 [{"match_type": "algorithm/asymmetric/DiffieHellman", "language": "all"}]
-	"Diffie.?Hellman"
+	"Diffie Hellman"
+	"Diffie-Hellman"
+	"Diffie_Hellman"
+	"Diffie.Hellman"
+	"DiffieHellman"
 	"\bDHParameterSpec"
 	"\bDHPublicKey"
 	"\bDHPrivateKey"
@@ -50,22 +54,30 @@
 	"\bDSA_new"
 
 [{"match_type": "algorithm/asymmetric/ECC", "language": "all"}]
-	"Elliptic.?Curve"
-	"ECDSA_"
+	"Elliptic Curve"
+	"Elliptic_Curve"
+	"Elliptic-Curve"
+	"Elliptic.Curve"
+	"EllipticCurve"
 	"ECDSA"
 	"ECDH"
+	"ECIES"
+	"ECMQV"
+	"ECNR"
 	"\bCkDh\b"
 	"CkCrypt2"
-	"\bEC_GROUP_"
-	"\bEC_KEY_"
 	"\becc_make_key"
-	"1\.2\.840\.10045\.3\.1\.1"
+	"1.2.840.10045.3.1.1"
 	"secp192r1"
 	"secp256r1"
 	"secp521r1"
 
 [{"match_type": "algorithm/asymmetric/ElGamal", "language": "all"}]
-	"El.?Gamal"
+	"El Gamal"
+	"El_Gamal"
+	"El-Gamal"
+	"El.Gamal"
+	"ElGamal"
 	"\bELG_secret_key"
 	"\bELG_public_key"
 	"\belg_generate"
@@ -75,7 +87,10 @@
 	"\belg_verify"
 
 [{"match_type": "algorithm/symmetric/block-cipher/GOST", "language": "all"}]
-	"\bGOST[ _-]?28147"
+	"\bGOST 28147"
+	"\bGOST_28147"
+	"\bGOST-28147"
+	"\bGOST28147"
 
 [{"match_type": "algorithm/asymmetric/RSA", "language": "all"}]
 	"\bRSA_"
@@ -83,21 +98,38 @@
 	"_RSA_"
 	"\brsa\b"
 	"RSASignature"
-	"\bX9.?31"
+	"\bX931"
+	"\bX9_31"
+	"\bX9-31"
+	"\bX9.31"
 
 [{"match_type": "algorithm/hash/generic", "language": "all"}]
 	"\blhash"
 	"\bhexdigest"
 
 [{"match_type": "algorithm/hash/BLAKE", "language": "all"}]
-	"\bBLAKE.?256"
+	"\bBLAKE256"
+	"\bBLAKE_256"
+	"\bBLAKE 256"
+	"\bBLAKE-256"
 	"\bBLAKE2b"
 
 [{"match_type": "algorithm/hash/HMAC", "language": "all"}]
 	"\bHMAC"
 
 [{"match_type": "algorithm/hash/MD", "language": "all"}]
-	"\bMD[245]"
+	"\bMD2\b"
+	"\bMD4\b"
+	"\bMD5\b"
+	"_MD2\b"
+	"_MD4\b"
+	"_MD5\b"
+	"\bMD2_"
+	"\bMD4_"
+	"\bMD5_"
+	"_MD2_"
+	"_MD4_"
+	"_MD5_"
 	"\bmdString"
 	"0xd76aa478"
 	"0xe8c7b756"
@@ -105,9 +137,19 @@
 
 [{"match_type": "algorithm/hash/RIPEMD", "language": "all"}]
 	"\bRIPEMD"
+	"RIPEMD128"
+	"RIPEMD160"
+	"RIPEMD256"
+	"RIPEMD320"
 
 [{"match_type": "algorithm/hash/SHA", "language": "all"}]
-	"\bSHA.?(?:[1-5]|Init)"
+	"SHAInit"
+	"\bSHA1"
+	"\bSHA-1"
+	"\bSHA2"
+	"\bSHA-2"
+	"\bSHA3"
+	"\bSHA5"
 	"0x67452301"
 
 [{"match_type": "algorithm/hash/Tiger", "language": "all"}]
@@ -135,28 +177,26 @@
 	"99, 124, 119, 123, 242, 107, 111, 197"
 
 [{"match_type": "algorithm/symmetric/block-cipher/Blowfish", "language": "all"}]
-	"\bblowfish"
-	"_blowfish"
-	"BF_set_?key"
+	"blowfish"
 	"0xD1310BA6"
 	"0x8979FB1B"
-	"\bBF_[^ \%\;\n\t]*(?:crypt|cipher)"
 
 [{"match_type": "algorithm/symmetric/block-cipher/Camellia", "language": "all"}]
-	"\bCamellia"
+	"Camellia"
 	"0xA09E667F"
 
 [{"match_type": "algorithm/symmetric/block-cipher/IntelCascade", "language": "all"}]
-	"\bcascade_cipher"
+	"cascade_cipher"
 
 [{"match_type": "algorithm/symmetric/block-cipher/CAST", "language": "all"}]
 	"\bCAST5"
+	"\bCAST6"
+	"\bCAST128"
 	"\bCAST-128"
 	"\bCAST_128"
+	"\bCAST256"
 	"\bCAST-256"
 	"\bCAST_256"
-	"\bCAST_[^ \%\;\n\t]*(?:crypt|cipher)"
-	"\bcast.[ch]\b"
 	"0x30fb40d4"
 	"0x7EC90C04"
 	"0x0F1946B8"
@@ -168,7 +208,8 @@
 	"\bDES_"
 	"_DES\b"
 	"_DES_"
-	"_triple?des"
+	"tripledes"
+	"triple_des"
 	"\b3DES"
 	"DES-EDE"
 	"DES-XEX"
@@ -179,22 +220,33 @@
 
 [{"match_type": "algorithm/symmetric/block-cipher/Feistel", "language": "all"}]
 	"\bfeistel"
-	"\bLuby.?Rackoff"
+	"Luby Rackoff"
+	"LubyRackoff"
+	"Luby-Rackoff"
 
 [{"match_type": "algorithm/symmetric/block-cipher/KASUMI", "language": "all"}]
 	"\bKASUMI"
 
 [{"match_type": "algorithm/symmetric/block-cipher/BEARLION", "language": "all"}]
-	"\bbear.?lion"
+	"\bbearlion"
+	"\bbear-lion"
+	"\bbear_lion"
+	"\bbear lion"
 
 [{"match_type": "algorithm/symmetric/block-cipher/IDEA", "language": "all"}]
 	"\bideainit"
-	"\bidea_[^ \%\;\n\t]*(?:crypt|cipher)"
+	"\bidea_encrypt"
+	"\bidea_decrypt"
 	"\bideaEncrypt"
 	"\bideaDecrypt"
 
 [{"match_type": "algorithm/symmetric/block-cipher/SAFER", "language": "all"}]
-	"\bSAFER.?S?K"
+	"\bSAFERSK\b"
+	"\bSAFERSK_"
+	"\bSAFER_SK\b"
+	"\bSAFER-SK\b"
+	"\bSAFERK"
+	"\bSAFER-K\b"
 
 [{"match_type": "algorithm/symmetric/block-cipher/SHACAL", "language": "all"}]
 	"\bSHACAL"
@@ -203,7 +255,10 @@
 	"\bAnubis"
 
 [{"match_type": "algorithm/symmetric/block-cipher/CSCipher", "language": "all"}]
-	"\bCS.?Cipher"
+	"\bCS_Cipher"
+	"\bCS Cipher"
+	"\bCS-Cipher"
+	"\bCSCipher"
 
 [{"match_type": "algorithm/symmetric/block-cipher/DFC", "language": "all"}]
 	"\bDFCv2"
@@ -216,13 +271,12 @@
 	"\bserpent_"
 
 [{"match_type": "algorithm/symmetric/block-cipher/Twofish", "language": "all"}]
-	"\btwofish"
-	"_twofish"
+	"twofish"
 	"0xA9, 0x67, 0xB3, 0xE8"
 	"0xBCBC3275"
 
 [{"match_type": "algorithm/symmetric/block-cipher/Threefish", "language": "all"}]
-	"\bThreeFish"
+	"ThreeFish"
 
 [{"match_type": "algorithm/symmetric/block-cipher/XTEA", "language": "all"}]
 	"\bXTEA"
@@ -231,7 +285,9 @@
 	"\bChaCha20"
 
 [{"match_type": "algorithm/symmetric/stream-cipher/Salsa20", "language": "all"}]
-	"\bSalsa.?20"
+	"Salsa20"
+	"Salsa_20"
+	"Salsa-20"
 
 [{"match_type": "algorithm/symmetric/block-cipher/MISTY1", "language": "all"}]
 	"\bMISTY1"
@@ -242,23 +298,59 @@
 
 [{"match_type": "algorithm/symmetric/block-cipher/RC2", "language": "all"}]
 	"\bRC2_128"
-	"\bRC2 encryption"
-	"\bA?RC2_[^ \%\;\n\t]*(?:crypt|cipher)"
+	"RC2_encrypt"
+	"RC2_decrypt"
 	"\bRC2Context"
-	"\bRC2_CBC"
-	"\bRC2_ECB"
+	"\brc2_cbc"
+	"\brc2_cfb"
+	"\brc2_ecb"
+	"\brc2_ofb"
+	"\brc2-cbc"
+	"\brc2-cfb"
+	"\brc2-ecb"
+	"\brc2-ofb"
 	"\bRC2_BLOCK_SIZE"
 
 [{"match_type": "algorithm/symmetric/stream-cipher/RC4", "language": "all"}]
 	"\bArcfour"
-	"\bA?RC4_[^ \%\;\n\t]*(?:crypt|cipher)"
+	"\bRC4_128"
+	"RC4_encrypt"
+	"RC4_decrypt"
+	"\bRC4Context"
+	"\brc4_cbc"
+	"\brc4_cfb"
+	"\brc4_ecb"
+	"\brc4_ofb"
+	"\brc4-cbc"
+	"\brc4-cfb"
+	"\brc4-ecb"
+	"\brc4-ofb"
 
 [{"match_type": "algorithm/symmetric/block-cipher/RC5", "language": "all"}]
-	"\bA?RC5_[^ \%\;\n\t]*(?:crypt|cipher)"
 	"0xb7e15163"
+	"RC5_encrypt"
+	"RC5_decrypt"
+	"\bRC5Context"
+	"\brc5_cbc"
+	"\brc5_cfb"
+	"\brc5_ecb"
+	"\brc5_ofb"
+	"\brc5-cbc"
+	"\brc5-cfb"
+	"\brc5-ecb"
+	"\brc5-ofb"
 
 [{"match_type": "algorithm/symmetric/block-cipher/RC6", "language": "all"}]
-	"\bA?RC6_[^ \%\;\n\t]*(?:crypt|cipher)"
+	"RC6_encrypt"
+	"RC6_decrypt"
+	"\brc6_cbc"
+	"\brc6_cfb"
+	"\brc6_ecb"
+	"\brc6_ofb"
+	"\brc6-cbc"
+	"\brc6-cfb"
+	"\brc6-ecb"
+	"\brc6-ofb"
 
 [{"match_type": "algorithm/symmetric/block-cipher/SEED", "language": "all"}]
 	"0x16c6d2d4"
@@ -296,8 +388,6 @@
 	"\bOpenSSH"
 
 [{"match_type": "library/OpenSSL", "language": "all"}]
-	"\bEVP_"
-	"_EVP_"
 	"\blibssl"
 	"\bOpenSSL"
 
@@ -313,24 +403,28 @@
 	"\bx509"
 	"\bx.509"
 	"\bx-509"
-	"Public.?Key"
-	"Private.?Key"
+	"PublicKey"
+	"Public_Key"
+	"PrivateKey"
+	"Private_Key"
 	"\bpubkey"
 	"\bpub_key"
 	"_pubkey"
 	"priv_key"
 
 [{"match_type": "protocol/SSH", "language": "all"}]
-	"\bssh[2\_\- ]"
+	"\bssh2"
+	"\bssh_"
+	"\bssh-"
+	"\bssh\b"
 	"_ssh\b"
 
-[{"match_type": "protocol/SSL", "language": "source"}]
+[{"match_type": "protocol/SSL", "language": "all"}]
 	"\bSSL_"
 	"_SSL_"
 	"_SSL\b"
 	"\bssl\b"
 	"\bossl_"
-	"libssl"
 	"SSLSocket"
 
 [{"match_type": "protocol/TLS", "language": "all"}]
@@ -347,7 +441,8 @@
 	"\bMQV_Domain"
 
 [{"match_type": "generic", "language": "all"}]
-	"[ck]rypt"
+	"crypt"
+	"krypt"
 	"\bcipher"
 	"_cipher"
 	"\bgenerateWorkingKey"

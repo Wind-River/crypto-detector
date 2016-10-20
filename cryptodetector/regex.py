@@ -21,22 +21,26 @@ import bisect
 import json
 from configparser import ConfigParser
 from cryptodetector import Languages
-from cryptodetector.exceptions import InvalidKeywordList, InvalidRegexException
+from cryptodetector.exceptions import InvalidKeywordList
 
 class Regex(object):
     """Class for searching file contents for a set of regular expressions defined in a config file
     """
-    def __init__(self, ignore_case=False, ignore_match_types=[]):
-        self.group_names = {}
-        self.regex = {}
-        self.automaton = {}
+    def __init__(self, ignore_case=False, ignore_match_types=[], whole_words=False):
+        self.keywords = {}
+        self.match_specs = {}
         self.flags = 0
+        self.ignore_case = ignore_case
+        self.whole_words = whole_words
         if ignore_case:
             self.flags = re.IGNORECASE
         self.ignore_match_types = ignore_match_types
 
-    def compile_pattern_list(self, keyword_list_path):
-        """Compiles list of regular expressions defined in a config file (eg keyword list)
+    def read_keyword_list(self, keyword_list_path):
+        """reads the set of keywords defined in a config file
+
+        Args:
+            keyword_list_path: (string) path to the keyword list config file
 
         Returns:
             None
@@ -45,7 +49,7 @@ class Regex(object):
             InvalidKeywordList
         """
 
-        # load config file
+        # read config file
         config = ConfigParser(allow_no_value=True, delimiters=('='))
         config.optionxform = str
         config.read(keyword_list_path)
@@ -57,9 +61,7 @@ class Regex(object):
 
         languages = Languages.get_list()
         for language in languages:
-            self.regex[language] = ""
-            self.group_names[language] = []
-            self.automaton[language] = None
+            self.keywords[language] = {}
 
         # parse keywords
         for match_spec_string in keywords:
@@ -93,62 +95,56 @@ class Regex(object):
             if not keywords[match_spec_string]:
                 continue
 
-            non_capturing_group = ""
-
-            for pattern in keywords[match_spec_string]:
-                if pattern[0] != "\"" or pattern[-1] != "\"" or len(pattern) < 2:
-                    raise InvalidRegexException("In file " + keyword_list_path \
+            for keyword in keywords[match_spec_string]:
+                if keyword[0] != "\"" or keyword[-1] != "\"" or len(keyword) < 2:
+                    raise InvalidKeywordList("In file " + keyword_list_path \
                         + ", and in section " \
                         + "[" + match_spec_string \
-                        + "]\n\nInvalid regular expression pattern:\n" \
-                        + pattern + "\n\nPatterns should begin and end with a quote.")
+                        + "]\n\nInvalid keyword:\n" \
+                        + keyword + "\n\nKeywords should begin and end with a quote.")
 
-                # removing quotes around the regex pattern
-                pattern = pattern[1:-1]
+                # removing quotes around the keyword
+                keyword = keyword[1:-1]
 
-                # replace end-of-token symbol
-                pattern.replace("\\b", r"\b")
+                if self.ignore_case:
+                    keyword = keyword.lower()
 
-                # validate
-                try:
-                    re.compile(pattern)
-                except re.error as error:
-                    raise InvalidRegexException("In file " + keyword_list_path \
-                    + ", and in section " \
-                    + "[" + match_spec_string + "]\n\nInvalid regular expression: '" \
-                    + pattern + "'\n\n" + str(error))
+                # removing \b character
+                keyword_no_boundary = keyword.replace("\\b", "")
 
-                non_capturing_group += "(?:" + pattern + ")|"
+                # escape special characters
+                keyword_re_escaped = re.escape(keyword).replace("\\\\b", r"\b")
 
-            self.regex[match_language] += "(" + non_capturing_group[:-1] + ")|"
-            self.group_names[match_language].append(match_spec)
+                if self.whole_words:
+                    keyword_re_escaped = r"\b" + keyword_re_escaped + r"\b"
 
-            # apply 'source' and 'all' patterns to all languages
-            if match_language in ["source", "all"]:
-                for language in languages:
-                    if language not in ["source", "all"]:
-                        self.regex[language] += "(" + non_capturing_group[:-1] + ")|"
-                        self.group_names[language].append(match_spec)
+                self.keywords[match_language][keyword_no_boundary] = keyword_re_escaped
 
-        # compile
-        for language in languages:
-            if self.regex[language]:
-                try:
-                    self.automaton[language] = re.compile(self.regex[language][:-1], \
-                        flags=self.flags)
-                except re.error as expn:
-                    raise InvalidRegexException("Failed to compile regular expression\n'" \
-                        + self.regex[language][:-1] + "'\n\n" + str(expn))
+                # use keyword in lower-case as a unique identifier to lookup match type from
+                # match text
+                keyword_identifier = keyword_no_boundary.lower()
+                if keyword_identifier in self.match_specs:
+                    raise InvalidKeywordList("In file " + keyword_list_path \
+                        + ", and in section " \
+                        + "[" + match_spec_string \
+                        + "]\n\nDuplicate keyword: '" + keyword_identifier + "'.")
+                self.match_specs[keyword_identifier] = match_spec
+
+                # apply 'source' and 'all' to all other languages
+                if match_language in ["source", "all"]:
+                    for language in languages:
+                        if language not in ["source", "all"]:
+                            self.keywords[language][keyword_no_boundary] = keyword_re_escaped
 
     def search(self, content, language):
-        """Search file content and find all matches
+        """Search file content and find all the matches
 
         Args:
             content: (string) file content
-            language: (string) see langauges.py
+            language: (string) file language; see langauges.py
 
         Returns:
-            (list) of dict objects for each match, containing all the output fields
+            (list) of matches, where a match is a dict object containing all the output fields
         """
         def line_text_surrounding(line_number, lines):
             """Returns the line text at the line_number
@@ -165,26 +161,27 @@ class Regex(object):
             except IndexError:
                 return ""
 
-        def get_match_spec(match):
-            """Lookup match specifications from the match object
+        # quick first pass to detect if any keyword exists
+        found = []
+        if self.ignore_case:
+            content_lower = content.lower()
+            for keyword in self.keywords[language]:
+                if keyword in content_lower:
+                    found.append(keyword)
+        else:
+            for keyword in self.keywords[language]:
+                if keyword in content:
+                    found.append(keyword)
 
-            Args:
-                match: (_sre.SRE_Match)
-
-            Returns:
-                (string) match type
-            """
-            group_index = 0
-
-            for group in match.groups():
-                if group:
-                    return self.group_names[language][group_index]
-                group_index += 1
-
-        if self.automaton[language] is None:
+        if not found:
             return []
 
-        matches = self.automaton[language].finditer(content)
+        # make a regular expression of found items and find their exact location
+        found_regex = ""
+        for found_keyword in found:
+            found_regex += "(?:" + self.keywords[language][found_keyword] + ")|"
+
+        matches = re.finditer(found_regex[:-1], content, flags=self.flags)
 
         if not matches:
             return []
@@ -201,7 +198,7 @@ class Regex(object):
 
         for match in matches:
             match_text = content[match.start(): match.end()]
-            match_spec = get_match_spec(match)
+            match_spec = self.match_specs[match_text.lower()]
             line_number = bisect.bisect_left(line_break_indicies, match.start()) - 1
             match_line_index_begin = match.start() - line_break_indicies[line_number]
             if line_number > 1:
@@ -244,7 +241,9 @@ class Regex(object):
         Returns:
             (bool) True if it found any matches in content, False otherwise
         """
-        if self.automaton[language] is None:
-            return False
-
-        return self.automaton[language].search(content) != None
+        for keyword in self.keywords[language]:
+            if keyword in content:
+                # search again with re to account for boundary (\b) character
+                if re.search(self.keywords[language][keyword], content, flags=self.flags) != None:
+                    return True
+        return False

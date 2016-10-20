@@ -24,19 +24,9 @@ class APIFinder(Method):
     """
     method_id = "api"
 
-    options = {
-        "ignore_case": False
-    }
-
-    options_help = {
-        "ignore_case": "Search for API usage case-insensitive"
-    }
-
     def __init__(self):
-        self.regex = Regex(ignore_case=APIFinder.options["ignore_case"], \
-            ignore_match_types=Method.ignore_match_types)
-        self.regex.compile_pattern_list(join(dirname(realpath(__file__)), "api_patterns.txt"))
-
+        self.regex = Regex(ignore_match_types=Method.ignore_match_types, whole_words=True)
+        self.regex.read_keyword_list(join(dirname(realpath(__file__)), "api_patterns.txt"))
 
     def supports_scanning_file(self, language):
         """This method supports scanning all text files
