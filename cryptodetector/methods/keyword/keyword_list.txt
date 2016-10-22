@@ -91,6 +91,8 @@
 	"\bGOST_28147"
 	"\bGOST-28147"
 	"\bGOST28147"
+	"1.2.643.2.2.30."
+	"1.2.643.2.2.31."
 
 [{"match_type": "algorithm/asymmetric/RSA", "language": "all"}]
 	"\bRSA_"
@@ -102,6 +104,7 @@
 	"\bX9_31"
 	"\bX9-31"
 	"\bX9.31"
+	"\bOAEP"
 
 [{"match_type": "algorithm/hash/generic", "language": "all"}]
 	"\blhash"
@@ -371,6 +374,7 @@
 
 [{"match_type": "library/Libgcrypt", "language": "all"}]
 	"\bLibgcrypt"
+	"\bGCRY_"
 
 [{"match_type": "library/Crypto++", "language": "all"}]
 	"\bCRYPTOPP"

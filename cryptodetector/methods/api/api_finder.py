@@ -26,7 +26,7 @@ class APIFinder(Method):
 
     def __init__(self):
         self.regex = Regex(ignore_match_types=Method.ignore_match_types, whole_words=True)
-        self.regex.read_keyword_list(join(dirname(realpath(__file__)), "api_patterns.txt"))
+        self.regex.read_keyword_list(join(dirname(realpath(__file__)), "api_definitions.txt"))
 
     def supports_scanning_file(self, language):
         """This method supports scanning all text files
