@@ -372,7 +372,7 @@
 	"\bbotan\b"
 	"\bBOTAN_"
 
-[{"match_type": "library/Libgcrypt", "language": "all"}]
+[{"match_type": "library/libgcrypt", "language": "all"}]
 	"\bLibgcrypt"
 	"\bGCRY_"
 
