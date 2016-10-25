@@ -261,17 +261,28 @@ class CryptoDetector(object):
                 total_binary_bytes += stats["package_binary_bytes"]
                 total_lines_of_text += stats["package_lines_of_text"]
 
-        # write quick scan output to stdout
+        # write quick scan output to stdout and some output file
 
         if self.quick and not self.skip_output:
+            output_message = ""
             if not any([self.quick_scan_result[package] for package in self.quick_scan_result]):
-                print("\n\nDid not find any matches in any of the packages.\n\n")
+                output_message += "\n\nDid not find any matches in any of the packages.\n\n"
             else:
-                print("\n\nFound matches in the following packages:\n")
+                output_message += "\n\nFound matches in the following packages:\n\n"
                 for package in self.quick_scan_result:
                     if self.quick_scan_result[package]:
-                        print(package)
-                print("\n\n")
+                        output_message += "    " + package + "\n"
+                output_message += "\n\n"
+
+                print(output_message)
+
+                # write quick search output to a file
+                quick_output_filename = os.path.join(self.output_directory, \
+                   "quick-scan-result.txt")
+
+                with open(quick_output_filename, "w") as output_file:
+                    output_file.write(output_message)
+
 
         # print stats
 
