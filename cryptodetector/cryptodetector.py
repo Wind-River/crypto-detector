@@ -138,8 +138,6 @@ class CryptoDetector(object):
         total_file_count = 0
         total_lines_of_text = 0
 
-        # scan all the packages
-
         for package_path in self.packages:
             package_filelist = self.file_lister.get_package_filelist(package_path)
             for package in package_filelist:
@@ -261,6 +259,9 @@ class CryptoDetector(object):
                 total_binary_bytes += stats["package_binary_bytes"]
                 total_lines_of_text += stats["package_lines_of_text"]
 
+                Output.print_information("\nCleaning up temporary files ...")
+                self.file_lister.cleaup_tmp_folder()
+
         # write quick scan output to stdout and some output file
 
         if self.quick and not self.skip_output:
@@ -300,12 +301,6 @@ class CryptoDetector(object):
 
         if self.log:
             Logger.write_log_files(self.output_directory)
-
-        # clean up
-
-        Output.print_information("\nCleaning up temporary files ...")
-
-        self.file_lister.cleaup_tmp_folder()
 
         if self.quick:
             return self.quick_scan_result
