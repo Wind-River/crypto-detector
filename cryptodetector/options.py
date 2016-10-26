@@ -364,7 +364,7 @@ class Options():
                     + "parameters from the command line.", True)
                 return
 
-        for section in ["settings", "methods", "packages"]:
+        for section in ["settings", "methods"]:
             if section not in config.sections():
                 raise InvalidConfigException("Invalid configuration file. [" \
                     + section + "] section " + "is required.")
@@ -384,7 +384,8 @@ class Options():
                 self.options[option] = option_value
 
         for option in ["methods", "packages"]:
-            self.options[option] = [item for item, _ in config.items(option)]
+            if config.has_section(option):
+                self.options[option] = [item for item, _ in config.items(option)]
 
         if self.options["output_existing"] not in ["rename", "overwrite", "skip"]:
             raise InvalidConfigException("Invalid config file. In section [settings] " \
