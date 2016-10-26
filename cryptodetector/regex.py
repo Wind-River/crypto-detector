@@ -19,7 +19,7 @@
 import re
 import bisect
 import json
-from configparser import ConfigParser
+import configparser
 from cryptodetector import Languages
 from cryptodetector.exceptions import InvalidKeywordList
 
@@ -50,9 +50,13 @@ class Regex(object):
         """
 
         # read config file
-        config = ConfigParser(allow_no_value=True, delimiters=('='))
+        config = configparser.ConfigParser(allow_no_value=True, delimiters=('='))
         config.optionxform = str
-        config.read(keyword_list_path)
+        try:
+            config.read(keyword_list_path)
+        except (configparser.Error, AttributeError) as error:
+            raise InvalidKeywordList("Failed to parse keyword list " + keyword_list_path \
+                + ":\n" + str(error))
         keywords = {}
         for section in config.sections():
             keywords[section] = []
