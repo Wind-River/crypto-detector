@@ -119,8 +119,22 @@
 
 [{"match_type": "algorithm/hash/HMAC", "language": "all"}]
 	"\bHMAC"
+	"\bHKDF"
+
+
+[{"match_type": "protocol/MAC", "language": "all"}]
+	"\bCMAC\b"
+	"\bCMAC_"
+	"\bDMAC\b"
+	"\bDMAC_"
+	"\bTTMAC\b"
+	"\bVMAC"
+
+[{"match_type": "algorithm/hash/CRC", "language": "all"}]
+	"\bCRC32"
 
 [{"match_type": "algorithm/hash/MD", "language": "all"}]
+	"\bMDC2\b"
 	"\bMD2\b"
 	"\bMD4\b"
 	"\bMD5\b"
@@ -146,13 +160,25 @@
 	"RIPEMD320"
 
 [{"match_type": "algorithm/hash/SHA", "language": "all"}]
-	"SHAInit"
+	"\bSHAInit"
 	"\bSHA1"
 	"\bSHA-1"
+	"\bSHA224"
+	"\bSHA-224"
+	"\bSHA_224"
+	"\bSHA256"
+	"\bSHA-256"
+	"\bSHA_256"
+	"\bSHA384"
+	"\bSHA-384"
+	"\bSHA_384"
+	"\bSHA512"
+	"\bSHA-512"
+	"\bSHA_512"
 	"\bSHA2"
 	"\bSHA-2"
 	"\bSHA3"
-	"\bSHA5"
+	"\bSHA-3"
 	"0x67452301"
 
 [{"match_type": "algorithm/hash/Tiger", "language": "all"}]
@@ -250,6 +276,7 @@
 	"\bSAFER-SK\b"
 	"\bSAFERK"
 	"\bSAFER-K\b"
+	"\bSAFER_K\b"
 
 [{"match_type": "algorithm/symmetric/block-cipher/SHACAL", "language": "all"}]
 	"\bSHACAL"
@@ -291,6 +318,12 @@
 	"Salsa20"
 	"Salsa_20"
 	"Salsa-20"
+
+[{"match_type": "algorithm/symmetric/stream-cipher/XSalsa20", "language": "all"}]
+	"\bXSalsa20"
+
+[{"match_type": "algorithm/symmetric/stream-cipher/SOSEMANUK", "language": "all"}]
+	"\bSosemanuk"
 
 [{"match_type": "algorithm/symmetric/block-cipher/MISTY1", "language": "all"}]
 	"\bMISTY1"
@@ -415,6 +448,7 @@
 	"\bpub_key"
 	"_pubkey"
 	"priv_key"
+	"\beSign\b"
 
 [{"match_type": "protocol/SSH", "language": "all"}]
 	"\bssh2"
