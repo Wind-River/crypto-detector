@@ -20,6 +20,9 @@ import shutil
 import hashlib
 import zipfile
 import tarfile
+import gzip
+import bz2
+import lzma
 import re
 import glob
 import tempfile
@@ -180,7 +183,7 @@ class FileLister():
         Returns:
             (list) a list containing one file-list for this file.
         """
-        archive_type = self.archive_type(file_path)
+        archive_type = FileLister.archive_type(file_path)
 
         package_name = basename(file_path)
         package_root = abspath(dirname(file_path))
@@ -207,6 +210,12 @@ class FileLister():
                 FileLister.extract_tar(file_path, tmp_dir)
             elif archive_type == "rpm":
                 extract_rpm(file_path, tmp_dir)
+            elif archive_type == "gzip":
+                FileLister.extract_by_library(gzip, file_path, tmp_dir)
+            elif archive_type == "bz2":
+                FileLister.extract_by_library(bz2, file_path, tmp_dir)
+            elif archive_type == "lzma":
+                FileLister.extract_by_library(lzma, file_path, tmp_dir)
 
             if tmp_root_path:
                 display_path = join(current_path, relpath(file_path, tmp_root_path))
@@ -287,7 +296,7 @@ class FileLister():
                     continue
 
                 try:
-                    archive_type = self.archive_type(full_path)
+                    archive_type = FileLister.archive_type(full_path)
                 except ExtractError as expn:
                     Output.print_error(str(expn))
                     continue
@@ -302,6 +311,13 @@ class FileLister():
                             FileLister.extract_tar(full_path, tmp_dir)
                         elif archive_type == "rpm":
                             extract_rpm(full_path, tmp_dir)
+                        elif archive_type == "gzip":
+                            FileLister.extract_by_library(gzip, full_path, tmp_dir)
+                        elif archive_type == "bz2":
+                            FileLister.extract_by_library(bz2, full_path, tmp_dir)
+                        elif archive_type == "lzma":
+                            FileLister.extract_by_library(lzma, full_path, tmp_dir)
+
                     except ExtractError as expn:
                         Output.print_error(str(expn))
                         continue
@@ -428,6 +444,24 @@ class FileLister():
         return bool(parsed_url.scheme) and bool(parsed_url.netloc)
 
     @staticmethod
+    def compression_library_reads(library, archive_path):
+        """Checks to see if the given library can read the file at archive_path
+
+        Args:
+            library: (module)
+            archive_path: (string)
+
+        Returns:
+            (bool)
+        """
+        try:
+            with library.open(archive_path) as archive_file:
+                archive_file.read()
+                return True
+        except:
+            return False
+
+    @staticmethod
     def archive_type(archive_path):
         """Determine the type of archive file
 
@@ -447,6 +481,12 @@ class FileLister():
                 return "tar"
             elif is_rpm(archive_path):
                 return "rpm"
+            elif FileLister.compression_library_reads(gzip, archive_path):
+                return "gzip"
+            elif FileLister.compression_library_reads(bz2, archive_path):
+                return "bz2"
+            elif FileLister.compression_library_reads(lzma, archive_path):
+                return "lzma"
             else:
                 return None
         except Exception as expn:
@@ -494,6 +534,40 @@ class FileLister():
                 tar_file.extractall(output_directory)
         except Exception as expn:
             raise ExtractError("Failed to extract tar archive " + tar_file_path + "\n" + str(expn))
+
+    @staticmethod
+    def extract_by_library(library, archive_path, output_directory):
+        """Extracts the given archive file to the output directory using the given library
+
+        Args:
+            library; (module)
+            archive_path: (string)
+            output_directory: (string)
+
+        Returns:
+            None
+
+        Raises:
+            ExtractError
+        """
+        library_name = library.__name__
+        Output.print_information("Extracting " + library_name + " archive " \
+            + archive_path + " ...")
+
+        try:
+            with library.open(archive_path, "rb") as archive_file:
+                decompressed_data = archive_file.read()
+
+                # remove the extension from filename
+                filename = basename(archive_path)
+                if len(filename.split(".")) > 1:
+                    filename = ".".join(filename.split(".")[:-1])
+
+                with open(abspath(join(output_directory, filename)), "wb") as decomp_file:
+                    decomp_file.write(decompressed_data)
+        except Exception as expn:
+            raise ExtractError("Failed to extract " + library_name + " archive " \
+                + archive_path + "\n" + str(expn))
 
     @staticmethod
     def download_file(url, download_directory):
