@@ -433,9 +433,9 @@
 
 [{"match_type": "protocol/kerberos", "language": "all"}]
 	"kerberos"
+	"\bKRB5_"
 
 [{"match_type": "protocol/PKI", "language": "all"}]
-	"\bpki\b"
 	"pkcs"
 	"\bx509"
 	"\bx.509"
