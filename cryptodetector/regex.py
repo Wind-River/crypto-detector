@@ -160,6 +160,8 @@ class Regex(object):
             Returns:
                 (string)
             """
+            if line_number < 0:
+                return ""
             try:
                 return lines[line_number]
             except IndexError:
