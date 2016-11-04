@@ -141,7 +141,7 @@ class Regex(object):
                             self.keywords[language].append( \
                                 (keyword_no_boundary, keyword_re_escaped))
 
-        # Sort found keywords by length and alphabetically to make search behaviour well defined
+        # Sort keywords by length and alphabetically to make search behaviour well defined
         # when there exists keywords that are prefixes of one another (eg crypt and cryptEncrypt)
         for language in languages:
             self.keywords[language] = sorted(self.keywords[language], \
