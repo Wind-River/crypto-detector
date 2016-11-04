@@ -132,6 +132,7 @@
 
 [{"match_type": "algorithm/hash/CRC", "language": "all"}]
 	"\bCRC32"
+	"\bCRC16"
 
 [{"match_type": "algorithm/hash/MD", "language": "all"}]
 	"\bMDC2\b"
