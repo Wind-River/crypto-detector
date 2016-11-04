@@ -17,7 +17,6 @@
 """
 
 import re
-import bisect
 import json
 import configparser
 from cryptodetector import Languages
