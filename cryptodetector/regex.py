@@ -167,12 +167,9 @@ class Regex(object):
             Returns:
                 (string)
             """
-            if line_number < 0:
+            if line_number < 0 or line_number >= len(lines):
                 return ""
-            try:
-                return lines[line_number]
-            except IndexError:
-                return ""
+            return lines[line_number]
 
         # quick first pass to detect if any keyword exists
         found = []
