@@ -182,9 +182,12 @@ class Regex(object):
         if not found:
             return []
 
-        # make a regular expression of found items and find their exact location
+        # Make a regular expression of found items and find their exact location.
+        # Sort found keywords by length and alphabetically to make the behaviour well defined
+        # when there exists keywords that are prefixes of one another (eg crypt and cryptEncrypt)
+        # If order of selection is random (not sorted), the result could be different every time.
         found_regex = ""
-        for found_keyword in found:
+        for found_keyword in sorted(found, key=lambda t: (len(t), str.lower(t)), reverse=True):
             found_regex += "(?:" + self.keywords[language][found_keyword] + ")|"
 
         # search line by line
