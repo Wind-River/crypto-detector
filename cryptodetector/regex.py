@@ -65,7 +65,7 @@ class Regex(object):
 
         languages = Languages.get_list()
         for language in languages:
-            self.keywords[language] = {}
+            self.keywords[language] = []
 
         # parse keywords
         for match_spec_string in keywords:
@@ -122,7 +122,7 @@ class Regex(object):
                 if self.whole_words:
                     keyword_re_escaped = r"\b" + keyword_re_escaped + r"\b"
 
-                self.keywords[match_language][keyword_no_boundary] = keyword_re_escaped
+                self.keywords[match_language].append((keyword_no_boundary, keyword_re_escaped))
 
                 # use keyword in lower-case as a unique identifier to lookup match type from
                 # match text
@@ -138,7 +138,14 @@ class Regex(object):
                 if match_language in ["source", "all"]:
                     for language in languages:
                         if language not in ["source", "all"]:
-                            self.keywords[language][keyword_no_boundary] = keyword_re_escaped
+                            self.keywords[language].append( \
+                                (keyword_no_boundary, keyword_re_escaped))
+
+        # Sort found keywords by length and alphabetically to make search behaviour well defined
+        # when there exists keywords that are prefixes of one another (eg crypt and cryptEncrypt)
+        for language in languages:
+            self.keywords[language] = sorted(self.keywords[language], \
+                key=lambda t: (len(t[0]), str.lower(t[0])), reverse=True)
 
     def search(self, content, language):
         """Search file content and find all the matches
@@ -171,24 +178,21 @@ class Regex(object):
         found = []
         if self.ignore_case:
             content_lower = content.lower()
-            for keyword in self.keywords[language]:
+            for keyword, keyword_re in self.keywords[language]:
                 if keyword in content_lower:
-                    found.append(keyword)
+                    found.append(keyword_re)
         else:
-            for keyword in self.keywords[language]:
+            for keyword, keyword_re in self.keywords[language]:
                 if keyword in content:
-                    found.append(keyword)
+                    found.append(keyword_re)
 
         if not found:
             return []
 
-        # Make a regular expression of found items and find their exact location.
-        # Sort found keywords by length and alphabetically to make the behaviour well defined
-        # when there exists keywords that are prefixes of one another (eg crypt and cryptEncrypt)
-        # If order of selection is random (not sorted), the result could be different every time.
+        # make a regular expression of found items to find all their occurances
         found_regex = ""
-        for found_keyword in sorted(found, key=lambda t: (len(t), str.lower(t)), reverse=True):
-            found_regex += "(?:" + self.keywords[language][found_keyword] + ")|"
+        for found_keyword in found:
+            found_regex += "(?:" + found_keyword + ")|"
 
         # search line by line
         result = []
