@@ -185,38 +185,21 @@ class Regex(object):
         for found_keyword in found:
             found_regex += "(?:" + self.keywords[language][found_keyword] + ")|"
 
-        matches = re.finditer(found_regex[:-1], content, flags=self.flags)
-
-        if not matches:
-            return []
-
+        # search line by line
         result = []
+        line_number = 0
+        chars_searched = 0
         lines = content.split("\n")
-        line_break_indicies = [0]
-        index = 0
-
         for line in lines:
-            index += len(line)
-            line_break_indicies.append(index)
-            index += 1
-
-        for match in matches:
-            match_text = content[match.start(): match.end()]
-            match_spec = self.match_specs[match_text.lower()]
-            line_number = bisect.bisect_left(line_break_indicies, match.start()) - 1
-            match_line_index_begin = match.start() - line_break_indicies[line_number]
-            if line_number > 1:
-                match_line_index_begin -= 1
-            match_line_index_end = match_line_index_begin + (match.end() - match.start())
-            line_text = lines[line_number]
-
-            match = {"match_text": match_text,
-                     "line_text": line_text,
+            for match in re.finditer(found_regex[:-1], line, flags=self.flags):
+                match_dict = {
+                    "match_text": line[match.start(): match.end()],
+                     "line_text": line,
                      "match_line_number": line_number + 1,
-                     "match_file_index_begin": match.start(),
-                     "match_file_index_end": match.end(),
-                     "match_line_index_begin": match_line_index_begin,
-                     "match_line_index_end": match_line_index_end,
+                     "match_file_index_begin": chars_searched + match.start(),
+                     "match_file_index_end": chars_searched + match.end(),
+                     "match_line_index_begin": match.start(),
+                     "match_line_index_end": match.end(),
                      "line_text_before_1": line_text_surrounding(line_number - 1, lines),
                      "line_text_before_2": line_text_surrounding(line_number - 2, lines),
                      "line_text_before_3": line_text_surrounding(line_number - 3, lines),
@@ -227,11 +210,15 @@ class Regex(object):
                      "comments": ""
                     }
 
-            for key in match_spec:
-                if key != "language":
-                    match[key] = match_spec[key]
+                match_spec = self.match_specs[match_dict["match_text"].lower()]
+                for key in match_spec:
+                    if key != "language":
+                        match_dict[key] = match_spec[key]
 
-            result.append(match)
+                result.append(match_dict)
+
+            chars_searched += len(line) + 1
+            line_number += 1
 
         return result
 
