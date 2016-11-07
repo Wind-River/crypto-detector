@@ -295,11 +295,7 @@ class FileLister():
                     Output.print_warning("Skipping symbolic link: " + full_path)
                     continue
 
-                try:
-                    archive_type = FileLister.archive_type(full_path)
-                except ExtractError as expn:
-                    Output.print_error(str(expn))
-                    continue
+                archive_type = FileLister.archive_type(full_path)
 
                 if archive_type:
                     tmp_dir = self.create_tmp_directory(full_path)
