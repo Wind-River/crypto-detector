@@ -83,8 +83,8 @@ class FileLister():
                 "display_path" and "physical_path". "display_path" is the path that's shown to the
                 user, but might not neccessarily be where the file physically resides, whereas
                 "physical_path" is where file can be accessed. For example,
-                "/path/arch.tar.gz/file.cpp" is a display_path, while "/tmp/cryptodetector/file.cpp" is
-                the physcial_path.
+                "/path/arch.tar.gz/file.cpp" is a display_path, while "/tmp/cryptodetector/file.cpp"
+                is the physcial_path.
 
                 As an example, it could be:
                 [{
@@ -201,26 +201,26 @@ class FileLister():
                 + "as a package.")
             return []
 
+        if tmp_root_path:
+            display_path = join(current_path, relpath(file_path, tmp_root_path))
+        else:
+            display_path = abspath(file_path)
+
         if archive_type:
             tmp_dir = self.create_tmp_directory(package_name)
 
             if archive_type == "zip":
-                FileLister.extract_zip(file_path, tmp_dir)
+                FileLister.extract_zip(file_path, display_path, tmp_dir)
             elif archive_type == "tar":
-                FileLister.extract_tar(file_path, tmp_dir)
+                FileLister.extract_tar(file_path, display_path, tmp_dir)
             elif archive_type == "rpm":
-                extract_rpm(file_path, tmp_dir)
+                extract_rpm(file_path, display_path, tmp_dir)
             elif archive_type == "gzip":
-                FileLister.extract_by_library(gzip, file_path, tmp_dir)
+                FileLister.extract_by_library(gzip, file_path, display_path, tmp_dir)
             elif archive_type == "bz2":
-                FileLister.extract_by_library(bz2, file_path, tmp_dir)
+                FileLister.extract_by_library(bz2, file_path, display_path, tmp_dir)
             elif archive_type == "lzma":
-                FileLister.extract_by_library(lzma, file_path, tmp_dir)
-
-            if tmp_root_path:
-                display_path = join(current_path, relpath(file_path, tmp_root_path))
-            else:
-                display_path = abspath(file_path)
+                FileLister.extract_by_library(lzma, file_path, display_path, tmp_dir)
 
             return self.list_directory(tmp_dir, package_name, tmp_root_path=tmp_dir, \
                 current_path=display_path, _package_root=package_root)
@@ -300,28 +300,28 @@ class FileLister():
                 if archive_type:
                     tmp_dir = self.create_tmp_directory(full_path)
 
-                    try:
-                        if archive_type == "zip":
-                            FileLister.extract_zip(full_path, tmp_dir)
-                        elif archive_type == "tar":
-                            FileLister.extract_tar(full_path, tmp_dir)
-                        elif archive_type == "rpm":
-                            extract_rpm(full_path, tmp_dir)
-                        elif archive_type == "gzip":
-                            FileLister.extract_by_library(gzip, full_path, tmp_dir)
-                        elif archive_type == "bz2":
-                            FileLister.extract_by_library(bz2, full_path, tmp_dir)
-                        elif archive_type == "lzma":
-                            FileLister.extract_by_library(lzma, full_path, tmp_dir)
-
-                    except ExtractError as expn:
-                        Output.print_error(str(expn))
-                        continue
-
                     if tmp_root_path:
                         display_path = join(current_path, relpath(full_path, tmp_root_path))
                     else:
                         display_path = full_path
+
+                    try:
+                        if archive_type == "zip":
+                            FileLister.extract_zip(full_path, display_path, tmp_dir)
+                        elif archive_type == "tar":
+                            FileLister.extract_tar(full_path, display_path, tmp_dir)
+                        elif archive_type == "rpm":
+                            extract_rpm(full_path, display_path, tmp_dir)
+                        elif archive_type == "gzip":
+                            FileLister.extract_by_library(gzip, full_path, display_path, tmp_dir)
+                        elif archive_type == "bz2":
+                            FileLister.extract_by_library(bz2, full_path, display_path, tmp_dir)
+                        elif archive_type == "lzma":
+                            FileLister.extract_by_library(lzma, full_path, display_path, tmp_dir)
+
+                    except ExtractError as expn:
+                        Output.print_error(str(expn))
+                        continue
 
                     file_list.extend(self.get_directory_filelist(tmp_dir, \
                         tmp_root_path=tmp_dir, current_path=display_path))
@@ -366,7 +366,8 @@ class FileLister():
         master_url = "https://github.com/" + owner + "/" + repo + "/archive/master.zip"
         tmp_dir = self.create_tmp_directory(master_url)
         master_zip_file = FileLister.download_file(master_url, tmp_dir)
-        FileLister.extract_zip(master_zip_file, tmp_dir)
+        display_path = package_name + " /master.zip"
+        FileLister.extract_zip(master_zip_file, display_path, tmp_dir)
         remove(master_zip_file)
         return self.list_directory(tmp_dir, package_name, tmp_dir)
 
@@ -489,11 +490,12 @@ class FileLister():
         return None
 
     @staticmethod
-    def extract_zip(zip_file_path, output_directory):
+    def extract_zip(zip_file_path, display_path, output_directory):
         """Extract a zip file
 
         Args:
-            zip_file_path: (string)
+            zip_file_path: (string) physical path of file on the hardware
+            display_path: (string) file path that should be displayed to the user
             output_directory: (string)
 
         Returns:
@@ -502,19 +504,20 @@ class FileLister():
         Raises:
             ExtractError
         """
-        Output.print_information("Extracting zip archive " + zip_file_path + " ...")
+        Output.print_information("Extracting zip archive " + display_path + " ...")
         try:
             with zipfile.ZipFile(zip_file_path) as zip_file:
                 zip_file.extractall(output_directory)
         except Exception as expn:
-            raise ExtractError("Failed to extract zip archive " + zip_file_path + "\n" + str(expn))
+            raise ExtractError("Failed to extract zip archive " + display_path + "\n" + str(expn))
 
     @staticmethod
-    def extract_tar(tar_file_path, output_directory):
+    def extract_tar(tar_file_path, display_path, output_directory):
         """Extract a tar archive
 
         Args:
-            tar_file_path: (String)
+            tar_file_path: (string) physical path of file on the hardware
+            display_path: (string) file path that should be displayed to the user
             output_directory: (string)
 
         Returns:
@@ -523,20 +526,21 @@ class FileLister():
         Raises:
             ExtractError
         """
-        Output.print_information("Extracting tar archive " + tar_file_path + " ...")
+        Output.print_information("Extracting tar archive " + display_path + " ...")
         try:
             with tarfile.open(tar_file_path) as tar_file:
                 tar_file.extractall(output_directory)
         except Exception as expn:
-            raise ExtractError("Failed to extract tar archive " + tar_file_path + "\n" + str(expn))
+            raise ExtractError("Failed to extract tar archive " + display_path + "\n" + str(expn))
 
     @staticmethod
-    def extract_by_library(library, archive_path, output_directory):
+    def extract_by_library(library, archive_path, display_path, output_directory):
         """Extracts the given archive file to the output directory using the given library
 
         Args:
-            library; (module)
-            archive_path: (string)
+            library: (module)
+            archive_path: (string) physical path of file on the hardware
+            display_path: (string) file path that should be displayed to the user
             output_directory: (string)
 
         Returns:
@@ -547,7 +551,7 @@ class FileLister():
         """
         library_name = library.__name__
         Output.print_information("Extracting " + library_name + " archive " \
-            + archive_path + " ...")
+            + display_path + " ...")
 
         try:
             with library.open(archive_path, "rb") as archive_file:
@@ -562,7 +566,7 @@ class FileLister():
                     decomp_file.write(decompressed_data)
         except Exception as expn:
             raise ExtractError("Failed to extract " + library_name + " archive " \
-                + archive_path + "\n" + str(expn))
+                + display_path + "\n" + str(expn))
 
     @staticmethod
     def download_file(url, download_directory):
