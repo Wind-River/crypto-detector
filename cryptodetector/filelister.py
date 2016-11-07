@@ -26,6 +26,8 @@ import lzma
 import re
 import glob
 import tempfile
+import time
+import os
 from os.path import join, relpath, basename, abspath, exists, isfile, \
     isdir, dirname, normpath, islink
 from os import pardir, makedirs, walk, remove
@@ -616,7 +618,7 @@ class FileLister():
         Raises:
             FileWriteException
         """
-        tmp_dir_name = hashlib.md5(dir_name.encode("utf-8")).hexdigest()
+        tmp_dir_name = dir_name + "-" + str(os.getpid()) + "-" + str(time.time())
         tmp_dir_name = join("cryptodetector", tmp_dir_name)
         tmp_dir = abspath(join(tempfile.gettempdir(), tmp_dir_name))
 
