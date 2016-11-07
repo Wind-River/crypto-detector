@@ -216,7 +216,7 @@ class FileLister():
             elif archive_type == "tar":
                 FileLister.extract_tar(file_path, display_path, tmp_dir)
             elif archive_type == "rpm":
-                extract_rpm(file_path, display_path, tmp_dir)
+                FileLister.extract_rpm_archive(file_path, display_path, tmp_dir)
             elif archive_type == "gzip":
                 FileLister.extract_by_library(gzip, file_path, display_path, tmp_dir)
             elif archive_type == "bz2":
@@ -313,7 +313,7 @@ class FileLister():
                         elif archive_type == "tar":
                             FileLister.extract_tar(full_path, display_path, tmp_dir)
                         elif archive_type == "rpm":
-                            extract_rpm(full_path, display_path, tmp_dir)
+                            FileLister.extract_rpm_archive(full_path, display_path, tmp_dir)
                         elif archive_type == "gzip":
                             FileLister.extract_by_library(gzip, full_path, display_path, tmp_dir)
                         elif archive_type == "bz2":
@@ -402,7 +402,7 @@ class FileLister():
         """
         package_name = basename(rpm_file_path)
         tpm_dir = self.create_tmp_directory(package_name)
-        extract_rpm(rpm_file_path, tpm_dir)
+        FileLister.extract_rpm_archive(rpm_file_path, tpm_dir)
         return self.list_directory(tpm_dir, package_name, tpm_dir)
 
     @staticmethod
@@ -569,6 +569,29 @@ class FileLister():
         except Exception as expn:
             raise ExtractError("Failed to extract " + library_name + " archive " \
                 + display_path + "\n" + str(expn))
+
+    @staticmethod
+    def extract_rpm_archive(archive_path, display_path, output_directory):
+        """Extract RPM archive
+
+        Args:
+            archive_path: (string) physical path of file on the hardware
+            display_path: (string) file path that should be displayed to the user
+            output_directory: (string)
+
+        Returns:
+            None
+
+        Raises:
+            ExtractError
+        """
+        Output.print_information("Extracting RPM archive " \
+            + display_path + " ...")
+        try:
+            extract_rpm(archive_path, output_directory)
+        except Exception as expn:
+            raise ExtractError("Failed to extract RPM archive " + display_path \
+                + "\n\n" + str(expn))
 
     @staticmethod
     def download_file(url, download_directory):
