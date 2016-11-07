@@ -463,35 +463,34 @@ class FileLister():
 
     @staticmethod
     def archive_type(archive_path):
-        """Determine the type of archive file
+        """Determine if the file at archive_path is a compressed archive file
 
         Args:
             archive_path: (string)
 
         Returns:
-            one of "zip", "tar", or None
-
-        Raises:
-            ExtractError
+            (string) the type of archive or None
         """
-        try:
-            if zipfile.is_zipfile(archive_path):
-                return "zip"
-            elif tarfile.is_tarfile(archive_path):
-                return "tar"
-            elif is_rpm(archive_path):
-                return "rpm"
-            elif FileLister.compression_library_reads(gzip, archive_path):
-                return "gzip"
-            elif FileLister.compression_library_reads(bz2, archive_path):
-                return "bz2"
-            elif FileLister.compression_library_reads(lzma, archive_path):
-                return "lzma"
-            else:
-                return None
-        except Exception as expn:
-            raise ExtractError("Failed to detect if the file " \
-                + archive_path + " is a compressed archive. " + str(expn))
+
+        archive_tests = {
+            "zip": lambda path: zipfile.is_zipfile(path),
+            "tar": lambda path: tarfile.is_tarfile(path),
+            "rpm": lambda path: is_rpm(path),
+            "gzip": lambda path: FileLister.compression_library_reads(gzip, path),
+            "bz2": lambda path: FileLister.compression_library_reads(bz2, path),
+            "lzma": lambda path: FileLister.compression_library_reads(lzma, path)
+            }
+
+        for archive_type_ in archive_tests:
+            is_archive_file = False
+            try:
+                is_archive_file = archive_tests[archive_type_](archive_path)
+            except:
+                pass
+            if is_archive_file:
+                return archive_type_
+
+        return None
 
     @staticmethod
     def extract_zip(zip_file_path, output_directory):
