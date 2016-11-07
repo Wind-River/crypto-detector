@@ -452,8 +452,8 @@ class FileLister():
         """
         try:
             with library.open(archive_path) as archive_file:
-                archive_file.read()
-                return True
+                compressed_payload = archive_file.read()
+                return len(compressed_payload > 5)
         except:
             return False
 
