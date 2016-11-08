@@ -28,23 +28,27 @@ if sys.version_info[0] < 3 or (sys.version_info[0] == 3 and sys.version_info[1] 
     print("\nRequires Python version 3.4 or later.")
     sys.exit(1)
 
-from cryptodetector import CryptoDetector, Output, Options
+import traceback
+from cryptodetector import CryptoDetector, Output, Options, Logger
 from cryptodetector.exceptions import CryptoDetectorError
 
 if __name__ == '__main__':
 
     try:
+        output_directory = None
         options = Options(CryptoDetector.version()).read_all_options()
+        output_directory = options["output"]
         CryptoDetector(options).scan()
 
         print("done")
 
     except CryptoDetectorError as expn:
         Output.print_error(str(expn))
+        if output_directory: Logger.write_log_files(output_directory)
 
     except KeyboardInterrupt:
         raise
 
-    except Exception:
-        Output.print_error("Unhandled exception.")
-        raise
+    except Exception as expn:
+        Output.print_error("Unhandled exception.\n\n" + str(traceback.format_exc()))
+        if output_directory: Logger.write_log_files(output_directory)

@@ -49,6 +49,7 @@ class Logger(object):
         """
         Logger.errors += "[" + str(datetime.datetime.now()) + "] ERROR: " + message + "\n"
 
+    @staticmethod
     def write_log_files(output_directory):
         """Write event log and error log files
 
@@ -66,6 +67,8 @@ class Logger(object):
         if Logger.events:
             with open(log_filename, "w") as log_file:
                 log_file.write(Logger.events)
-                if Logger.errors:
-                    log_file.write("\n\nEncountered the following errors:\n\n")
-                    log_file.write(Logger.errors)
+
+        if Logger.errors:
+            with open(log_filename, "a") as log_file:
+                log_file.write("\n\nEncountered the following errors:\n\n")
+                log_file.write(Logger.errors)
