@@ -323,6 +323,26 @@ class CryptoDetector(object):
 
         report = {"report": {}}
 
+        # save scan settings
+
+        report["scan_settings"] = {}
+        report["scan_settings"]["quick"] = self.quick
+        report["scan_settings"]["output_existing"] = self.output_existing
+        report["scan_settings"]["log"] = self.log
+        report["scan_settings"]["source_files_only"] = self.source_files_only
+        report["scan_settings"]["ignore_match_types"] = Method.ignore_match_types
+        report["scan_settings"]["stop_after"] = self.stop_after
+        report["scan_settings"]["methods"] = {}
+
+        for method_id in self.methods:
+            method = self.methods[method_id]
+            report["scan_settings"]["methods"][method_id] = {}
+
+            if hasattr(method, "options"):
+                for option in method.options:
+                    value = method.options[option]
+                    report["scan_settings"]["methods"][method_id][option] = value
+
         # Group matches by filename
 
         for match in matches:
