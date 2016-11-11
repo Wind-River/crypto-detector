@@ -35,20 +35,22 @@ from cryptodetector.exceptions import CryptoDetectorError
 if __name__ == '__main__':
 
     try:
-        output_directory = None
+        log_output_directory = None
         options = Options(CryptoDetector.version()).read_all_options()
-        output_directory = options["output"]
+        if "log" in options:
+            if options["log"]:
+                log_output_directory = options["output"]
         CryptoDetector(options).scan()
 
         print("done")
 
     except CryptoDetectorError as expn:
         Output.print_error(str(expn))
-        if output_directory: Logger.write_log_files(output_directory)
+        if log_output_directory: Logger.write_log_files(log_output_directory)
 
     except KeyboardInterrupt:
         raise
 
     except Exception as expn:
         Output.print_error("Unhandled exception.\n\n" + str(traceback.format_exc()))
-        if output_directory: Logger.write_log_files(output_directory)
+        if log_output_directory: Logger.write_log_files(log_output_directory)
