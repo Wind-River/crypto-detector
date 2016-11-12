@@ -34,6 +34,9 @@
 # 	"haskell",
 # 	"pascal"
 
+[keyword_list_version]
+	1
+
 [{"match_type": "algorithm/asymmetric/DiffieHellman", "language": "all"}]
 	"Diffie Hellman"
 	"Diffie-Hellman"

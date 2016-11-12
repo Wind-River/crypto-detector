@@ -23,19 +23,23 @@ class KeywordSearch(Method):
     """Class for searching files for a set of keywords
     """
     method_id = "keyword"
+    kwlist_version = None
 
     options = {
-        "ignore_case": False
+        "ignore_case": False,
+        "kwlist_path": join(dirname(realpath(__file__)), "keyword_list.txt")
     }
 
     options_help = {
-        "ignore_case": "Search for keywords case-insensitive"
+        "ignore_case": "Search for keywords case-insensitive",
+        "kwlist_path": "Path to the file containing keyword list"
     }
 
     def __init__(self):
         self.regex = Regex(ignore_case=KeywordSearch.options["ignore_case"], \
             ignore_match_types=Method.ignore_match_types)
-        self.regex.read_keyword_list(join(dirname(realpath(__file__)), "keyword_list.txt"))
+        self.regex.read_keyword_list(KeywordSearch.options["kwlist_path"])
+        KeywordSearch.options["keyword_list_version"] = self.regex.kwlist_version()
 
     def supports_scanning_file(self, language):
         """This method supports scanning all text files

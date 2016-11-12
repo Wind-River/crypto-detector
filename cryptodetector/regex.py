@@ -18,12 +18,13 @@
 
 import re
 import json
+import os
 import configparser
 from cryptodetector import Languages
 from cryptodetector.exceptions import InvalidKeywordList
 
 class Regex(object):
-    """Class for searching file contents for a set of regular expressions defined in a config file
+    """Class for searching file contents for keywords using regular expressions
     """
     def __init__(self, ignore_case=False, ignore_match_types=[], whole_words=False):
         self.keywords = {}
@@ -34,6 +35,7 @@ class Regex(object):
         if ignore_case:
             self.flags = re.IGNORECASE
         self.ignore_match_types = ignore_match_types
+        self.keyword_list_version = None
 
     def read_keyword_list(self, keyword_list_path):
         """reads the set of keywords defined in a config file
@@ -47,6 +49,8 @@ class Regex(object):
         Raises:
             InvalidKeywordList
         """
+        if not os.path.isfile(keyword_list_path):
+            raise InvalidKeywordList("Keyword list file '" + keyword_list_path + "' did not exist.")
 
         # read config file
         config = configparser.ConfigParser(allow_no_value=True, delimiters=('='))
@@ -62,12 +66,22 @@ class Regex(object):
             for item, _ in config.items(section):
                 keywords[section].append(item)
 
+        if not config.has_section("keyword_list_version"):
+            raise InvalidKeywordList("Keyword list file " + keyword_list_path \
+                + " is invalid. Missing required section 'keyword_list_version'")
+        if len(config.items("keyword_list_version")) != 1:
+               raise InvalidKeywordList("Keyword list file " + keyword_list_path \
+                + " is invalid. There should be one value in 'keyword_list_version' section.")
+        self.keyword_list_version = config.items("keyword_list_version")[0][0]
+
         languages = Languages.get_list()
         for language in languages:
             self.keywords[language] = []
 
         # parse keywords
         for match_spec_string in keywords:
+            if match_spec_string == "keyword_list_version":
+                continue
             try:
                 match_spec = json.loads(match_spec_string)
             except json.JSONDecodeError as decode_error:
@@ -145,6 +159,17 @@ class Regex(object):
         for language in languages:
             self.keywords[language] = sorted(self.keywords[language], \
                 key=lambda t: (len(t[0]), str.lower(t[0])), reverse=True)
+
+    def kwlist_version(self):
+        """Get keyword list version
+
+        Args:
+            None
+
+        Returns:
+            (integer) keyword list version number
+        """
+        return self.keyword_list_version
 
     def search(self, content, language):
         """Search file content and find all the matches

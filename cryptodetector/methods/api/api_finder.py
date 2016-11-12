@@ -23,10 +23,20 @@ class APIFinder(Method):
     """Class for searching for API usage
     """
     method_id = "api"
+    kwlist_version = None
+
+    options= {
+        "kwlist_path": join(dirname(realpath(__file__)), "api_definitions.txt")
+    }
+
+    options_help = {
+        "kwlist_path": "Path to the file containing list of API definitions"
+    }
 
     def __init__(self):
         self.regex = Regex(ignore_match_types=Method.ignore_match_types, whole_words=True)
-        self.regex.read_keyword_list(join(dirname(realpath(__file__)), "api_definitions.txt"))
+        self.regex.read_keyword_list(APIFinder.options["kwlist_path"])
+        APIFinder.options["api_list_version"] = self.regex.kwlist_version()
 
     def supports_scanning_file(self, language):
         """This method supports scanning all text files

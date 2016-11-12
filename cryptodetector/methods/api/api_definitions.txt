@@ -40,7 +40,8 @@
 # reported in the crypto file
 #
 
-
+[keyword_list_version]
+	1
 
 ### OpenSSL (reference: https://www.openssl.org/docs/man1.1.0/crypto/)
 
