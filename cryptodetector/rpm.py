@@ -1400,6 +1400,8 @@ class CpioFile(object):
                 self.extract(cpioinfo, path)
 
         # Reverse sort directories.
+        def cmp(a, b):
+            return (a > b) - (a < b)
         def compare(a, b): return cmp(a.name, b.name)
         directories = sorted(directories, key=cmp_to_key(compare))
         directories.reverse()
