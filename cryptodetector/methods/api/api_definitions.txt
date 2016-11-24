@@ -41,7 +41,7 @@
 #
 
 [keyword_list_version]
-	1
+	2
 
 ### OpenSSL (reference: https://www.openssl.org/docs/man1.1.0/crypto/)
 
@@ -2474,11 +2474,6 @@
 [{"match_type": "algorithm/symmetric/stream-cipher/RC4", "language": "all", "encryption_library": "OpenSSL", "encryption_api_usage": "call"}]
 	"RC4_set_key"
 
-[{"match_type": "algorithm/hash/RIPEMD", "language": "all", "encryption_library": "OpenSSL", "encryption_api_usage": "call"}]
-	"RIPEMD160_Final"
-	"RIPEMD160_Init"
-	"RIPEMD160_Update"
-
 [{"match_type": "algorithm/symmetric/block-cipher/CAST", "language": "all", "encryption_library": "OpenSSL", "encryption_api_usage": "call"}]
 	"EVP_cast5_cbc"
 	"EVP_cast5_cfb"
@@ -2604,9 +2599,6 @@
 	"SHA224_Final"
 	"SHA224_Init"
 	"SHA224_Update"
-	"SHA256_Final"
-	"SHA256_Init"
-	"SHA256_Update"
 	"SHA384_Final"
 	"SHA384_Init"
 	"SHA384_Update"
@@ -2639,7 +2631,6 @@
 
 
 
-
 ### Crypto++
 
 [{"match_type": "library/Crypto++", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
@@ -2647,7 +2638,6 @@
 	"AdditiveCipherAbstractPolicy"
 	"AdditiveCipherConcretePolicy"
 	"AdditiveCipherTemplate"
-	"Adler32"
 	"AlignedSecByteBlock"
 	"ArrayXorSink"
 	"ASN1CryptoMaterial"
@@ -3158,9 +3148,6 @@
 
 [{"match_type": "algorithm/symmetric/block-cipher/Feistel", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "include"}]
 	"lubyrack.h"
-
-[{"match_type": "algorithm/symmetric/block-cipher/SAFER", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "include"}]
-	"safer.h"
 
 [{"match_type": "algorithm/symmetric/block-cipher/Skipjack", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "include"}]
 	"skipjack.h"
@@ -3711,3 +3698,80 @@
 
 [{"match_type": "library/Botan", "language": "all", "encryption_library": "BOTAN", "encryption_api_usage": "include"}]
 	"botan.h"
+
+
+
+### libmd
+
+[{"match_type": "algorithm/hash/SHA", "language": "all", "encryption_library": "libMD", "encryption_api_usage": "call"}]
+	"SHA_Init"
+	"SHA_Update"
+	"SHA_Final"
+	"SHA_End"
+	"SHA_File"
+	"SHA_FileChunk"
+	"SHA_Data"
+	"SHA1_End"
+	"SHA1_File"
+	"SHA1_FileChunk"
+	"SHA1_Data"
+	"SHA256_Init"
+	"SHA256_Update"
+	"SHA256_Final"
+	"SHA256_End"
+	"SHA256_File"
+	"SHA256_FileChunk"
+	"SHA256_Data"
+
+[{"match_type": "algorithm/hash/MD4", "language": "all", "encryption_library": "libMD", "encryption_api_usage": "call"}]
+	"MD4Init"
+	"MD4Update"
+	"MD4Pad"
+	"MD4Final"
+	"MD4End"
+	"MD4File"
+	"MD4FileChunk"
+	"MD4Data"
+
+[{"match_type": "algorithm/hash/MD5", "language": "all", "encryption_library": "libMD", "encryption_api_usage": "call"}]
+	"MD5Init"
+	"MD5Update"
+	"MD5Pad"
+	"MD5Final"
+	"MD5End"
+	"MD5File"
+	"MD5FileChunk"
+	"MD5Data"
+
+[{"match_type": "algorithm/hash/RIPEMD", "language": "all", "encryption_library": "libMD", "encryption_api_usage": "call"}]
+	"RIPEMD160_Init"
+	"RIPEMD160_Update"
+	"RIPEMD160_Final"
+	"RIPEMD160_End"
+	"RIPEMD160_File"
+	"RIPEMD160_FileChunk"
+	"RIPEMD160_Data"
+
+
+
+### GlibC
+
+[{"match_type": "algorithm/hash/generic", "language": "all", "encryption_library": "glibc", "encryption_api_usage": "call"}]
+	"g_checksum_type_get_length"
+	"g_checksum_new"
+	"g_checksum_copy"
+	"g_checksum_free"
+	"g_checksum_reset"
+	"g_checksum_update"
+	"g_checksum_get_string"
+	"g_checksum_get_digest"
+	"g_compute_checksum_for_data"
+	"g_compute_checksum_for_string"
+	"g_compute_checksum_for_bytes"
+
+
+
+### QT
+
+[{"match_type": "algorithm/hash/generic", "language": "all", "encryption_library": "QT", "encryption_api_usage": "data_type"}]
+	"QCryptographicHash"

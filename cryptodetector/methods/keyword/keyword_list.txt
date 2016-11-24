@@ -35,7 +35,7 @@
 # 	"pascal"
 
 [keyword_list_version]
-	1
+	2
 
 [{"match_type": "algorithm/asymmetric/DiffieHellman", "language": "all"}]
 	"Diffie Hellman"
@@ -46,8 +46,10 @@
 	"\bDHParameterSpec"
 	"\bDHPublicKey"
 	"\bDHPrivateKey"
+	"0xFFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD1"
 
 [{"match_type": "algorithm/asymmetric/DSA", "language": "all"}]
+	"Digital Signature Algorithm"
 	"\bDSA_"
 	"_DSA\b"
 	"_DSA_"
@@ -64,9 +66,9 @@
 	"EllipticCurve"
 	"ECDSA"
 	"ECDH"
-	"ECIES"
+	"\bECIES"
 	"ECMQV"
-	"ECNR"
+	"\bECNR"
 	"\bCkDh\b"
 	"CkCrypt2"
 	"\becc_make_key"
@@ -74,6 +76,9 @@
 	"secp192r1"
 	"secp256r1"
 	"secp521r1"
+	"\bEC2NP"
+	"_EC2NP_"
+	"_EC2NP\b"
 
 [{"match_type": "algorithm/asymmetric/ElGamal", "language": "all"}]
 	"El Gamal"
@@ -108,6 +113,7 @@
 	"\bX9-31"
 	"\bX9.31"
 	"\bOAEP"
+	"\bSecurID\b"
 
 [{"match_type": "algorithm/hash/generic", "language": "all"}]
 	"\blhash"
@@ -124,12 +130,9 @@
 	"\bHMAC"
 	"\bHKDF"
 
-
 [{"match_type": "protocol/MAC", "language": "all"}]
 	"\bCMAC\b"
 	"\bCMAC_"
-	"\bDMAC\b"
-	"\bDMAC_"
 	"\bTTMAC\b"
 	"\bVMAC"
 
@@ -138,6 +141,11 @@
 	"\bCRC16"
 
 [{"match_type": "algorithm/hash/MD", "language": "all"}]
+	"\bmd5sum\b"
+	"\bmd4sum\b"
+	"\bmd2sum\b"
+	"\bdgstsum\b"
+	"\bmdc2sum\b"
 	"\bMDC2\b"
 	"\bMD2\b"
 	"\bMD4\b"
@@ -157,6 +165,7 @@
 	"0x5A827999"
 
 [{"match_type": "algorithm/hash/RIPEMD", "language": "all"}]
+	"\bripemd160sum\b"
 	"\bRIPEMD"
 	"RIPEMD128"
 	"RIPEMD160"
@@ -164,7 +173,8 @@
 	"RIPEMD320"
 
 [{"match_type": "algorithm/hash/SHA", "language": "all"}]
-	"\bSHAInit"
+	"\bsha1sum\b"
+	"\bshasum\b"
 	"\bSHA1"
 	"\bSHA-1"
 	"\bSHA224"
@@ -196,10 +206,18 @@
 	"\bwhirlpool"
 
 [{"match_type": "algorithm/hybrid/PGP", "language": "all"}]
-	"PGP"
-	"GPG"
+	"\bPGP\b"
+	"\bPGP_"
+	"_PGP_"
+	"_PGP\b"
+	"\bGPG\b"
+	"\bGPG_"
+	"_GPG_"
+	"_GPG\b"
+	"libpgp"
 
 [{"match_type": "algorithm/symmetric/block-cipher/AES", "language": "all"}]
+	"Advanced Encryption Standard"
 	"\bAES_"
 	"_AES\b"
 	"_AES_"
@@ -238,12 +256,14 @@
 	"\bCRYPTON"
 
 [{"match_type": "algorithm/symmetric/block-cipher/DES", "language": "all"}]
+	"Data Encryption Standard"
 	"\bDES_"
 	"_DES\b"
 	"_DES_"
 	"tripledes"
 	"triple_des"
 	"\b3DES"
+	"_3DES"
 	"DES-EDE"
 	"DES-XEX"
 	"\bDESX"
@@ -431,6 +451,7 @@
 [{"match_type": "library/OpenSSL", "language": "all"}]
 	"\blibssl"
 	"\bOpenSSL"
+	"_OpenSSL"
 
 [{"match_type": "library/SpongyCastle", "language": "all"}]
 	"spongycastle"
@@ -438,6 +459,7 @@
 [{"match_type": "protocol/kerberos", "language": "all"}]
 	"kerberos"
 	"\bKRB5_"
+	"\bkrb5\b"
 
 [{"match_type": "protocol/PKI", "language": "all"}]
 	"pkcs"
@@ -453,13 +475,14 @@
 	"_pubkey"
 	"priv_key"
 	"\beSign\b"
+	"\bkeysym"
 
 [{"match_type": "protocol/SSH", "language": "all"}]
 	"\bssh2"
 	"\bssh_"
-	"\bssh-"
-	"\bssh\b"
 	"_ssh\b"
+	"\bssh\b"
+	"_ssh_"
 
 [{"match_type": "protocol/SSL", "language": "all"}]
 	"\bSSL_"
@@ -476,11 +499,35 @@
 	"\btls_cipher"
 	"\btls_server"
 	"\btls_client"
+	"Transport Layer Security"
+	"SSL/TLS"
 
 [{"match_type": "protocol/MQV", "language": "all"}]
 	"\bMQV\b"
 	"_MQV_"
 	"\bMQV_Domain"
+
+[{"match_type":"algorithm/symmetric/substitution-cipher/ROT13", "language": "all"}]
+	"\bROT13\b"
+	"\bROT13_"
+
+[{"match_type": "library/libXCrypt", "language": "all"}]
+	"libxcrypt"
+
+[{"match_type": "library/glibC", "language": "all"}]
+	"glibc/crypt"
+
+[{"match_type": "protocol/MSCHAP", "language": "all"}]
+	"\bMS-CHAP"
+	"\bMSCHAP"
+
+[{"match_type": "algorithm/hash/Adler32", "language": "all"}]
+	"\bAdler-32"
+	"\bAdler32"
+
+#
+# TODO: Modes of encryption
+#
 
 [{"match_type": "generic", "language": "all"}]
 	"crypt"
@@ -492,3 +539,8 @@
 	"\bStreamCipher"
 	"\bkey_schedule"
 	"MERSENNE"
+	"\bcerts"
+	"_CBC3_"
+	"\bCBC3_"
+	"\bCBC3-"
+	"_CBC3\b"
