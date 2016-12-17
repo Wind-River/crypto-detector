@@ -36,16 +36,25 @@
 # 	"pascal"
 #
 # You can add any additional information to the match specification,
-# such as encryption_library, library_version, etc, and it will be
-# reported in the crypto file
+# such and it will be reported in the crypto output
+#
+# For example,
+#   [{"match_type": "mytype", ... , "mycustomfield": "myvalue"}]
+#
 #
 
+
 [keyword_list_version]
-	2
+	3
 
-### OpenSSL (reference: https://www.openssl.org/docs/man1.1.0/crypto/)
 
-[{"match_type": "library/OpenSSL", "language": "all", "encryption_library": "OpenSSL", "encryption_api_usage": "call"}]
+####################################################################################################
+### OpenSSL
+###
+###     https://www.openssl.org/docs/man1.1.0/crypto/
+####################################################################################################
+
+[{"encryption_library":"OpenSSL", "match_type":"library/OpenSSL", "encryption_api_usage":"call", "language":"all"}]
 	"ACCESS_DESCRIPTION_free"
 	"ACCESS_DESCRIPTION_new"
 	"ASIdOrRange_free"
@@ -534,23 +543,18 @@
 	"ENGINE_ctrl_cmd_string"
 	"ENGINE_finish"
 	"ENGINE_free"
-	"ENGINE_get_DH"
-	"ENGINE_get_DSA"
-	"ENGINE_get_ECDH"
-	"ENGINE_get_ECDSA"
 	"ENGINE_get_RAND"
-	"ENGINE_get_RSA"
+	"ENGINE_register_RAND"
+	"ENGINE_register_all_RAND"
+	"ENGINE_set_RAND"
+	"ENGINE_set_default_RAND"
+	"ENGINE_unregister_RAND"
 	"ENGINE_get_cipher"
 	"ENGINE_get_cipher_engine"
 	"ENGINE_get_ciphers"
 	"ENGINE_get_cmd_defns"
 	"ENGINE_get_ctrl_function"
-	"ENGINE_get_default_DH"
-	"ENGINE_get_default_DSA"
-	"ENGINE_get_default_ECDH"
-	"ENGINE_get_default_ECDSA"
 	"ENGINE_get_default_RAND"
-	"ENGINE_get_default_RSA"
 	"ENGINE_get_destroy_function"
 	"ENGINE_get_digest"
 	"ENGINE_get_digest_engine"
@@ -569,46 +573,19 @@
 	"ENGINE_get_next"
 	"ENGINE_get_prev"
 	"ENGINE_get_table_flags"
-	"ENGINE_init"
 	"ENGINE_load_builtin_engines"
 	"ENGINE_load_private_key"
 	"ENGINE_load_public_key"
-	"ENGINE_new"
-	"ENGINE_register_DH"
-	"ENGINE_register_DSA"
-	"ENGINE_register_ECDH"
-	"ENGINE_register_ECDSA"
-	"ENGINE_register_RAND"
-	"ENGINE_register_RSA"
-	"ENGINE_register_all_DH"
-	"ENGINE_register_all_DSA"
-	"ENGINE_register_all_ECDH"
-	"ENGINE_register_all_ECDSA"
-	"ENGINE_register_all_RAND"
-	"ENGINE_register_all_RSA"
 	"ENGINE_register_all_ciphers"
 	"ENGINE_register_all_complete"
 	"ENGINE_register_all_digests"
 	"ENGINE_register_ciphers"
 	"ENGINE_register_complete"
 	"ENGINE_register_digests"
-	"ENGINE_remove"
-	"ENGINE_set_DH"
-	"ENGINE_set_DSA"
-	"ENGINE_set_ECDH"
-	"ENGINE_set_ECDSA"
-	"ENGINE_set_RAND"
-	"ENGINE_set_RSA"
 	"ENGINE_set_ciphers"
 	"ENGINE_set_cmd_defns"
 	"ENGINE_set_ctrl_function"
 	"ENGINE_set_default"
-	"ENGINE_set_default_DH"
-	"ENGINE_set_default_DSA"
-	"ENGINE_set_default_ECDH"
-	"ENGINE_set_default_ECDSA"
-	"ENGINE_set_default_RAND"
-	"ENGINE_set_default_RSA"
 	"ENGINE_set_default_ciphers"
 	"ENGINE_set_default_digests"
 	"ENGINE_set_default_string"
@@ -623,12 +600,6 @@
 	"ENGINE_set_load_pubkey_function"
 	"ENGINE_set_name"
 	"ENGINE_set_table_flags"
-	"ENGINE_unregister_DH"
-	"ENGINE_unregister_DSA"
-	"ENGINE_unregister_ECDH"
-	"ENGINE_unregister_ECDSA"
-	"ENGINE_unregister_RAND"
-	"ENGINE_unregister_RSA"
 	"ENGINE_unregister_ciphers"
 	"ENGINE_unregister_digests"
 	"ENGINE_up_ref"
@@ -811,21 +782,10 @@
 	"EVP_PKEY_CTX_set1_hkdf_salt"
 	"EVP_PKEY_CTX_set_app_data"
 	"EVP_PKEY_CTX_set_cb"
-	"EVP_PKEY_CTX_set_dh_paramgen_generator"
-	"EVP_PKEY_CTX_set_dh_paramgen_prime_len"
-	"EVP_PKEY_CTX_set_dsa_paramgen_bits"
 	"EVP_PKEY_CTX_set_ec_param_enc"
 	"EVP_PKEY_CTX_set_ec_paramgen_curve_nid"
 	"EVP_PKEY_CTX_set_hkdf_md"
-	"EVP_PKEY_CTX_set_rsa_keygen_pubexp"
-	"EVP_PKEY_CTX_set_rsa_padding"
-	"EVP_PKEY_CTX_set_rsa_pss_saltlen"
-	"EVP_PKEY_CTX_set_rsa_rsa_keygen_bits"
 	"EVP_PKEY_CTX_set_signature_md"
-	"EVP_PKEY_assign_DH"
-	"EVP_PKEY_assign_DSA"
-	"EVP_PKEY_assign_EC_KEY"
-	"EVP_PKEY_assign_RSA"
 	"EVP_PKEY_base_id"
 	"EVP_PKEY_cmp"
 	"EVP_PKEY_cmp_parameters"
@@ -838,15 +798,6 @@
 	"EVP_PKEY_encrypt"
 	"EVP_PKEY_encrypt_init"
 	"EVP_PKEY_free"
-	"EVP_PKEY_get0_DH"
-	"EVP_PKEY_get0_DSA"
-	"EVP_PKEY_get0_EC_KEY"
-	"EVP_PKEY_get0_RSA"
-	"EVP_PKEY_get0_hmac"
-	"EVP_PKEY_get1_DH"
-	"EVP_PKEY_get1_DSA"
-	"EVP_PKEY_get1_EC_KEY"
-	"EVP_PKEY_get1_RSA"
 	"EVP_PKEY_get_default_digest_nid"
 	"EVP_PKEY_id"
 	"EVP_PKEY_keygen"
@@ -858,10 +809,6 @@
 	"EVP_PKEY_print_params"
 	"EVP_PKEY_print_private"
 	"EVP_PKEY_print_public"
-	"EVP_PKEY_set1_DH"
-	"EVP_PKEY_set1_DSA"
-	"EVP_PKEY_set1_EC_KEY"
-	"EVP_PKEY_set1_RSA"
 	"EVP_PKEY_sign"
 	"EVP_PKEY_sign_init"
 	"EVP_PKEY_size"
@@ -882,44 +829,7 @@
 	"EVP_VerifyInit"
 	"EVP_VerifyInit_ex"
 	"EVP_VerifyUpdate"
-	"EVP_aes_128_cbc"
-	"EVP_aes_128_ccm"
-	"EVP_aes_128_cfb"
-	"EVP_aes_128_ecb"
-	"EVP_aes_128_gcm"
-	"EVP_aes_128_ofb"
-	"EVP_aes_192_cbc"
-	"EVP_aes_192_ccm"
-	"EVP_aes_192_cfb"
-	"EVP_aes_192_ecb"
-	"EVP_aes_192_gcm"
-	"EVP_aes_192_ofb"
-	"EVP_aes_256_cbc"
-	"EVP_aes_256_ccm"
-	"EVP_aes_256_cfb"
-	"EVP_aes_256_ecb"
-	"EVP_aes_256_gcm"
-	"EVP_aes_256_ofb"
-	"EVP_bf_cbc"
-	"EVP_bf_cfb"
-	"EVP_bf_ecb"
-	"EVP_bf_ofb"
-	"EVP_blake2b_512"
-	"EVP_blake2s_256"
 	"EVP_cleanup"
-	"EVP_des_cbc"
-	"EVP_des_cfb"
-	"EVP_des_ecb"
-	"EVP_des_ede"
-	"EVP_des_ede3"
-	"EVP_des_ede3_cbc"
-	"EVP_des_ede3_cfb"
-	"EVP_des_ede3_ofb"
-	"EVP_des_ede_cbc"
-	"EVP_des_ede_cfb"
-	"EVP_des_ede_ofb"
-	"EVP_des_ofb"
-	"EVP_desx_cbc"
 	"EVP_enc_null"
 	"EVP_get_cipherbyname"
 	"EVP_get_cipherbynid"
@@ -927,26 +837,6 @@
 	"EVP_get_digestbyname"
 	"EVP_get_digestbynid"
 	"EVP_get_digestbyobj"
-	"EVP_idea_cbc"
-	"EVP_idea_cfb"
-	"EVP_idea_ecb"
-	"EVP_idea_ofb"
-	"EVP_md2"
-	"EVP_md5"
-	"EVP_md_null"
-	"EVP_mdc2"
-	"EVP_rc4"
-	"EVP_rc4_40"
-	"EVP_rc5_32_12_16_cbc"
-	"EVP_rc5_32_12_16_cfb"
-	"EVP_rc5_32_12_16_ecb"
-	"EVP_rc5_32_12_16_ofb"
-	"EVP_ripemd160"
-	"EVP_sha1"
-	"EVP_sha224"
-	"EVP_sha256"
-	"EVP_sha384"
-	"EVP_sha512"
 	"EXTENDED_KEY_USAGE_free"
 	"EXTENDED_KEY_USAGE_new"
 	"GENERAL_NAMES_free"
@@ -1161,9 +1051,6 @@
 	"PEM_read_PKCS8_PRIV_KEY_INFO"
 	"PEM_read_PUBKEY"
 	"PEM_read_PrivateKey"
-	"PEM_read_RSAPrivateKey"
-	"PEM_read_RSAPublicKey"
-	"PEM_read_RSA_PUBKEY"
 	"PEM_read_SSL_SESSION"
 	"PEM_read_X509"
 	"PEM_read_X509_AUX"
@@ -1171,21 +1058,12 @@
 	"PEM_read_X509_REQ"
 	"PEM_read_bio"
 	"PEM_read_bio_CMS"
-	"PEM_read_bio_DHparams"
-	"PEM_read_bio_DSAPrivateKey"
-	"PEM_read_bio_DSA_PUBKEY"
-	"PEM_read_bio_DSAparams"
-	"PEM_read_bio_ECPKParameters"
-	"PEM_read_bio_EC_PUBKEY"
 	"PEM_read_bio_NETSCAPE_CERT_SEQUENCE"
 	"PEM_read_bio_PKCS7"
 	"PEM_read_bio_PKCS8"
 	"PEM_read_bio_PKCS8_PRIV_KEY_INFO"
 	"PEM_read_bio_PUBKEY"
 	"PEM_read_bio_PrivateKey"
-	"PEM_read_bio_RSAPrivateKey"
-	"PEM_read_bio_RSAPublicKey"
-	"PEM_read_bio_RSA_PUBKEY"
 	"PEM_read_bio_SSL_SESSION"
 	"PEM_read_bio_X509"
 	"PEM_read_bio_X509_AUX"
@@ -1193,14 +1071,6 @@
 	"PEM_read_bio_X509_REQ"
 	"PEM_write"
 	"PEM_write_CMS"
-	"PEM_write_DHparams"
-	"PEM_write_DHxparams"
-	"PEM_write_DSAPrivateKey"
-	"PEM_write_DSA_PUBKEY"
-	"PEM_write_DSAparams"
-	"PEM_write_ECPKParameters"
-	"PEM_write_ECPrivateKey"
-	"PEM_write_EC_PUBKEY"
 	"PEM_write_NETSCAPE_CERT_SEQUENCE"
 	"PEM_write_PKCS7"
 	"PEM_write_PKCS8"
@@ -1209,9 +1079,6 @@
 	"PEM_write_PKCS8_PRIV_KEY_INFO"
 	"PEM_write_PUBKEY"
 	"PEM_write_PrivateKey"
-	"PEM_write_RSAPrivateKey"
-	"PEM_write_RSAPublicKey"
-	"PEM_write_RSA_PUBKEY"
 	"PEM_write_SSL_SESSION"
 	"PEM_write_X509"
 	"PEM_write_X509_AUX"
@@ -1221,14 +1088,6 @@
 	"PEM_write_bio"
 	"PEM_write_bio_CMS"
 	"PEM_write_bio_CMS_stream"
-	"PEM_write_bio_DHparams"
-	"PEM_write_bio_DHxparams"
-	"PEM_write_bio_DSAPrivateKey"
-	"PEM_write_bio_DSA_PUBKEY"
-	"PEM_write_bio_DSAparams"
-	"PEM_write_bio_ECPKParameters"
-	"PEM_write_bio_ECPrivateKey"
-	"PEM_write_bio_EC_PUBKEY"
 	"PEM_write_bio_NETSCAPE_CERT_SEQUENCE"
 	"PEM_write_bio_PKCS7"
 	"PEM_write_bio_PKCS7_stream"
@@ -1239,9 +1098,6 @@
 	"PEM_write_bio_PUBKEY"
 	"PEM_write_bio_PrivateKey"
 	"PEM_write_bio_PrivateKey_traditional"
-	"PEM_write_bio_RSAPrivateKey"
-	"PEM_write_bio_RSAPublicKey"
-	"PEM_write_bio_RSA_PUBKEY"
 	"PEM_write_bio_SSL_SESSION"
 	"PEM_write_bio_X509"
 	"PEM_write_bio_X509_AUX"
@@ -1351,7 +1207,6 @@
 	"d2i_NETSCAPE_SPKAC"
 	"d2i_NETSCAPE_SPKI"
 	"d2i_NOTICEREF"
-	"d2i_Netscape_RSA"
 	"d2i_OCSP_BASICRESP"
 	"d2i_OCSP_CERTID"
 	"d2i_OCSP_CERTSTATUS"
@@ -1427,7 +1282,6 @@
 	"i2d_NETSCAPE_SPKAC"
 	"i2d_NETSCAPE_SPKI"
 	"i2d_NOTICEREF"
-	"i2d_Netscape_RSA"
 	"i2d_OCSP_BASICRESP"
 	"i2d_OCSP_CERTID"
 	"i2d_OCSP_CERTSTATUS"
@@ -1506,7 +1360,10 @@
 	"sk_TYPE_value"
 	"sk_TYPE_zero"
 
-[{"match_type": "protocol/ASN1", "language": "all", "encryption_library": "OpenSSL", "encryption_api_usage": "call"}]
+[{"encryption_library":"OpenSSL", "match_type":"algorithm/hash/RIPEMD", "encryption_api_usage":"call", "language":"all"}]
+	"EVP_ripemd160"
+
+[{"encryption_library":"OpenSSL", "match_type":"protocol/ASN1", "encryption_api_usage":"call", "language":"all"}]
 	"ASN1_ENUMERATED_get"
 	"ASN1_ENUMERATED_get_int64"
 	"ASN1_ENUMERATED_set"
@@ -1596,7 +1453,7 @@
 	"i2d_ASN1_VISIBLESTRING"
 	"i2d_ASN1_bio_stream"
 
-[{"match_type": "protocol/SSL", "language": "all", "encryption_library": "OpenSSL", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"OpenSSL", "match_type":"protocol/SSL", "encryption_api_usage":"data_type", "language":"all"}]
 	"SSL_R_BAD_DECOMPRESSION"
 	"SSL_R_BAD_DH_G_LENGTH"
 	"SSL_R_BAD_DH_PUB_KEY_LENGTH"
@@ -1609,7 +1466,27 @@
 	"SSL_R_BAD_ECC_CERT"
 	"SSL_F_SSL3_GET_KEY_EXCHANGE"
 
-[{"match_type": "algorithm/symmetric/block-cipher/Blowfish", "language": "all", "encryption_library": "OpenSSL", "encryption_api_usage": "call"}]
+[{"encryption_library":"OpenSSL", "match_type":"algorithm/symmetric/block-cipher/AES", "encryption_api_usage":"call", "language":"all"}]
+	"EVP_aes_128_cbc"
+	"EVP_aes_128_ccm"
+	"EVP_aes_128_cfb"
+	"EVP_aes_128_ecb"
+	"EVP_aes_128_gcm"
+	"EVP_aes_128_ofb"
+	"EVP_aes_192_cbc"
+	"EVP_aes_192_ccm"
+	"EVP_aes_192_cfb"
+	"EVP_aes_192_ecb"
+	"EVP_aes_192_gcm"
+	"EVP_aes_192_ofb"
+	"EVP_aes_256_cbc"
+	"EVP_aes_256_ccm"
+	"EVP_aes_256_cfb"
+	"EVP_aes_256_ecb"
+	"EVP_aes_256_gcm"
+	"EVP_aes_256_ofb"
+
+[{"encryption_library":"OpenSSL", "match_type":"algorithm/symmetric/block-cipher/Blowfish", "encryption_api_usage":"call", "language":"all"}]
 	"BF_cbc_encrypt"
 	"BF_cfb64_encrypt"
 	"BF_decrypt"
@@ -1618,8 +1495,12 @@
 	"BF_ofb64_encrypt"
 	"BF_options"
 	"BF_set_key"
+	"EVP_bf_cbc"
+	"EVP_bf_cfb"
+	"EVP_bf_ecb"
+	"EVP_bf_ofb"
 
-[{"match_type": "algorithm/symmetric/block-cipher/DES", "language": "all", "encryption_library": "OpenSSL", "encryption_api_usage": "call"}]
+[{"encryption_library":"OpenSSL", "match_type":"algorithm/symmetric/block-cipher/DES", "encryption_api_usage":"call", "language":"all"}]
 	"des_modes"
 	"DES_cbc_cksum"
 	"DES_cfb64_encrypt"
@@ -1650,8 +1531,27 @@
 	"DES_string_to_2keys"
 	"DES_string_to_key"
 	"DES_xcbc_encrypt"
+	"EVP_des_cbc"
+	"EVP_des_cfb"
+	"EVP_des_ecb"
+	"EVP_des_ede"
+	"EVP_des_ede3"
+	"EVP_des_ede3_cbc"
+	"EVP_des_ede3_cfb"
+	"EVP_des_ede3_ofb"
+	"EVP_des_ede_cbc"
+	"EVP_des_ede_cfb"
+	"EVP_des_ede_ofb"
+	"EVP_des_ofb"
+	"EVP_desx_cbc"
 
-[{"match_type": "algorithm/asymmetric/DiffieHellman", "language": "all", "encryption_library": "OpenSSL", "encryption_api_usage": "call"}]
+[{"encryption_library":"OpenSSL", "match_type":"algorithm/symmetric/block-cipher/RC5", "encryption_api_usage":"call", "language":"all"}]
+	"EVP_rc5_32_12_16_cbc"
+	"EVP_rc5_32_12_16_cfb"
+	"EVP_rc5_32_12_16_ecb"
+	"EVP_rc5_32_12_16_ofb"
+
+[{"encryption_library":"OpenSSL", "match_type":"algorithm/asymmetric/DiffieHellman", "encryption_api_usage":"call", "language":"all"}]
 	"DH_OpenSSL"
 	"DH_bits"
 	"DH_check"
@@ -1709,8 +1609,26 @@
 	"d2i_DHxparams"
 	"i2d_DHparams"
 	"i2d_DHxparams"
+	"ENGINE_get_DH"
+	"ENGINE_get_default_DH"
+	"ENGINE_register_DH"
+	"ENGINE_register_all_DH"
+	"ENGINE_set_DH"
+	"ENGINE_set_default_DH"
+	"ENGINE_unregister_DH"
+	"EVP_PKEY_CTX_set_dh_paramgen_generator"
+	"EVP_PKEY_CTX_set_dh_paramgen_prime_len"
+	"EVP_PKEY_assign_DH"
+	"EVP_PKEY_get0_DH"
+	"EVP_PKEY_get1_DH"
+	"EVP_PKEY_set1_DH"
+	"PEM_read_bio_DHparams"
+	"PEM_write_DHparams"
+	"PEM_write_DHxparams"
+	"PEM_write_bio_DHparams"
+	"PEM_write_bio_DHxparams"
 
-[{"match_type": "algorithm/asymmetric/DSA", "language": "all", "encryption_library": "OpenSSL", "encryption_api_usage": "call"}]
+[{"encryption_library":"OpenSSL", "match_type":"algorithm/asymmetric/DSA", "encryption_api_usage":"call", "language":"all"}]
 	"DSA_OpenSSL"
 	"DSA_SIG_free"
 	"DSA_SIG_get0"
@@ -1792,8 +1710,29 @@
 	"i2d_DSA_PUBKEY_fp"
 	"i2d_DSA_SIG"
 	"i2d_DSAparams"
+	"ENGINE_get_DSA"
+	"ENGINE_get_default_DSA"
+	"ENGINE_register_DSA"
+	"ENGINE_register_all_DSA"
+	"ENGINE_set_DSA"
+	"ENGINE_set_default_DSA"
+	"ENGINE_unregister_DSA"
+	"EVP_PKEY_CTX_set_dsa_paramgen_bits"
+	"EVP_PKEY_assign_DSA"
+	"EVP_PKEY_get0_DSA"
+	"EVP_PKEY_get1_DSA"
+	"EVP_PKEY_set1_DSA"
+	"PEM_read_bio_DSAPrivateKey"
+	"PEM_read_bio_DSA_PUBKEY"
+	"PEM_read_bio_DSAparams"
+	"PEM_write_DSAPrivateKey"
+	"PEM_write_DSA_PUBKEY"
+	"PEM_write_DSAparams"
+	"PEM_write_bio_DSAPrivateKey"
+	"PEM_write_bio_DSA_PUBKEY"
+	"PEM_write_bio_DSAparams"
 
-[{"match_type": "algorithm/asymmetric/ECC", "language": "all", "encryption_library": "OpenSSL", "encryption_api_usage": "call"}]
+[{"encryption_library":"OpenSSL", "match_type":"algorithm/asymmetric/ECC", "encryption_api_usage":"call", "language":"all"}]
 	"ECDH_get_ex_data"
 	"ECDH_get_ex_new_index"
 	"ECDH_set_ex_data"
@@ -1950,8 +1889,34 @@
 	"i2d_EC_PUBKEY"
 	"i2d_EC_PUBKEY_bio"
 	"i2d_EC_PUBKEY_fp"
+	"ENGINE_get_ECDH"
+	"ENGINE_get_ECDSA"
+	"ENGINE_get_default_ECDH"
+	"ENGINE_get_default_ECDSA"
+	"ENGINE_register_ECDH"
+	"ENGINE_register_ECDSA"
+	"ENGINE_register_all_ECDH"
+	"ENGINE_register_all_ECDSA"
+	"ENGINE_set_ECDH"
+	"ENGINE_set_ECDSA"
+	"ENGINE_set_default_ECDH"
+	"ENGINE_set_default_ECDSA"
+	"ENGINE_unregister_ECDH"
+	"ENGINE_unregister_ECDSA"
+	"EVP_PKEY_assign_EC_KEY"
+	"EVP_PKEY_get0_EC_KEY"
+	"EVP_PKEY_get1_EC_KEY"
+	"EVP_PKEY_set1_EC_KEY"
+	"PEM_read_bio_ECPKParameters"
+	"PEM_read_bio_EC_PUBKEY"
+	"PEM_write_ECPKParameters"
+	"PEM_write_ECPrivateKey"
+	"PEM_write_EC_PUBKEY"
+	"PEM_write_bio_ECPKParameters"
+	"PEM_write_bio_ECPrivateKey"
+	"PEM_write_bio_EC_PUBKEY"
 
-[{"match_type": "algorithm/hash/HMAC", "language": "all", "encryption_library": "OpenSSL", "encryption_api_usage": "call"}]
+[{"encryption_library":"OpenSSL", "match_type":"algorithm/hash/HMAC", "encryption_api_usage":"call", "language":"all"}]
 	"HMAC_CTX_copy"
 	"HMAC_CTX_free"
 	"HMAC_CTX_get_md"
@@ -1962,8 +1927,9 @@
 	"HMAC_Init"
 	"HMAC_Init_ex"
 	"HMAC_Update"
+	"EVP_PKEY_get0_hmac"
 
-[{"match_type": "algorithm/hash/MD", "language": "all", "encryption_library": "OpenSSL", "encryption_api_usage": "call"}]
+[{"encryption_library":"OpenSSL", "match_type":"algorithm/hash/MD", "encryption_api_usage":"call", "language":"all"}]
 	"MD2_Final"
 	"MD2_Init"
 	"MD2_Update"
@@ -1973,11 +1939,17 @@
 	"MD5_Final"
 	"MD5_Init"
 	"MD5_Update"
+	"EVP_md2"
+	"EVP_md5"
+	"EVP_md_null"
+
+[{"encryption_library":"OpenSSL", "match_type":"algorithm/hash/MDC-2", "encryption_api_usage":"call", "language":"all"}]
+	"EVP_mdc2"
 	"MDC2_Final"
 	"MDC2_Init"
 	"MDC2_Update"
 
-[{"match_type": "protocol/PKCS", "language": "all", "encryption_library": "OpenSSL", "encryption_api_usage": "call"}]
+[{"encryption_library":"OpenSSL", "match_type":"protocol/PKCS", "encryption_api_usage":"call", "language":"all"}]
 	"PKCS12_BAGS_free"
 	"PKCS12_BAGS_new"
 	"PKCS12_MAC_DATA_free"
@@ -2452,7 +2424,7 @@
 	"i2d_re_X509_REQ_tbs"
 	"i2d_re_X509_tbs"
 
-[{"match_type": "algorithm/RNG", "language": "all", "encryption_library": "OpenSSL", "encryption_api_usage": "call"}]
+[{"encryption_library":"OpenSSL", "match_type":"algorithm/RNG", "encryption_api_usage":"call", "language":"all"}]
 	"RAND_OpenSSL"
 	"RAND_add"
 	"RAND_bytes"
@@ -2471,16 +2443,18 @@
 	"RAND_status"
 	"RAND_write_file"
 
-[{"match_type": "algorithm/symmetric/stream-cipher/RC4", "language": "all", "encryption_library": "OpenSSL", "encryption_api_usage": "call"}]
+[{"encryption_library":"OpenSSL", "match_type":"algorithm/symmetric/stream-cipher/RC4", "encryption_api_usage":"call", "language":"all"}]
 	"RC4_set_key"
+	"EVP_rc4"
+	"EVP_rc4_40"
 
-[{"match_type": "algorithm/symmetric/block-cipher/CAST", "language": "all", "encryption_library": "OpenSSL", "encryption_api_usage": "call"}]
+[{"encryption_library":"OpenSSL", "match_type":"algorithm/symmetric/block-cipher/CAST", "encryption_api_usage":"call", "language":"all"}]
 	"EVP_cast5_cbc"
 	"EVP_cast5_cfb"
 	"EVP_cast5_ecb"
 	"EVP_cast5_ofb"
 
-[{"match_type": "algorithm/asymmetric/RSA", "language": "all", "encryption_library": "OpenSSL", "encryption_api_usage": "call"}]
+[{"encryption_library":"OpenSSL", "match_type":"algorithm/asymmetric/RSA", "encryption_api_usage":"call", "language":"all"}]
 	"RSAPrivateKey_dup"
 	"RSAPublicKey_dup"
 	"RSA_OAEP_PARAMS_free"
@@ -2591,8 +2565,37 @@
 	"i2d_RSA_PUBKEY"
 	"i2d_RSA_PUBKEY_bio"
 	"i2d_RSA_PUBKEY_fp"
+	"ENGINE_get_RSA"
+	"ENGINE_get_default_RSA"
+	"ENGINE_register_RSA"
+	"ENGINE_register_all_RSA"
+	"ENGINE_set_RSA"
+	"ENGINE_set_default_RSA"
+	"ENGINE_unregister_RSA"
+	"EVP_PKEY_CTX_set_rsa_keygen_pubexp"
+	"EVP_PKEY_CTX_set_rsa_padding"
+	"EVP_PKEY_CTX_set_rsa_pss_saltlen"
+	"EVP_PKEY_CTX_set_rsa_rsa_keygen_bits"
+	"EVP_PKEY_assign_RSA"
+	"EVP_PKEY_get0_RSA"
+	"EVP_PKEY_get1_RSA"
+	"EVP_PKEY_set1_RSA"
+	"PEM_read_RSAPrivateKey"
+	"PEM_read_RSAPublicKey"
+	"PEM_read_RSA_PUBKEY"
+	"PEM_read_bio_RSAPrivateKey"
+	"PEM_read_bio_RSAPublicKey"
+	"PEM_read_bio_RSA_PUBKEY"
+	"PEM_write_RSAPrivateKey"
+	"PEM_write_RSAPublicKey"
+	"PEM_write_RSA_PUBKEY"
+	"PEM_write_bio_RSAPrivateKey"
+	"PEM_write_bio_RSAPublicKey"
+	"PEM_write_bio_RSA_PUBKEY"
+	"d2i_Netscape_RSA"
+	"i2d_Netscape_RSA"
 
-[{"match_type": "algorithm/hash/SHA", "language": "all", "encryption_library": "OpenSSL", "encryption_api_usage": "call"}]
+[{"encryption_library":"OpenSSL", "match_type":"algorithm/hash/SHA", "encryption_api_usage":"call", "language":"all"}]
 	"SHA1_Final"
 	"SHA1_Init"
 	"SHA1_Update"
@@ -2605,12 +2608,17 @@
 	"SHA512_Final"
 	"SHA512_Init"
 	"SHA512_Update"
+	"EVP_sha1"
+	"EVP_sha224"
+	"EVP_sha256"
+	"EVP_sha384"
+	"EVP_sha512"
 
-[{"match_type": "protocol/TLS", "language": "all", "encryption_library": "OpenSSL", "encryption_api_usage": "call"}]
+[{"encryption_library":"OpenSSL", "match_type":"protocol/TLS", "encryption_api_usage":"call", "language":"all"}]
 	"TLS_FEATURE_free"
 	"TLS_FEATURE_new"
 
-[{"match_type": "algorithm/symmetric/block-cipher/RC2", "language": "all", "encryption_library": "OpenSSL", "encryption_api_usage": "call"}]
+[{"encryption_library":"OpenSSL", "match_type":"algorithm/symmetric/block-cipher/RC2", "encryption_api_usage":"call", "language":"all"}]
 	"EVP_rc2_40_cbc"
 	"EVP_rc2_64_cbc"
 	"EVP_rc2_cbc"
@@ -2618,22 +2626,31 @@
 	"EVP_rc2_ecb"
 	"EVP_rc2_ofb"
 
+[{"encryption_library":"OpenSSL", "match_type":"algorithm/hash/BLAKE", "encryption_api_usage":"data_type", "language":"all"}]
+	"EVP_blake2b_512"
+	"EVP_blake2s_256"
 
-[{"match_type": "algorithm/asymmetric/DiffieHellman", "language": "all", "encryption_library": "OpenSSL", "encryption_api_usage": "include"}]
+[{"encryption_library":"OpenSSL", "match_type":"algorithm/symmetric/block-cipher/IDEA", "encryption_api_usage":"data_type", "language":"all"}]
+	"EVP_idea_cbc"
+	"EVP_idea_cfb"
+	"EVP_idea_ecb"
+	"EVP_idea_ofb"
+
+[{"encryption_library":"OpenSSL", "match_type":"algorithm/asymmetric/DiffieHellman", "encryption_api_usage":"include", "language":"all"}]
 	"dh.h"
 
-[{"match_type": "algorithm/asymmetric/ECC", "language": "all", "encryption_library": "OpenSSL", "encryption_api_usage": "include"}]
+[{"encryption_library":"OpenSSL", "match_type":"algorithm/asymmetric/ECC", "encryption_api_usage":"include", "language":"all"}]
 	"ecdsa.h"
 	"ecdh.h"
 
-[{"match_type": "library/OpenSSL", "language": "all", "encryption_library": "OpenSSL", "encryption_api_usage": "include"}]
+[{"encryption_library":"OpenSSL", "match_type":"library/OpenSSL", "encryption_api_usage":"include", "language":"all"}]
 	"evp.h"
 
-
-
+####################################################################################################
 ### Crypto++
+####################################################################################################
 
-[{"match_type": "library/Crypto++", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"library/Crypto++", "encryption_api_usage":"data_type", "language":"all"}]
 	"AbstractEuclideanDomain"
 	"AdditiveCipherAbstractPolicy"
 	"AdditiveCipherConcretePolicy"
@@ -2879,16 +2896,16 @@
 	"ZlibCompressor"
 	"ZlibDecompressor"
 
-[{"match_type": "algorithm/asymmetric/Rabin", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/asymmetric/Rabin", "encryption_api_usage":"data_type", "language":"all"}]
 	"InvertibleRabinFunction"
 	"RabinES"
 	"RabinFunction"
 	"RabinSS"
 
-[{"match_type": "algorithm/asymmetric/XTR", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/asymmetric/XTR", "encryption_api_usage":"data_type", "language":"all"}]
 	"XTR_DH"
 
-[{"match_type": "algorithm/RNG", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/RNG", "encryption_api_usage":"data_type", "language":"all"}]
 	"AutoSeededRandomPool"
 	"AutoSeededX917RNG"
 	"ClassNullRNG"
@@ -2907,7 +2924,7 @@
 	"RDSEED_Err"
 	"X917RNG"
 
-[{"match_type": "algorithm/hash/BLAKE", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/hash/BLAKE", "encryption_api_usage":"data_type", "language":"all"}]
 	"BLAKE2_Base"
 	"BLAKE2_Info"
 	"BLAKE2_ParameterBlock"
@@ -2917,24 +2934,24 @@
 	"BLAKE2b"
 	"BLAKE2s"
 
-[{"match_type": "algorithm/symmetric/block-cipher/Blowfish", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/Blowfish", "encryption_api_usage":"data_type", "language":"all"}]
 	"Blowfish_Info"
 
-[{"match_type": "algorithm/symmetric/block-cipher/Camellia", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/Camellia", "encryption_api_usage":"data_type", "language":"all"}]
 	"Camellia_Info"
 
-[{"match_type": "algorithm/symmetric/block-cipher/CAST", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/CAST", "encryption_api_usage":"data_type", "language":"all"}]
 	"CAST128_Info"
 	"CAST256_Info"
 
-[{"match_type": "algorithm/symmetric/stream-cipher/ChaCha20", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/stream-cipher/ChaCha20", "encryption_api_usage":"data_type", "language":"all"}]
 	"ChaCha12"
 	"ChaCha20"
 	"ChaCha8"
 	"ChaCha_Info"
 	"ChaCha_Policy"
 
-[{"match_type": "algorithm/symmetric/block-cipher/DES", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/DES", "encryption_api_usage":"data_type", "language":"all"}]
 	"DES_EDE2"
 	"DES_EDE2_Info"
 	"DES_EDE3"
@@ -2944,11 +2961,11 @@
 	"DES_XEX3_Info"
 	"RawDES"
 
-[{"match_type": "algorithm/asymmetric/DiffieHellman", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/asymmetric/DiffieHellman", "encryption_api_usage":"data_type", "language":"all"}]
 	"DH2("
 	"DH_Domain"
 
-[{"match_type": "algorithm/asymmetric/ECC", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/asymmetric/ECC", "encryption_api_usage":"data_type", "language":"all"}]
 	"DL_PublicKey_EC"
 	"DL_PrivateKey_EC"
 	"DL_GroupParameters_EC"
@@ -2964,33 +2981,33 @@
 	"ECFHMQV"
 	"ECHMQV"
 
-[{"match_type": "algorithm/symmetric/block-cipher/BTEA", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/BTEA", "encryption_api_usage":"data_type", "language":"all"}]
 	"BTEA_Info"
 	"BTEA"
 
-[{"match_type": "algorithm/symmetric/block-cipher/GOST", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/GOST", "encryption_api_usage":"data_type", "language":"all"}]
 	"GOST_Info"
 
-[{"match_type": "algorithm/hash/HMAC", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/hash/HMAC", "encryption_api_usage":"data_type", "language":"all"}]
 	"HMAC_Base"
 
-[{"match_type": "algorithm/symmetric/block-cipher/IDEA", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/IDEA", "encryption_api_usage":"data_type", "language":"all"}]
 	"IDEA_Info"
 
-[{"match_type": "algorithm/symmetric/block-cipher/MARS", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/MARS", "encryption_api_usage":"data_type", "language":"all"}]
 	"MARS_Info"
 
-[{"match_type": "algorithm/symmetric/block-cipher/MDC", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/hash/MDC", "encryption_api_usage":"data_type", "language":"all"}]
 	"MDC_Info"
 
-[{"match_type": "algorithm/symmetric/block-cipher/Twofish", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/Twofish", "encryption_api_usage":"data_type", "language":"all"}]
 	"Twofish_Info"
 
-[{"match_type": "algorithm/symmetric/block-cipher/Threeway", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/Threeway", "encryption_api_usage":"data_type", "language":"all"}]
 	"ThreeWay"
 	"ThreeWay_Info"
 
-[{"match_type": "algorithm/asymmetric/DSA", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/asymmetric/DSA", "encryption_api_usage":"data_type", "language":"all"}]
 	"DL_Algorithm_GDSA"
 	"DL_GroupParameters_DSA"
 	"DL_Keys_DSA"
@@ -2998,13 +3015,13 @@
 	"DSA2"
 	"GDSA"
 
-[{"match_type": "algorithm/asymmetric/ElGamal", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/asymmetric/ElGamal", "encryption_api_usage":"data_type", "language":"all"}]
 	"DL_ElgamalLikeSignatureAlgorithm"
 	"ElGamalBase"
 	"ElGamalKeys"
 	"ElGamalObjectImpl"
 
-[{"match_type": "algorithm/asymmetric/RSA", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/asymmetric/RSA", "encryption_api_usage":"data_type", "language":"all"}]
 	"InvertibleRSAFunction"
 	"InvertibleRSAFunction_ISO"
 	"RSA_ISO"
@@ -3021,7 +3038,7 @@
 	"RSASSA_PKCS1v15_SHA_Signer"
 	"RSASSA_PKCS1v15_SHA_Verifier"
 
-[{"match_type": "algorithm/hash/SHA", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/hash/SHA", "encryption_api_usage":"data_type", "language":"all"}]
 	"Keccak"
 	"Keccak_224"
 	"Keccak_256"
@@ -3030,22 +3047,22 @@
 	"Keccak_Final"
 	"SHA3_Final"
 
-[{"match_type": "algorithm/symmetric/block-cipher/SHACAL", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/SHACAL", "encryption_api_usage":"data_type", "language":"all"}]
 	"SHACAL2"
 	"SHACAL2_Info"
 
-[{"match_type": "algorithm/symmetric/stream-cipher/PANAMA", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/stream-cipher/PANAMA", "encryption_api_usage":"data_type", "language":"all"}]
 	"PanamaCipher"
 	"PanamaCipherInfo"
 	"PanamaCipherPolicy"
 
-[{"match_type": "algorithm/symmetric/stream-cipher/WAKE", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/stream-cipher/WAKE", "encryption_api_usage":"data_type", "language":"all"}]
 	"WAKE_Base"
 	"WAKE_OFB"
 	"WAKE_OFB_Info"
 	"WAKE_Policy"
 
-[{"match_type": "protocol/PKCS", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"protocol/PKCS", "encryption_api_usage":"data_type", "language":"all"}]
 	"PK_CryptoSystem"
 	"PK_Decryptor"
 	"PK_DecryptorFilter"
@@ -3074,92 +3091,89 @@
 	"PKCS_DigestDecoration"
 	"PKCS_EncryptionPaddingScheme"
 
-[{"match_type": "algorithm/symmetric/block-cipher/RC2", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/RC2", "encryption_api_usage":"data_type", "language":"all"}]
 	"RC2_Info"
 
-[{"match_type": "algorithm/symmetric/block-cipher/RC5", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/RC5", "encryption_api_usage":"data_type", "language":"all"}]
 	"RC5_Info"
 
-[{"match_type": "algorithm/symmetric/block-cipher/RC6", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/RC6", "encryption_api_usage":"data_type", "language":"all"}]
 	"RC6_Info"
 
-[{"match_type": "algorithm/symmetric/block-cipher/Rijndael", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/Rijndael", "encryption_api_usage":"data_type", "language":"all"}]
 	"Rijndael_Info"
 
-[{"match_type": "algorithm/asymmetric/RabinWilliams", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/asymmetric/RabinWilliams", "encryption_api_usage":"data_type", "language":"all"}]
 	"RWFunction"
 	"RWSS"
 	"InvertibleRWFunction"
 
-[{"match_type": "algorithm/symmetric/block-cipher/SAFER", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/SAFER", "encryption_api_usage":"data_type", "language":"all"}]
 	"SAFER("
 	"SAFER_Impl"
 	"SAFER_K_Info"
 	"SAFER_SK_Info"
 
-[{"match_type": "algorithm/symmetric/stream-cipher/Salsa20", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/stream-cipher/Salsa20", "encryption_api_usage":"data_type", "language":"all"}]
 	"Salsa20_Info"
 	"Salsa20_Policy"
 
-[{"match_type": "algorithm/symmetric/stream-cipher/XSalsa20", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/stream-cipher/XSalsa20", "encryption_api_usage":"data_type", "language":"all"}]
 	"XSalsa20_Info"
 	"XSalsa20_Policy"
 
-[{"match_type": "algorithm/symmetric/stream-cipher/SEAL", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/stream-cipher/SEAL", "encryption_api_usage":"data_type", "language":"all"}]
 	"SEAL_Gamma"
 	"SEAL_Info"
 	"SEAL_Policy"
 
-[{"match_type": "algorithm/symmetric/block-cipher/SEED", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/SEED", "encryption_api_usage":"data_type", "language":"all"}]
 	"SEED_Info"
 
-[{"match_type": "algorithm/symmetric/block-cipher/Serpent", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/Serpent", "encryption_api_usage":"data_type", "language":"all"}]
 	"Serpent_Info"
 
-[{"match_type": "algorithm/symmetric/block-cipher/SHARK", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/SHARK", "encryption_api_usage":"data_type", "language":"all"}]
 	"SHARK_Info"
 	"SharkProcessAndXorBlock"
 
-[{"match_type": "algorithm/symmetric/block-cipher/Skipjack", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/Skipjack", "encryption_api_usage":"data_type", "language":"all"}]
 	"SKIPJACK("
 	"SKIPJACK_Info"
 
-[{"match_type": "algorithm/symmetric/stream-cipher/SOSEMANUK", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/stream-cipher/SOSEMANUK", "encryption_api_usage":"data_type", "language":"all"}]
 	"SosemanukInfo"
 	"SosemanukPolicy"
 
-[{"match_type": "algorithm/symmetric/block-cipher/TEA", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/TEA", "encryption_api_usage":"data_type", "language":"all"}]
 	"TEA_Info"
 
-[{"match_type": "algorithm/symmetric/block-cipher/XTEA", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/XTEA", "encryption_api_usage":"data_type", "language":"all"}]
 	"XTEA_Info"
 
-[{"match_type": "library/Crypto++", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "include"}]
+[{"encryption_library":"Crypto++", "match_type":"library/Crypto++", "encryption_api_usage":"include", "language":"all"}]
 	"cryptlib.h"
 
-[{"match_type": "algorithm/symmetric/block-cipher/IDEA", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "include"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/IDEA", "encryption_api_usage":"include", "language":"all"}]
 	"idea.h"
 
-[{"match_type": "algorithm/symmetric/block-cipher/GOST", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "include"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/GOST", "encryption_api_usage":"include", "language":"all"}]
 	"gost.h"
 
-[{"match_type": "algorithm/symmetric/block-cipher/Camellia", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "include"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/Camellia", "encryption_api_usage":"include", "language":"all"}]
 	"camellia.h"
 
-[{"match_type": "algorithm/symmetric/block-cipher/Feistel", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "include"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/Feistel", "encryption_api_usage":"include", "language":"all"}]
 	"lubyrack.h"
 
-[{"match_type": "algorithm/symmetric/block-cipher/Skipjack", "language": "all", "encryption_library": "Crypto++", "encryption_api_usage": "include"}]
+[{"encryption_library":"Crypto++", "match_type":"algorithm/symmetric/block-cipher/Skipjack", "encryption_api_usage":"include", "language":"all"}]
 	"skipjack.h"
 
-
-
-
-
+####################################################################################################
 ### libGCrypt
+####################################################################################################
 
-
-[{"match_type": "library/libgcrypt", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"library/libgcrypt", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_CIPHER_MODE_NONE"
 	"GCRY_CIPHER_MODE_ECB"
 	"GCRY_CIPHER_MODE_CFB"
@@ -3289,19 +3303,19 @@
 	"pk_encoding_ctx"
 	"primepool_s"
 
-[{"match_type": "algorithm/MAC/Poly1305", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/MAC/Poly1305", "encryption_api_usage":"data_type", "language":"all"}]
 	"poly1305_context_s"
 	"poly1305_key_s"
 	"poly1305_ops_s"
 	"poly1305_state_ref32_s"
 	"poly1305mac_context_s"
 
-[{"match_type": "library/libgcrypt", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "include"}]
+[{"encryption_library":"libgcrypt", "match_type":"library/libgcrypt", "encryption_api_usage":"include", "language":"all"}]
 	"gcrypt.h"
 	"GCRYPT_NO_MPI_MACROS"
 	"GCRYPT_NO_DEPRECATED"
 
-[{"match_type": "library/libgcrypt", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "call"}]
+[{"encryption_library":"libgcrypt", "match_type":"library/libgcrypt", "encryption_api_usage":"call", "language":"all"}]
 	"gcry_cipher_close"
 	"gcry_cipher_setkey"
 	"gcry_cipher_setiv"
@@ -3428,7 +3442,7 @@
 	"gcry_check_version"
 	"gcry_control"
 
-[{"match_type": "protocol/MAC", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "call"}]
+[{"encryption_library":"libgcrypt", "match_type":"protocol/MAC", "encryption_api_usage":"call", "language":"all"}]
 	"gcry_mac_open"
 	"gcry_mac_setkey"
 	"gcry_mac_setiv"
@@ -3443,7 +3457,7 @@
 	"gcry_mac_get_algo_maclen"
 	"gcry_mac_get_algo_keylen"
 
-[{"match_type": "algorithm/hash/MD", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "call"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/hash/MD", "encryption_api_usage":"call", "language":"all"}]
 	"gcry_md_open"
 	"gcry_md_enable"
 	"gcry_md_setkey"
@@ -3468,7 +3482,7 @@
 	"gcry_strerror"
 	"gcry_strsource"
 
-[{"match_type": "algorithm/hybrid/PGP", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/hybrid/PGP", "encryption_api_usage":"data_type", "language":"all"}]
 	"GPG_ERR_SOURCE_UNKNOWN"
 	"GPG_ERR_SOURCE_GPG"
 	"GPG_ERR_SOURCE_GPGSM"
@@ -3499,14 +3513,14 @@
 	"GPG_ERR_NO_PUBKEY"
 	"GPG_ERR_NOT_OPERATIONAL"
 
-[{"match_type": "algorithm/hash/HMAC", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/hash/HMAC", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_MD_FLAG_HMAC"
 	"GCRY_MAC_HMAC_MD5"
 	"GCRY_MAC_HMAC_MD4"
 	"GCRY_MAC_HMAC_RMD160"
 	"hmac256_context"
 
-[{"match_type": "algorithm/hash/MD", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/hash/MD", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_MD_NONE"
 	"GCRY_MD_RMD160"
 	"GCRY_MD_MD5"
@@ -3518,16 +3532,16 @@
 	"MD5_CONTEXT"
 	"RMD160_CONTEXT"
 
-[{"match_type": "algorithm/hash/TIGER", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/hash/TIGER", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_MD_TIGER"
 	"GCRY_MD_TIGER1"
 	"GCRY_MD_TIGER2"
 	"TIGER_CONTEXT"
 
-[{"match_type": "algorithm/hash/HAVAL", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/hash/HAVAL", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_MD_HAVAL"
 
-[{"match_type": "algorithm/hash/SHA", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/hash/SHA", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_MD_SHA1"
 	"GCRY_MD_SHA224"
 	"GCRY_MD_SHA256"
@@ -3546,45 +3560,39 @@
 	"SHA512_CONTEXT"
 	"SHA512_STATE"
 
-[{"match_type": "algorithm/hash/CRC", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
-	"GCRY_MD_CRC32"
-	"GCRY_MD_CRC32_RFC1510"
-	"GCRY_MD_CRC24_RFC2440"
-	"RFC2268_context"
-
-[{"match_type": "algorithm/hash/Whrilpool", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/hash/Whirlpool", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_MD_WHIRLPOOL"
 	"GCRY_MAC_HMAC_WHIRLPOOL"
 	"whirlpool_context_t"
 	"whirlpool_tables_s"
 
-[{"match_type": "algorithm/hash/GOST", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/hash/GOST", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_MD_GOSTR3411_94"
 	"GCRY_MAC_HMAC_GOSTR3411_94"
 	"GOSTR3411_CONTEXT"
 
-[{"match_type": "algorithm/hash/STRIBOG", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/hash/STRIBOG", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_MD_STRIBOG256"
 	"GCRY_MD_STRIBOG512"
 	"GCRY_MAC_HMAC_STRIBOG256"
 	"STRIBOG_CONTEXT"
 
-[{"match_type": "algorithm/asymmetric/ECC", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/asymmetric/ECC", "encryption_api_usage":"data_type", "language":"all"}]
 	"elliptic_curve_t"
 	"ecc_domain_parms_t"
 	"ECC_public_key"
 	"ECC_secret_key"
 	"mpi_ec_ctx_s"
 
-[{"match_type": "algorithm/asymmetric/ElGamal", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/asymmetric/ElGamal", "encryption_api_usage":"data_type", "language":"all"}]
 	"ELG_public_key"
 	"ELG_secret_key"
 
-[{"match_type": "algorithm/asymmetric/RSA", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/asymmetric/RSA", "encryption_api_usage":"data_type", "language":"all"}]
 	"RSA_public_key"
 	"RSA_secret_key"
 
-[{"match_type": "algorithm/asymmetric/ECC", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "call"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/asymmetric/ECC", "encryption_api_usage":"call", "language":"all"}]
 	"gcry_mpi_ec_p_new"
 	"gcry_mpi_ec_get_mpi"
 	"gcry_mpi_ec_get_point"
@@ -3596,12 +3604,12 @@
 	"gcry_mpi_ec_mul"
 	"gcry_mpi_ec_curve_point"
 
-[{"match_type": "algorithm/symmetric/block-cipher/IDEA", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/symmetric/block-cipher/IDEA", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_CIPHER_IDEA"
 	"GCRY_MAC_CMAC_IDEA"
 	"IDEA_context"
 
-[{"match_type": "algorithm/symmetric/block-cipher/DES", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/symmetric/block-cipher/DES", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_CIPHER_3DES"
 	"GCRY_CIPHER_DES_SK"
 	"GCRY_CIPHER_DES"
@@ -3609,20 +3617,20 @@
 	"_des_ctx"
 	"_tripledes_ctx"
 
-[{"match_type": "algorithm/symmetric/block-cipher/CAST", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/symmetric/block-cipher/CAST", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_CIPHER_CAST5"
 	"GCRY_MAC_CMAC_CAST5"
 	"CAST5_context"
 
-[{"match_type": "algorithm/symmetric/block-cipher/Blowfish", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/symmetric/block-cipher/Blowfish", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_CIPHER_BLOWFISH"
 	"GCRY_MAC_CMAC_BLOWFISH"
 	"BLOWFISH_context"
 
-[{"match_type": "algorithm/symmetric/block-cipher/SAFER", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/symmetric/block-cipher/SAFER", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_CIPHER_SAFER_SK128"
 
-[{"match_type": "algorithm/symmetric/block-cipher/AES", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/symmetric/block-cipher/AES", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_CIPHER_AES"
 	"GCRY_CIPHER_AES128"
 	"GCRY_CIPHER_RIJNDAEL"
@@ -3635,26 +3643,26 @@
 	"GCRY_MAC_GMAC_AES"
 	"RIJNDAEL_context_s"
 
-[{"match_type": "algorithm/asymmetric/DSA", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/asymmetric/DSA", "encryption_api_usage":"data_type", "language":"all"}]
 	"dsa_domain_t"
 	"DSA_public_key"
 	"DSA_secret_key"
 
-[{"match_type": "algorithm/symmetric/stream-cipher/ChaCha20", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/symmetric/stream-cipher/ChaCha20", "encryption_api_usage":"data_type", "language":"all"}]
 	"CHACHA20_context_s"
 
-[{"match_type": "algorithm/symmetric/block-cipher/Twofish", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/symmetric/block-cipher/Twofish", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_CIPHER_TWOFISH"
 	"GCRY_CIPHER_TWOFISH128"
 	"GCRY_MAC_CMAC_TWOFISH"
 	"GCRY_MAC_GMAC_TWOFISH"
 	"TWOFISH_context"
 
-[{"match_type": "algorithm/symmetric/stream-cipher/RC4", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/symmetric/stream-cipher/RC4", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_CIPHER_ARCFOUR"
 	"ARCFOUR_context"
 
-[{"match_type": "algorithm/symmetric/block-cipher/Serpent", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/symmetric/block-cipher/Serpent", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_CIPHER_SERPENT128"
 	"GCRY_CIPHER_SERPENT192"
 	"GCRY_CIPHER_SERPENT256"
@@ -3662,18 +3670,18 @@
 	"GCRY_MAC_GMAC_SERPENT"
 	"serpent_context"
 
-[{"match_type": "algorithm/symmetric/block-cipher/RFC2268", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/symmetric/block-cipher/RFC2268", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_CIPHER_RFC2268_40"
 	"GCRY_CIPHER_RFC2268_128"
 	"GCRY_MAC_CMAC_RFC2268"
 
-[{"match_type": "algorithm/symmetric/block-cipher/SEED", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/symmetric/block-cipher/SEED", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_CIPHER_SEED"
 	"GCRY_MAC_CMAC_SEED"
 	"GCRY_MAC_GMAC_SEED"
 	"SEED_context"
 
-[{"match_type": "algorithm/symmetric/block-cipher/Camellia", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/symmetric/block-cipher/Camellia", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_CIPHER_CAMELLIA128"
 	"GCRY_CIPHER_CAMELLIA192"
 	"GCRY_CIPHER_CAMELLIA256"
@@ -3681,29 +3689,29 @@
 	"GCRY_MAC_GMAC_CAMELLIA"
 	"CAMELLIA_context"
 
-[{"match_type": "algorithm/symmetric/stream-cipher/Salsa20", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/symmetric/stream-cipher/Salsa20", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_CIPHER_SALSA20"
 	"GCRY_CIPHER_SALSA20R12"
 	"SALSA20_context_s"
 
-[{"match_type": "algorithm/symmetric/block-cipher/GOST", "language": "all", "encryption_library": "libgcrypt", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"libgcrypt", "match_type":"algorithm/symmetric/block-cipher/GOST", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_CIPHER_GOST28147"
 	"GCRY_MAC_CMAC_GOST28147"
 	"GOST28147_context"
 	"gost_sbox"
 
-
-
+####################################################################################################
 ### BOTAN
+####################################################################################################
 
-[{"match_type": "library/Botan", "language": "all", "encryption_library": "BOTAN", "encryption_api_usage": "include"}]
+[{"encryption_library":"BOTAN", "match_type":"library/Botan", "encryption_api_usage":"include", "language":"all"}]
 	"botan.h"
 
+####################################################################################################
+### libMD
+####################################################################################################
 
-
-### libmd
-
-[{"match_type": "algorithm/hash/SHA", "language": "all", "encryption_library": "libMD", "encryption_api_usage": "call"}]
+[{"encryption_library":"libMD", "match_type":"algorithm/hash/SHA", "encryption_api_usage":"call", "language":"all"}]
 	"SHA_Init"
 	"SHA_Update"
 	"SHA_Final"
@@ -3723,7 +3731,7 @@
 	"SHA256_FileChunk"
 	"SHA256_Data"
 
-[{"match_type": "algorithm/hash/MD4", "language": "all", "encryption_library": "libMD", "encryption_api_usage": "call"}]
+[{"encryption_library":"libMD", "match_type":"algorithm/hash/MD4", "encryption_api_usage":"call", "language":"all"}]
 	"MD4Init"
 	"MD4Update"
 	"MD4Pad"
@@ -3733,7 +3741,7 @@
 	"MD4FileChunk"
 	"MD4Data"
 
-[{"match_type": "algorithm/hash/MD5", "language": "all", "encryption_library": "libMD", "encryption_api_usage": "call"}]
+[{"encryption_library":"libMD", "match_type":"algorithm/hash/MD5", "encryption_api_usage":"call", "language":"all"}]
 	"MD5Init"
 	"MD5Update"
 	"MD5Pad"
@@ -3743,7 +3751,7 @@
 	"MD5FileChunk"
 	"MD5Data"
 
-[{"match_type": "algorithm/hash/RIPEMD", "language": "all", "encryption_library": "libMD", "encryption_api_usage": "call"}]
+[{"encryption_library":"libMD", "match_type":"algorithm/hash/RIPEMD", "encryption_api_usage":"call", "language":"all"}]
 	"RIPEMD160_Init"
 	"RIPEMD160_Update"
 	"RIPEMD160_Final"
@@ -3752,11 +3760,11 @@
 	"RIPEMD160_FileChunk"
 	"RIPEMD160_Data"
 
-
-
+####################################################################################################
 ### GlibC
+####################################################################################################
 
-[{"match_type": "algorithm/hash/generic", "language": "all", "encryption_library": "glibc", "encryption_api_usage": "call"}]
+[{"encryption_library":"glibc", "match_type":"algorithm/hash/generic", "encryption_api_usage":"call", "language":"all"}]
 	"g_checksum_type_get_length"
 	"g_checksum_new"
 	"g_checksum_copy"
@@ -3769,9 +3777,64 @@
 	"g_compute_checksum_for_string"
 	"g_compute_checksum_for_bytes"
 
-
-
+####################################################################################################
 ### QT
+####################################################################################################
 
-[{"match_type": "algorithm/hash/generic", "language": "all", "encryption_library": "QT", "encryption_api_usage": "data_type"}]
+[{"encryption_library":"QT", "match_type":"algorithm/hash/generic", "encryption_api_usage":"data_type", "language":"all"}]
 	"QCryptographicHash"
+
+
+[{"encryption_library":"QT", "match_type":"protocol/SSL", "encryption_api_usage":"data_type", "language":"all"}]
+	"QSslSocket"
+	"QSslKey"
+	"QSslCertificate"
+	"QSslCipher"
+	"QSslError"
+
+####################################################################################################
+### JAVA SE 7
+###
+###      http://docs.oracle.com/javase/7/docs/api/javax/crypto/package-summary.html
+###      https://docs.oracle.com/javase/7/docs/api/java/security/Signature.html
+####################################################################################################
+
+[{"encryption_library":"javase7", "match_type":"algorithm/asymmetric/DSA", "encryption_api_usage":"call", "language":"all"}]
+	"SHA1withDSA"
+
+[{"encryption_library":"javase7", "match_type":"algorithm/asymmetric/RSA", "encryption_api_usage":"call", "language":"all"}]
+	"SHA1withRSA"
+	"SHA256withRSA"
+	"MD2withRSA"
+	"MD5withRSA"
+
+####################################################################################################
+### WinCrypt
+###
+###     https://msdn.microsoft.com/en-us/library/windows/desktop/aa380244(v=vs.85).aspx
+###     https://msdn.microsoft.com/en-us/library/windows/desktop/aa386983(v=vs.85).aspx
+####################################################################################################
+
+[{"encryption_library":"wincrypt", "match_type":"library/wincrypt", "encryption_api_usage":"include", "language":"all"}]
+	"wincrypt.h"
+
+[{"encryption_library":"wincrypt", "match_type":"library/wincrypt", "encryption_api_usage":"call", "language":"all"}]
+	"CryptAcquireContext"
+	"PROV_FORTEZZA"
+	"PROV_MS_EXCHANGE"
+
+[{"encryption_library":"wincrypt", "match_type":"algorithm/asymmetric/RSA", "encryption_api_usage":"data_type", "language":"all"}]
+	"PROV_RSA_FULL"
+	"PROV_RSA_AES"
+	"PROV_RSA_SIG"
+	"PROV_RSA_SCHANNEL"
+
+[{"encryption_library":"wincrypt", "match_type":"algorithm/asymmetric/DSA", "encryption_api_usage":"data_type", "language":"all"}]
+	"PROV_DSS"
+	"PROV_DSS_DH"
+
+[{"encryption_library":"wincrypt", "match_type":"algorithm/asymmetric/DiffieHellman", "encryption_api_usage":"data_type", "language":"all"}]
+	"PROV_DH_SCHANNEL"
+
+[{"encryption_library":"wincrypt", "match_type":"protocol/SSL", "encryption_api_usage":"data_type", "language":"all"}]
+	"PROV_SSL"

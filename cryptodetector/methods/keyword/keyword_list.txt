@@ -35,7 +35,7 @@
 # 	"pascal"
 
 [keyword_list_version]
-	2
+	3
 
 [{"match_type": "algorithm/asymmetric/DiffieHellman", "language": "all"}]
 	"Diffie Hellman"
@@ -136,17 +136,11 @@
 	"\bTTMAC\b"
 	"\bVMAC"
 
-[{"match_type": "algorithm/hash/CRC", "language": "all"}]
-	"\bCRC32"
-	"\bCRC16"
-
 [{"match_type": "algorithm/hash/MD", "language": "all"}]
 	"\bmd5sum\b"
 	"\bmd4sum\b"
 	"\bmd2sum\b"
 	"\bdgstsum\b"
-	"\bmdc2sum\b"
-	"\bMDC2\b"
 	"\bMD2\b"
 	"\bMD4\b"
 	"\bMD5\b"
@@ -163,6 +157,10 @@
 	"0xd76aa478"
 	"0xe8c7b756"
 	"0x5A827999"
+
+[{"match_type": "algorithm/hash/MDC-2", "language": "all"}]
+	"\bmdc2sum\b"
+	"\bMDC2\b"
 
 [{"match_type": "algorithm/hash/RIPEMD", "language": "all"}]
 	"\bripemd160sum\b"
@@ -206,6 +204,7 @@
 	"\bwhirlpool"
 
 [{"match_type": "algorithm/hybrid/PGP", "language": "all"}]
+	"\bGnuPG\b"
 	"\bPGP\b"
 	"\bPGP_"
 	"_PGP_"
@@ -225,6 +224,7 @@
 	"AES128"
 	"\brijndael"
 	"\bBMGL"
+	"\baesKey\b"
 	"99, 124, 119, 123, 242, 107, 111, 197"
 
 [{"match_type": "algorithm/symmetric/block-cipher/Blowfish", "language": "all"}]
@@ -252,11 +252,9 @@
 	"0x7EC90C04"
 	"0x0F1946B8"
 
-[{"match_type": "algorithm/symmetric/block-cipher/CRYPTON", "language": "all"}]
-	"\bCRYPTON"
-
 [{"match_type": "algorithm/symmetric/block-cipher/DES", "language": "all"}]
 	"Data Encryption Standard"
+	"DES algorithm"
 	"\bDES_"
 	"_DES\b"
 	"_DES_"
@@ -305,9 +303,6 @@
 [{"match_type": "algorithm/symmetric/block-cipher/SHACAL", "language": "all"}]
 	"\bSHACAL"
 
-[{"match_type": "algorithm/symmetric/block-cipher/Anubis", "language": "all"}]
-	"\bAnubis"
-
 [{"match_type": "algorithm/symmetric/block-cipher/CSCipher", "language": "all"}]
 	"\bCS_Cipher"
 	"\bCS Cipher"
@@ -323,6 +318,7 @@
 [{"match_type": "algorithm/symmetric/block-cipher/Serpent", "language": "all"}]
 	"\bSerpent\b"
 	"\bserpent_"
+	"_serpent"
 
 [{"match_type": "algorithm/symmetric/block-cipher/Twofish", "language": "all"}]
 	"twofish"
@@ -370,6 +366,8 @@
 	"\brc2-ecb"
 	"\brc2-ofb"
 	"\bRC2_BLOCK_SIZE"
+	"\bRC2_KEY"
+	"RC2 algorithm"
 
 [{"match_type": "algorithm/symmetric/stream-cipher/RC4", "language": "all"}]
 	"\bArcfour"
@@ -385,6 +383,8 @@
 	"\brc4-cfb"
 	"\brc4-ecb"
 	"\brc4-ofb"
+	"\bRC4_KEY"
+	"RC4 algorithm"
 
 [{"match_type": "algorithm/symmetric/block-cipher/RC5", "language": "all"}]
 	"0xb7e15163"
@@ -399,6 +399,8 @@
 	"\brc5-cfb"
 	"\brc5-ecb"
 	"\brc5-ofb"
+	"\bRC5_KEY"
+	"RC5 algorithm"
 
 [{"match_type": "algorithm/symmetric/block-cipher/RC6", "language": "all"}]
 	"RC6_encrypt"
@@ -411,6 +413,8 @@
 	"\brc6-cfb"
 	"\brc6-ecb"
 	"\brc6-ofb"
+	"\bRC6_KEY"
+	"RC6 algorithm"
 
 [{"match_type": "algorithm/symmetric/block-cipher/SEED", "language": "all"}]
 	"0x16c6d2d4"
@@ -474,7 +478,6 @@
 	"\bpub_key"
 	"_pubkey"
 	"priv_key"
-	"\beSign\b"
 	"\bkeysym"
 
 [{"match_type": "protocol/SSH", "language": "all"}]
@@ -526,21 +529,29 @@
 	"\bAdler32"
 
 #
-# TODO: Modes of encryption
+# TODO encryption modes
 #
+
+#[{"match_type": "encryption_mode/CBC", "language": "all"}]
+#	"_CBC3_"
+#	"-CBC3-"
+#	"\bCBC3_"
+#	"\bCBC3-"
+#	"_CBC3\b"
 
 [{"match_type": "generic", "language": "all"}]
 	"crypt"
 	"krypt"
 	"\bcipher"
 	"_cipher"
+	"base64Cipher"
 	"\bgenerateWorkingKey"
 	"\bBlockCipher"
+	"Block Cipher"
 	"\bStreamCipher"
+	"Stream Cipher"
 	"\bkey_schedule"
+	"secret_key"
+	"secretKey"
 	"MERSENNE"
 	"\bcerts"
-	"_CBC3_"
-	"\bCBC3_"
-	"\bCBC3-"
-	"_CBC3\b"
