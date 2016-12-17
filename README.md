@@ -365,7 +365,6 @@ code that you like, push them to a branch, and create a pull request from that b
 https://github.com/Wind-River/crypto-detector/pulls. If you'd like to contact the maintainers,
 please email kamyar.kaviani@windriver.com or mark.gisi@windriver.com.
 
-## License ##
+## Terms of use ##
 
-This project is subject to Wind River Commercial License. The right to copy, distribute, modify, or otherwise make use of this software may be licensed only pursuant to the terms
-of an applicable Wind River license agreement.
+Crypto Detector is free and distributed under the *Apache License, Version 2.0*. For further details, visit http://www.apache.org/licenses/LICENSE-2.0.

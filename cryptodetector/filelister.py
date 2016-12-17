@@ -1,19 +1,15 @@
 """
-/* <legal-notice>
-*
-* Copyright (c) 2016 Wind River Systems, Inc.
-*
-* This software has been developed and maintained under the Wind River
-* CodeSwap program. The right to copy, distribute, modify, or otherwise
-* make use of this software may be licensed only pursuant to the terms
-* of an applicable Wind River license agreement.
-*
-* <credits>
-*   { Kamyar Kaviani,  kamyar.kaviani@windriver.com}
-* </credits>
-*
-* </legal-notice>
-*/
+Copyright (c) 2016 Wind River Systems, Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software  distributed
+under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES
+OR CONDITIONS OF ANY KIND, either express or implied.
 """
 
 import shutil
@@ -38,7 +34,7 @@ from cryptodetector.exceptions import InvalidPackageException, ExtractError, \
     DownloadError, FileWriteException
 
 class FileLister():
-    """Facility for gathering the list of files for each pacakge. A package can be a local archive,
+    """Class for gathering the list of files for each pacakge. A package can be a local archive,
     directory, wild-card address, link to a remote archive, or a git repository link.
     """
     GITHUB_REGEX = r"((?:git@github\.com\:)|(?:http[s]?://github.com/))" \
