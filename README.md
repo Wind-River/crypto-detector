@@ -367,4 +367,4 @@ please email kamyar.kaviani@windriver.com or mark.gisi@windriver.com.
 
 ## Terms of use ##
 
-Crypto Detector is free and distributed under the *Apache License, Version 2.0*. For further details, visit http://www.apache.org/licenses/LICENSE-2.0.
+Crypto Detector is free and distributed under the **Apache License, Version 2.0**. For further details, visit http://www.apache.org/licenses/LICENSE-2.0.
