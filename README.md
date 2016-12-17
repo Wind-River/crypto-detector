@@ -15,23 +15,40 @@ To go one step further, we search the content of each file for patterns (express
 
 ## Encryption algorithms ##
 
-Currently, our code crudely detects the following cryptography schemes:
+This script crudely detects the following cryptography schemes:
 
-* Asymmetric cryptography:
-  * RSA, DSA, Diffie-Hellman, ECC, ElGamal
-* Block ciphers:
-  * AES, DES, RC2, RC5, RC6, CAST, Blowfish, Twofish, Threefish, Camellia, IDEA, GOST, IntelCascade, KASUMI, MISTY1, NOEKEON, SEED, Serpent, XTEA, BEAR-LION
-* Stream ciphers:
-  * RC4, Salsa20, ChaCha20
-* Hybrid encryption:
-  * PGP, GPG
-* Hashing algorithms:
-  *  MD2, MD4, MD5, SHA1, SHA-256, SHA-2, BLAKE, HMAC, RIPEMD, Tiger, Whirlpool
-* Protocols and standards:
-  * SSL, TLS, SSH, PKI, MQV, kerberos
-* Encryption libraries:
-  * OpenSSL, OpenSSH, libgcrypt, Crypto++, BeeCrypt, Botan, BouncyCastle, SpongyCastle
-* Generic encryption evidence
+* Asymmetric cryptography
+
+ >RSA, DSA, Diffie-Hellman, ECC, ElGamal, Rabin, XTR
+* Block ciphers
+
+ >AES, DES, RC2, RC5, RC6, CAST, Blowfish, Twofish, Threefish, Rijndael, Camellia, IDEA, SEED, Serpent, SHACAL, GOST, TEA, XTEA, BTEA, SAFER, Feistel, IntelCascade, KASUMI, MISTY1, NOEKEON, SHARK, Skipjack, BEAR-LION, RFC2268, MDC, MARS, Diamond2, DFC, CSCipher
+* Stream ciphers
+
+ >RC4, Salsa20, XSalsa20, ChaCha20, PANAMA, SEAL, SOSEMANUK, WAKE
+* Substitution ciphers
+
+ >ROT13
+* Hybrid encryption
+
+ >PGP, GPG
+* Hashing algorithms
+
+ >MD2, MD4, MD5, SHA-1, SHA-2, SHA-3, BLAKE, HMAC, RIPEMD, HAVAL, Tiger, Whirlpool, GOST, Adler32, Streebog
+* Protocols and standards
+
+ >SSL, TLS, SSH, PKI, PKCS, MQV, kerberos, ASN1, MSCHAP
+* Encryption libraries
+
+ >OpenSSL, OpenSSH, libgcrypt, Crypto++, cryptlib, libXCrypt, libMD, glibC, BeeCrypt, Botan,
+ BouncyCastle, SpongyCastle, QT, JAVA SE 7, WinCrypt
+* Message Authentication Codes
+
+ >HMAC, Poly1305
+
+* Cryptographic random number generators
+
+* And other generic encryption evidence
 
 ## Using this tool ##
 
