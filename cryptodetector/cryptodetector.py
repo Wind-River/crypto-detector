@@ -319,6 +319,8 @@ class CryptoDetector(object):
 
         report = {"report": {}}
 
+        report["package_name"] = package_name
+
         # save scan settings
 
         report["scan_settings"] = {}
