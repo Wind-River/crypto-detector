@@ -40,7 +40,8 @@ This script crudely detects the following cryptography schemes:
  >SSL, TLS, SSH, PKI, PKCS, MQV, kerberos, ASN1, MSCHAP
 * Encryption libraries
 
- >OpenSSL, OpenSSH, libgcrypt, Crypto++, cryptlib, libXCrypt, glibC, BeeCrypt, Botan, BouncyCastle, SpongyCastle
+ >OpenSSL, OpenSSH, libgcrypt, Crypto++, cryptlib, libXCrypt, libMD, glibC, BeeCrypt, Botan,
+ BouncyCastle, SpongyCastle, QT, JAVA SE 7, WinCrypt
 * Message Authentication Codes
 
  >HMAC, Poly1305
