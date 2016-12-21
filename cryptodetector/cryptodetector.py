@@ -13,6 +13,7 @@ OR CONDITIONS OF ANY KIND, either express or implied.
 """
 
 import os
+import sys
 import hashlib
 import codecs
 import mimetypes
@@ -29,9 +30,12 @@ from cryptodetector.exceptions import InvalidOptionsException, FileWriteExceptio
 class CryptoDetector(object):
     """Cryptography Detector main class
     """
-    def __init__(self, options, skip_output=False):
-        """Initializer
 
+    VERSION = 0.1
+
+
+    def __init__(self, options, skip_output=False):
+        """
         Args:
             options: (dict) all options
             skip_output: (bool) whether we should skip writing or printing out the output (used only
@@ -56,7 +60,6 @@ class CryptoDetector(object):
             methods = options["methods"]
         except KeyError as expn:
             raise InvalidOptionsException("Missing required option: \n" + str(expn))
-
 
         self.packages = packages
         self.quick_scan_result = {}
@@ -126,6 +129,7 @@ class CryptoDetector(object):
             self.active_methods[method] = method_instances[method]
 
         self.crypto_output = CryptoOutput()
+        self.crypto_output.set_crypto_detector_version(CryptoDetector.VERSION)
         self.crypto_output.set_scan_settings(Method.ignore_match_types,
                                              self.log,
                                              self.output_existing,
@@ -152,7 +156,8 @@ class CryptoDetector(object):
         Returns:
             (string) version
         """
-        return "CryptoId 0.3 development (c) Wind River Systems"
+        return "Crypto Detector " + str(CryptoDetector.VERSION) + " (c) 2016 Wind River Systems" \
+            + " -- Running python " + str(sys.version)
 
     def scan(self):
         """Main function to initiate the scanning job

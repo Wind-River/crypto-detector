@@ -26,6 +26,8 @@ class CryptoOutput(object):
         self.__JSON_data = {
             "crypto_output_spec_version": CryptoOutput.CRYPTO_SPEC_VERSION,
 
+            "crypto_detector_version": None,
+
             "package_name": None,
 
             "stats": {
@@ -83,10 +85,13 @@ class CryptoOutput(object):
             "method"
         ]
 
+    def set_crypto_detector_version(self, version):
+        """Sets the version of the script"""
+        self.__JSON_data["crypto_detector_version"] = version
+
     def set_package_name(self, package_name):
         """Set the package name"""
         self.__JSON_data["package_name"] = package_name
-
 
     def set_scan_settings(self,
                           ignore_match_types,
