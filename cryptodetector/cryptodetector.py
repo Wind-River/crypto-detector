@@ -404,6 +404,8 @@ class CryptoDetector(object):
         else:
             output_file += ".crypto"
 
+        Output.print_information("\nWriting output in " + output_file + " ...\n")
+
         output_file += ".partial"
 
         try:
@@ -413,8 +415,6 @@ class CryptoDetector(object):
                     JSON_string = json.dumps(json_data, sort_keys=True, indent=2)
                 else:
                     JSON_string = json.dumps(json_data)
-
-                Output.print_information("\nWriting output in " + output_file + " ...\n")
 
                 file_object.write(JSON_string)
 
