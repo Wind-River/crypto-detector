@@ -133,7 +133,6 @@ class CryptoDetector(object):
         self.crypto_output.set_scan_settings(Method.ignore_match_types,
                                              self.log,
                                              self.output_existing,
-                                             self.quick,
                                              self.source_files_only,
                                              self.stop_after,
                                              method_api_active,

@@ -42,7 +42,6 @@ class CryptoOutput(object):
                 "ignore_match_types": None,
                 "log": None,
                 "output_existing": None,
-                "quick": None,
                 "source_files_only": None,
                 "stop_after": None,
                 "methods": {
@@ -106,7 +105,6 @@ class CryptoOutput(object):
                           ignore_match_types,
                           log,
                           output_existing,
-                          quick,
                           source_files_only,
                           stop_after,
                           method_api_active,
@@ -118,7 +116,6 @@ class CryptoOutput(object):
         self.__JSON_data["scan_settings"]["ignore_match_types"] = ignore_match_types
         self.__JSON_data["scan_settings"]["log"] = log
         self.__JSON_data["scan_settings"]["output_existing"] = output_existing
-        self.__JSON_data["scan_settings"]["quick"] = quick
         self.__JSON_data["scan_settings"]["source_files_only"] = source_files_only
         self.__JSON_data["scan_settings"]["stop_after"] = stop_after
         self.__JSON_data["scan_settings"]["methods"]["api"]["active"] = method_api_active

@@ -2,7 +2,7 @@
 
 ## Overview ##
 
-Detecting cryptography in the source code of open-source packages turns out to be a common problem for many of the software companies that include these packages in their products.
+Detecting cryptography in the source code of open-source packages or libraries turns out to be a common problem for many of the software companies that include these packages in their products.
 
 At Wind River, we face a similar challenge. Thousands of packages are bundled as part of the Wind River operating system. We are developing this project to be an automated and efficient code parser that can determine, with some degree of confidence, that a piece of code contains restricted encryption algorithms. The output could then be verified by a human expert.
 
