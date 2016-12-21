@@ -120,19 +120,19 @@
 ```
 
 
-### package_name ###
+#### package_name ####
 The name of the package that was scanned.
 
-### crypto_detector_version ###
+#### crypto_detector_version ####
 The version of the main script that produced this file.
 
-### crypto_output_spec_version ###
+#### crypto_output_spec_version ####
 The version of the output specification.
 
-### errors ###
+#### errors ####
 An array of run-time error messages that occured during scanning of this package.
 
-### stats ###
+## stats ##
 provides general execution statistics about the run.
 
 ##### bytes_of_binary_processed #####
@@ -150,7 +150,7 @@ Number of files in this package.
 ##### lines_of_text_processed #####
 Total number of lines in all the text files that were scanned.
 
-### scan_settings ###
+## scan_settings ##
 The settings of the script when the job started.
 
 ##### ignore_match_types #####
@@ -223,6 +223,7 @@ The type of the match.
 
 ##### method #####
 The method that found this match.
+
 
 **Note**: The API finder method produces two additional fields:
 
