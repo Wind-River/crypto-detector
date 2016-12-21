@@ -231,9 +231,7 @@ class Regex(object):
                      "line_text_before_3": line_text_surrounding(line_number - 3, lines),
                      "line_text_after_1": line_text_surrounding(line_number + 1, lines),
                      "line_text_after_2": line_text_surrounding(line_number + 2, lines),
-                     "line_text_after_3": line_text_surrounding(line_number + 3, lines),
-                     "comments": "",
-                     "human_reviewed": ""
+                     "line_text_after_3": line_text_surrounding(line_number + 3, lines)
                     }
 
                 match_spec = self.match_specs[match_dict["match_text"].lower()]

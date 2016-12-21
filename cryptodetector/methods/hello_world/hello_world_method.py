@@ -70,7 +70,7 @@ class HelloWorldScanner(Method):
         """
         result = []
 
-        for match in re.finditer("Hello, World", language):
+        for match in re.finditer("Hello, World", content):
 
             result.append({"match_type": "generic", \
                            "match_text": "Hello, World", \

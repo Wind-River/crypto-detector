@@ -64,26 +64,35 @@ class CryptoOutput(object):
         }
 
     def required_output_fields(self):
-        """defines what to expect in each match"""
-        return [
-            "comments",
-            "human_reviewed",
-            "line_text",
-            "line_text_after_1",
-            "line_text_after_2",
-            "line_text_after_3",
-            "line_text_before_1",
-            "line_text_before_2",
-            "line_text_before_3",
-            "match_file_index_begin",
-            "match_file_index_end",
-            "match_line_index_begin",
-            "match_line_index_end",
-            "match_line_number",
-            "match_text",
-            "match_type",
-            "method"
-        ]
+        """defines the output fields and what is required by a match object.
+
+        If a field is required (has a true next to it) and is missing, the program will throw an
+        error and exit.
+
+        The ones that are not required (have a false value) are _expected_, but if not present, they
+        will be added as blank.
+
+        Every match will have at least these fields.
+        """
+        return {
+            "comments": False,
+            "human_reviewed": False,
+            "line_text": False,
+            "line_text_after_1": False,
+            "line_text_after_2": False,
+            "line_text_after_3": False,
+            "line_text_before_1": False,
+            "line_text_before_2": False,
+            "line_text_before_3": False,
+            "match_file_index_begin": True,
+            "match_file_index_end": True,
+            "match_line_index_begin": False,
+            "match_line_index_end": False,
+            "match_line_number": False,
+            "match_text": True,
+            "match_type": True,
+            "method": True
+        }
 
     def set_crypto_detector_version(self, version):
         """Sets the version of the script"""

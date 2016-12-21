@@ -246,7 +246,7 @@ class CryptoDetector(object):
 
                             for match in result:
                                 match["method"] = method_id
-                                self.validate_match_fields(method_id, match)
+                                match = self.validate_match_fields(method_id, match)
                                 self.crypto_output.add_match(
                                     file_path=file_path["display_path"],
                                     file_checksum=checksums[file_path["display_path"]],
@@ -361,23 +361,33 @@ class CryptoDetector(object):
             return self.full_scan_result
 
     def validate_match_fields(self, method_id, match_dict):
-        """Validate the output fields of the match produced by the method with method_id
+        """Validate the output fields of the match. If something is missing (but not required), it
+        will be added to the match object. If the field is required, InvalidMethodException will be
+        thrown
 
         Args:
             method_id: (string)
             match_dict: (dict)
 
         Returns:
-            None
+            A match dict with the expected fields added as blank
 
         Raises:
             InvalidMethodException
         """
+        match_dict_with_missing_fields = copy.copy(match_dict)
+        EMPTY_VALUE = ""
+
         for required_field in self.crypto_output.required_output_fields():
             if required_field not in match_dict:
-                raise InvalidMethodException("Invalid Method " + method_id \
-                    + ". Missing required output field '" \
-                    + required_field + "' in the match object.")
+                if self.crypto_output.required_output_fields()[required_field]:
+                    raise InvalidMethodException("Invalid Method " + method_id \
+                        + ". Missing required output field '" \
+                        + required_field + "' in the match object.")
+                else:
+                    match_dict_with_missing_fields[required_field] = EMPTY_VALUE
+        return match_dict_with_missing_fields
+
 
     def write_crypto_file(self, json_data, output_directory, package_name):
         """Writes the crypto data to a file at the output_directory
