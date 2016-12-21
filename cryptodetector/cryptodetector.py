@@ -16,12 +16,14 @@ import os
 import hashlib
 import codecs
 import mimetypes
-import re
 import json
 import copy
+import re
 import time
-from cryptodetector import Method, MethodFactory, Languages, Output, FileLister, Logger
-from cryptodetector.exceptions import InvalidOptionsException, FileWriteException
+from cryptodetector import Method, MethodFactory, Languages, Output, FileLister, Logger, \
+    CryptoOutput
+from cryptodetector.exceptions import InvalidOptionsException, FileWriteException, \
+    InvalidMethodException
 
 
 class CryptoDetector(object):
@@ -55,12 +57,10 @@ class CryptoDetector(object):
         except KeyError as expn:
             raise InvalidOptionsException("Missing required option: \n" + str(expn))
 
-        self.methods = {}
+
         self.packages = packages
         self.quick_scan_result = {}
         self.full_scan_result = {}
-        self.checksums = {}
-        self.errors = {}
         self.languages = Languages.get_list()
         self.skip_output = skip_output
         self.current_package = None
@@ -93,11 +93,50 @@ class CryptoDetector(object):
 
         method_classes = {mc.method_id: mc for mc in MethodFactory.method_classes}
 
+        method_instances = {}
+
+        # get method settings
+
+        for method in method_classes:
+
+            # instantiate method
+            method_instances[method] = method_classes[method]()
+
+            # read options
+            method_options = None
+            if hasattr(method_instances[method], "options"):
+                method_options = method_instances[method].options
+
+            if method == "keyword":
+                method_keyword_active = (method in methods)
+                method_keyword_ignore_case = method_options["ignore_case"]
+                method_keyword_kwlist_version = method_options["keyword_list_version"]
+
+            elif method == "api":
+                method_api_active = (method in methods)
+                method_api_kwlist_version = method_options["keyword_list_version"]
+
+        # active methods are the ones we use to scan the code
+
+        self.active_methods = {}
         for method in methods:
             if method not in method_classes:
                 raise InvalidOptionsException("Invalid method " + method)
 
-            self.methods[method] = method_classes[method]()
+            self.active_methods[method] = method_instances[method]
+
+        self.crypto_output = CryptoOutput()
+        self.crypto_output.set_scan_settings(Method.ignore_match_types,
+                                             self.log,
+                                             self.output_existing,
+                                             self.quick,
+                                             self.source_files_only,
+                                             self.stop_after,
+                                             method_api_active,
+                                             method_api_kwlist_version,
+                                             method_keyword_active,
+                                             method_keyword_ignore_case,
+                                             method_keyword_kwlist_version)
 
         Logger.log("Starting a new crypto scanning job with the following options:")
         for option, value in sorted(options.items()):
@@ -142,17 +181,19 @@ class CryptoDetector(object):
                 file_list = package["file_list"]
                 package_count += 1
                 match_count = 0
+                checksums = {}
 
                 self.current_package = package_name
                 self.package_text_bytes = 0
                 self.package_binary_bytes = 0
                 self.package_lines_of_text = 0
+                self.crypto_output.reset_data()
+                self.crypto_output.set_package_name(package_name)
 
                 Output.print_information("Scanning package " + package_name + "\n")
 
                 start_time = time.time()
                 stats = {}
-                matches = []
                 self.package_text_bytes = 0
                 self.package_binary_bytes = 0
                 self.package_lines_of_text = 0
@@ -168,8 +209,8 @@ class CryptoDetector(object):
 
                     found_matches = False
 
-                    for method_id in self.methods:
-                        method = self.methods[method_id]
+                    for method_id in self.active_methods:
+                        method = self.active_methods[method_id]
 
                         if not method.supports_scanning_file(language):
                             continue
@@ -192,17 +233,19 @@ class CryptoDetector(object):
                             else:
                                 found_matches = True
 
-                            if file_path["display_path"] not in self.checksums:
+                            if file_path["display_path"] not in checksums:
                                 checksum_calculator = hashlib.sha1()
                                 checksum_calculator.update(codecs.encode(content, "utf-8"))
                                 hexdigest = checksum_calculator.hexdigest()
-                                self.checksums[file_path["display_path"]] = hexdigest
+                                checksums[file_path["display_path"]] = hexdigest
 
                             for match in result:
-                                match.update({
-                                    "file_path": file_path["display_path"],
-                                    "method": method.method_id})
-                                matches.append(match)
+                                match["method"] = method_id
+                                self.validate_match_fields(method_id, match)
+                                self.crypto_output.add_match(
+                                    file_path=file_path["display_path"],
+                                    file_checksum=checksums[file_path["display_path"]],
+                                    match_dict=match)
                                 match_count += 1
 
                     if self.quick:
@@ -210,7 +253,7 @@ class CryptoDetector(object):
                             self.quick_scan_result[package_name] = True
                             break
                     else:
-                        self.full_scan_result[package_name] = matches
+                        self.full_scan_result[package_name] = self.crypto_output.get_crypto_data()
 
                     if self.stop_after and found_matches:
                         if self.stop_after == 1:
@@ -224,13 +267,23 @@ class CryptoDetector(object):
                 stats["package_binary_bytes"] = self.package_binary_bytes
                 stats["package_lines_of_text"] = self.package_lines_of_text
 
+                self.crypto_output.set_stats(
+                    bytes_of_binary_processed=stats["package_binary_bytes"],
+                    bytes_of_text_processed=stats["package_text_bytes"],
+                    execution_time=stats["execution_time"],
+                    file_count=stats["file_count"],
+                    lines_of_text_processed=stats["package_lines_of_text"])
+
                 if package_root != None and self.output_in_package_directory:
                     output_directory = package_root
                 else:
                     output_directory = self.output_directory
 
+                # write the output to a file
+
                 if not self.skip_output and not self.quick:
-                    self.write_crypto_file(package_name, matches, stats, output_directory)
+                    self.write_crypto_file(self.crypto_output.get_crypto_data(),
+                                           output_directory, package_name)
 
                 number_of_matches = "Did not find any matches"
                 if match_count == 1:
@@ -280,7 +333,6 @@ class CryptoDetector(object):
                 with open(quick_output_filename, "w") as output_file:
                     output_file.write(output_message)
 
-
         # print stats
 
         Output.print_information("\nTook " \
@@ -303,71 +355,38 @@ class CryptoDetector(object):
         else:
             return self.full_scan_result
 
-    def write_crypto_file(self, package_name, matches, stats, output_directory):
-        """Writes the output of scanning a package to a crypto file
+    def validate_match_fields(self, method_id, match_dict):
+        """Validate the output fields of the match produced by the method with method_id
 
         Args:
-            package_name: (string) the name of the package
-            matches: (list) a list of match dicts.
-            stats: (dict) stats about the computation of output for this package.
-            output_directory: (string) the directory into which to write the output files.
+            method_id: (string)
+            match_dict: (dict)
 
         Returns:
             None
+
+        Raises:
+            InvalidMethodException
         """
-        Output.print_information("\nWriting output in " + package_name + ".crypto ...\n")
+        for required_field in self.crypto_output.required_output_fields():
+            if required_field not in match_dict:
+                raise InvalidMethodException("Invalid Method " + method_id \
+                    + ". Missing required output field '" \
+                    + required_field + "' in the match object.")
 
-        report = {"report": {}}
+    def write_crypto_file(self, json_data, output_directory, package_name):
+        """Writes the crypto data to a file at the output_directory
+            Args:
+                json_data: (dict)
+                output_directory: (string)
+                package_name: (string)
 
-        report["package_name"] = package_name
+            Returns:
+                None
 
-        # save scan settings
-
-        report["scan_settings"] = {}
-        report["scan_settings"]["quick"] = self.quick
-        report["scan_settings"]["output_existing"] = self.output_existing
-        report["scan_settings"]["log"] = self.log
-        report["scan_settings"]["source_files_only"] = self.source_files_only
-        report["scan_settings"]["ignore_match_types"] = Method.ignore_match_types
-        report["scan_settings"]["stop_after"] = self.stop_after
-        report["scan_settings"]["methods"] = {}
-
-        for method_id in self.methods:
-            method = self.methods[method_id]
-            report["scan_settings"]["methods"][method_id] = {}
-
-            if hasattr(method, "options"):
-                for option in method.options:
-                    value = method.options[option]
-                    report["scan_settings"]["methods"][method_id][option] = value
-
-        # Group matches by filename
-
-        for match in matches:
-            match_copy = copy.deepcopy(match)
-            del match_copy["file_path"]
-
-            if match["file_path"] not in report["report"]:
-                report["report"][match["file_path"]] = {
-                    "SHA1_checksum": self.checksums[match["file_path"]],
-                    "matches": []
-                    }
-
-            report["report"][match["file_path"]]["matches"].append(match_copy)
-
-        if package_name in self.errors:
-            report["errors"] = self.errors[package_name]
-        else:
-            report["errors"] = []
-
-        report["stats"] = {
-            "execution_time": stats["execution_time"],
-            "file_count": stats["file_count"],
-            "bytes_of_text_processed": stats["package_text_bytes"],
-            "bytes_of_binary_processed": stats["package_binary_bytes"],
-            "lines_of_text_processed": stats["package_lines_of_text"]
-        }
-
+            Raises:
+                FileWriteException
+        """
         output_file = os.path.join(output_directory, package_name)
 
         if self.output_existing == "rename":
@@ -384,12 +403,19 @@ class CryptoDetector(object):
 
         try:
             with open(output_file, 'w') as file_object:
+
                 if self.pretty:
-                    file_object.write(json.dumps(report, sort_keys=True, indent=2))
+                    JSON_string = json.dumps(json_data, sort_keys=True, indent=2)
                 else:
-                    file_object.write(json.dumps(report))
+                    JSON_string = json.dumps(json_data)
+
+                Output.print_information("\nWriting output in " + output_file + " ...\n")
+
+                file_object.write(JSON_string)
+
         except (OSError, IOError) as e:
-            raise FileWriteException("Failed to create crypto file " + output_file + "\n" + str(e))
+            raise FileWriteException("Failed to write result in the crypto file " + output_file \
+                + "\n" + str(e))
 
         # rename the file back from .crypto.partial to .crypto at the very last step to ensure
         # writing completely succeeded when a .crypto file exists
@@ -421,10 +447,7 @@ class CryptoDetector(object):
         Returns:
             None
         """
-        if self.current_package not in self.errors:
-            self.errors[self.current_package] = []
-
-        self.errors[self.current_package].append(message)
+        self.crypto_output.add_error(message)
         Output.print_error(message)
 
     @staticmethod

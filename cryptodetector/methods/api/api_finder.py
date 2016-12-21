@@ -32,7 +32,7 @@ class APIFinder(Method):
     def __init__(self):
         self.regex = Regex(ignore_match_types=Method.ignore_match_types, whole_words=True)
         self.regex.read_keyword_list(APIFinder.options["kwlist_path"])
-        APIFinder.options["api_list_version"] = self.regex.kwlist_version()
+        APIFinder.options["keyword_list_version"] = self.regex.kwlist_version()
 
     def supports_scanning_file(self, language):
         """This method supports scanning all text files

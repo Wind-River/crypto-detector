@@ -415,6 +415,7 @@ class Options():
 
                 if option_value != None:
                     method_class.options[option] = option_value
+                    self.options[method + "_" + option] = option_value
 
     def read_all_options(self, test_case=None):
         """Return list of all options

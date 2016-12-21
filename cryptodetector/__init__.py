@@ -18,6 +18,7 @@ from os import listdir
 from cryptodetector.logger import Logger
 from cryptodetector.languages import Languages
 from cryptodetector.output import Output
+from cryptodetector.crypto_output import CryptoOutput
 from cryptodetector.regex import Regex
 from cryptodetector.rpm import is_rpm, extract_rpm
 from cryptodetector.filelister import FileLister
