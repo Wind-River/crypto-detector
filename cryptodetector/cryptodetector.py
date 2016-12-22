@@ -476,6 +476,12 @@ class CryptoDetector(object):
         """
         extension = path.split(".")[-1]
 
+        if extension == "php":
+            return Languages.PHP
+
+        elif extension == "patch":
+            return Languages.Patch
+
         guess, _ = mimetypes.guess_type(path)
 
         if guess is None:

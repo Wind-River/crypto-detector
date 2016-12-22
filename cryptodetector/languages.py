@@ -29,6 +29,8 @@ class Languages(object):
     Scala = "scala"
     MSDOS = "msdos"
     Haskell = "haskell"
+    PHP = "php"
+    Patch = "patch"
     Pascal = "pascal"
 
     @staticmethod
@@ -42,7 +44,7 @@ class Languages(object):
             (list)
         """
         return ["all", "source", "c", "python", "java", "shell", "perl", "javascript", \
-            "scala", "haskell", "pascal"]
+            "scala", "haskell", "pascal", "php", "patch"]
 
     @staticmethod
     def is_text(language):
@@ -67,4 +69,4 @@ class Languages(object):
             (bool) whether given langauge is a source code language
         """
         return language in ["c", "python", "java", "shell", "perl", \
-            "javascript", "scala", "haskell", "pascal"]
+            "javascript", "scala", "haskell", "pascal", "php", "patch"]
