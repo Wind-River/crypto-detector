@@ -154,8 +154,8 @@ class CryptoOutput(object):
             self.__JSON_data["report"][file_path] = {}
             self.__JSON_data["report"][file_path]["SHA1_checksum"] = file_checksum
             self.__JSON_data["report"][file_path]["matches"] = []
-        else:
-            self.__JSON_data["report"][file_path]["matches"].append(copy.copy(match_dict))
+
+        self.__JSON_data["report"][file_path]["matches"].append(copy.copy(match_dict))
 
     def reset_data(self):
         """Clears out the report data"""
