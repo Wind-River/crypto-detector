@@ -637,7 +637,7 @@ class FileLister():
         Raises:
             FileWriteException
         """
-        tmp_dir_name = dir_name + "-" + str(os.getpid()) + "-" + str(time.time())
+        tmp_dir_name = str(os.getpid()) + "-" + str(time.time())
         tmp_dir_name = join("cryptodetector", tmp_dir_name)
         tmp_dir = abspath(join(tempfile.gettempdir(), tmp_dir_name))
 
