@@ -17,7 +17,7 @@ import time
 from unittest import TestCase
 from cryptodetector import Options, CryptoDetector, MethodFactory
 
-class TestCryptoId(TestCase):
+class TestCryptoDetector(TestCase):
     """Unit Tests
     """
 
@@ -32,7 +32,7 @@ class TestCryptoId(TestCase):
         for option in extra_options:
             options[option] = extra_options[option]
 
-        current_directory = os.path.dirname(os.path.realpath(__file__))
+        current_directory = os.path.dirname(os.path.abspath(__file__))
         options["packages"] = []
         for package in test_packages:
             package_full_path = os.path.join(current_directory, package)
@@ -49,9 +49,9 @@ class TestCryptoId(TestCase):
         return CryptoDetector(options, skip_output=True).scan()
 
     def count_matches(self, data, package, file, match_type, package_name=None):
-        current_directory = os.path.dirname(os.path.realpath(__file__))
+        current_directory = os.path.dirname(os.path.abspath(__file__))
         file_full_path = os.path.join(current_directory, package)
-        file_full_path = os.path.join(file_full_path, file)
+        file_full_path = os.path.abspath(os.path.join(file_full_path, file))
 
         if package_name is None:
             package_name = package
@@ -83,11 +83,11 @@ class TestCryptoId(TestCase):
             {"methods": ["keyword"]})
         self.assert_result_not_empty(result, "test." + archive_type)
 
-        current_directory = os.path.dirname(os.path.realpath(__file__))
+        current_directory = os.path.dirname(os.path.abspath(__file__))
         file_full_path = os.path.join(current_directory, "extract_test/test." + archive_type)
         tar_file_full_path = os.path.join(file_full_path, "test.tar")
-        file_full_path = os.path.join(file_full_path, "test")
-        tar_file_full_path = os.path.join(tar_file_full_path, "test")
+        file_full_path = os.path.abspath(os.path.join(file_full_path, "test"))
+        tar_file_full_path = os.path.abspath(os.path.join(tar_file_full_path, "test"))
 
         file_path_exists = file_full_path  in result["test." + archive_type]["report"]
         tar_path_exists = tar_file_full_path in result["test." + archive_type]["report"]
@@ -105,7 +105,7 @@ class TestCryptoId(TestCase):
     def get_dummy2_matches(self):
         result = self.scan_package(["dummy", "dummy2"], {"methods": ["keyword"]})
         self.assert_result_not_empty(result, "dummy2")
-        current_directory = os.path.dirname(os.path.realpath(__file__))
+        current_directory = os.path.dirname(os.path.abspath(__file__))
         file_full_path = os.path.join(current_directory, "dummy2")
         file_full_path = os.path.join(file_full_path, "test")
         self.assertTrue(file_full_path in result["dummy2"]["report"])
@@ -144,9 +144,9 @@ class TestCryptoId(TestCase):
 
     def test_checksum(self):
         result = self.scan_package(["dummy"], {"methods": ["keyword"]})
-        current_directory = os.path.dirname(os.path.realpath(__file__))
+        current_directory = os.path.dirname(os.path.abspath(__file__))
         file_full_path = os.path.join(current_directory, "dummy")
-        file_full_path = os.path.join(file_full_path, "file1")
+        file_full_path = os.path.abspath(os.path.join(file_full_path, "file1"))
 
         self.assertEqual(result["dummy"]["report"][file_full_path]["SHA1_checksum"], \
             "370aef2687f5d68f3696b0190d459600a22dccf7")
@@ -225,7 +225,7 @@ class TestCryptoId(TestCase):
         self.assert_result_not_empty(result, "dummy")
         self.assertEqual(len(result["dummy"]["report"]), 1)
 
-        current_directory = os.path.dirname(os.path.realpath(__file__))
+        current_directory = os.path.dirname(os.path.abspath(__file__))
         file_full_path = os.path.join(current_directory, "dummy")
         file_full_path = os.path.join(file_full_path, "file.cpp")
 
