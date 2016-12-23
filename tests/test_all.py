@@ -131,6 +131,9 @@ class TestCryptoDetector(TestCase):
     def test_extract_tar_bz2(self):
         self.archive_test("tar.bz2")
 
+    def test_extract_tar_xz(self):
+        self.archive_test("tar.xz")
+
     def test_extract_tar_gz(self):
         self.archive_test("tar.gz")
 
