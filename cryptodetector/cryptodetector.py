@@ -433,8 +433,10 @@ class CryptoDetector(object):
 
         # rename the file back from .crypto.partial to .crypto at the very last step to ensure
         # writing completely succeeded when a .crypto file exists
-
-        os.rename(output_file, output_file[:-8])
+        crypto_file_path = output_file[:-8]
+        if os.path.exists(crypto_file_path):
+            os.remove(crypto_file_path)
+        os.rename(output_file, crypto_file_path)
 
     @staticmethod
     def human_readable_filesize(size):
