@@ -476,10 +476,22 @@ class CryptoDetector(object):
         """
         extension = path.split(".")[-1]
 
-        if extension == "php":
+        if extension.lower() in ["c", "cc", "cp", "cpp", "c++", "cxx", "h", "hh", "hxx", "hpp"]:
+            return Languages.C
+
+        elif extension.lower() in ["py", "rpy", "pyt", "pyw", "pym"]:
+            return Languages.Python
+
+        elif extension.lower() in ["sh", "ksh", "run", "bsh"]:
+            return Languages.Shell
+
+        elif extension.lower() in ["java", "jsp", "j"]:
+            return Languages.Java
+
+        elif extension.lower() == "php":
             return Languages.PHP
 
-        elif extension == "patch":
+        elif extension.lower() == "patch":
             return Languages.Patch
 
         guess, _ = mimetypes.guess_type(path)
