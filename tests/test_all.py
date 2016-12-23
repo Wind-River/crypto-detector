@@ -76,32 +76,6 @@ class TestCryptoDetector(TestCase):
         self.assertEqual(self.count_matches(result, "extract_test/test." + archive_type \
             , "test", "keyword_boundary_all", "test." + archive_type), 40)
 
-    def archive_test_tar(self, archive_type):
-        """For some reason, sometimes, FileLister extracts tar archives to .tar and then
-        to its files, and sometimes directly to its files."""
-        result = self.scan_package(["extract_test/test." + archive_type], \
-            {"methods": ["keyword"]})
-        self.assert_result_not_empty(result, "test." + archive_type)
-
-        current_directory = os.path.dirname(os.path.abspath(__file__))
-        file_full_path = os.path.join(current_directory, "extract_test/test." + archive_type)
-        tar_file_full_path = os.path.join(file_full_path, "test.tar")
-        file_full_path = os.path.abspath(os.path.join(file_full_path, "test"))
-        tar_file_full_path = os.path.abspath(os.path.join(tar_file_full_path, "test"))
-
-        file_path_exists = file_full_path  in result["test." + archive_type]["report"]
-        tar_path_exists = tar_file_full_path in result["test." + archive_type]["report"]
-
-        self.assertTrue(file_path_exists or tar_path_exists)
-
-        if file_path_exists:
-            self.assertEqual(self.count_matches(result, "extract_test/test." + archive_type \
-             , "test", "keyword_boundary_all", "test." + archive_type), 40)
-        else:
-            self.assertEqual(self.count_matches(result, "extract_test/test." \
-                +  archive_type + "/test.tar", "test", "keyword_boundary_all", "test." +
-                archive_type), 40)
-
     def get_dummy2_matches(self):
         result = self.scan_package(["dummy", "dummy2"], {"methods": ["keyword"]})
         self.assert_result_not_empty(result, "dummy2")
@@ -155,13 +129,13 @@ class TestCryptoDetector(TestCase):
         self.archive_test("zip")
 
     def test_extract_tar_bz2(self):
-        self.archive_test_tar("tar.bz2")
+        self.archive_test("tar.bz2")
 
     def test_extract_tar_gz(self):
-        self.archive_test_tar("tar.gz")
+        self.archive_test("tar.gz")
 
     def test_extract_tar_lzma(self):
-        self.archive_test_tar("tar.lzma")
+        self.archive_test("tar.lzma")
 
     def test_extract_rpm(self):
         self.archive_test("rpm")
@@ -227,7 +201,7 @@ class TestCryptoDetector(TestCase):
 
         current_directory = os.path.dirname(os.path.abspath(__file__))
         file_full_path = os.path.join(current_directory, "dummy")
-        file_full_path = os.path.join(file_full_path, "file.cpp")
+        file_full_path = os.path.abspath(os.path.join(file_full_path, "file.cpp"))
 
         self.assertTrue(file_full_path in result["dummy"]["report"])
 

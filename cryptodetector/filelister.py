@@ -467,19 +467,19 @@ class FileLister():
             (string) the type of archive or None
         """
 
-        archive_tests = {
-            "zip": lambda path: zipfile.is_zipfile(path),
-            "tar": lambda path: tarfile.is_tarfile(path),
-            "rpm": lambda path: is_rpm(path),
-            "gzip": lambda path: FileLister.compression_library_reads(gzip, path),
-            "bz2": lambda path: FileLister.compression_library_reads(bz2, path),
-            "lzma": lambda path: FileLister.compression_library_reads(lzma, path)
-            }
+        archive_tests = [
+            ("zip", lambda path: zipfile.is_zipfile(path)),
+            ("tar", lambda path: tarfile.is_tarfile(path)),
+            ("rpm", lambda path: is_rpm(path)),
+            ("gzip", lambda path: FileLister.compression_library_reads(gzip, path)),
+            ("bz2", lambda path: FileLister.compression_library_reads(bz2, path)),
+            ("lzma", lambda path: FileLister.compression_library_reads(lzma, path))
+            ]
 
-        for archive_type_ in archive_tests:
+        for archive_type_, archive_library in archive_tests:
             is_archive_file = False
             try:
-                is_archive_file = archive_tests[archive_type_](archive_path)
+                is_archive_file = archive_library(archive_path)
             except:
                 pass
             if is_archive_file:
