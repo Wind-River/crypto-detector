@@ -206,19 +206,7 @@ class FileLister():
 
         if archive_type:
             tmp_dir = self.create_tmp_directory(package_name)
-
-            if archive_type == "zip":
-                FileLister.extract_zip(file_path, display_path, tmp_dir)
-            elif archive_type == "tar":
-                FileLister.extract_tar(file_path, display_path, tmp_dir)
-            elif archive_type == "rpm":
-                FileLister.extract_rpm_archive(file_path, display_path, tmp_dir)
-            elif archive_type == "gzip":
-                FileLister.extract_by_library(gzip, file_path, display_path, tmp_dir)
-            elif archive_type == "bz2":
-                FileLister.extract_by_library(bz2, file_path, display_path, tmp_dir)
-            elif archive_type == "lzma":
-                FileLister.extract_by_library(lzma, file_path, display_path, tmp_dir)
+            FileLister.extract_archive(archive_type, file_path, display_path, tmp_dir)
 
             return self.list_directory(tmp_dir, package_name, tmp_root_path=tmp_dir, \
                 current_path=display_path, _package_root=package_root)
@@ -304,19 +292,7 @@ class FileLister():
                         display_path = full_path
 
                     try:
-                        if archive_type == "zip":
-                            FileLister.extract_zip(full_path, display_path, tmp_dir)
-                        elif archive_type == "tar":
-                            FileLister.extract_tar(full_path, display_path, tmp_dir)
-                        elif archive_type == "rpm":
-                            FileLister.extract_rpm_archive(full_path, display_path, tmp_dir)
-                        elif archive_type == "gzip":
-                            FileLister.extract_by_library(gzip, full_path, display_path, tmp_dir)
-                        elif archive_type == "bz2":
-                            FileLister.extract_by_library(bz2, full_path, display_path, tmp_dir)
-                        elif archive_type == "lzma":
-                            FileLister.extract_by_library(lzma, full_path, display_path, tmp_dir)
-
+                        FileLister.extract_archive(archive_type, full_path, display_path, tmp_dir)
                     except ExtractError as expn:
                         Output.print_error(str(expn))
                         continue
@@ -486,6 +462,24 @@ class FileLister():
                 return archive_type_
 
         return None
+
+    @staticmethod
+    def extract_archive(archive_type, full_path, display_path, tmp_dir):
+        """Extract the given archive at tmp_dir"""
+        if archive_type == "zip":
+            FileLister.extract_zip(full_path, display_path, tmp_dir)
+        elif archive_type == "tar":
+            FileLister.extract_tar(full_path, display_path, tmp_dir)
+        elif archive_type == "rpm":
+            FileLister.extract_rpm_archive(full_path, display_path, tmp_dir)
+        elif archive_type == "gzip":
+            FileLister.extract_by_library(gzip, full_path, display_path, tmp_dir)
+        elif archive_type == "bz2":
+            FileLister.extract_by_library(bz2, full_path, display_path, tmp_dir)
+        elif archive_type == "lzma":
+            FileLister.extract_by_library(lzma, full_path, display_path, tmp_dir)
+        # last step to ensure operation is atomic
+        os.rename(tmp_dir, tmp_dir)
 
     @staticmethod
     def extract_zip(zip_file_path, display_path, output_directory):
