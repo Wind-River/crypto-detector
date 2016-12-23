@@ -1,1 +1,3 @@
-python -m unittest discover tests
+Run this command at the root of repo to run unit tests
+
+python -m unittest discover tests -v
