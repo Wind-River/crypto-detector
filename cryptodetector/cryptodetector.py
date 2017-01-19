@@ -1,5 +1,5 @@
 """
-Copyright (c) 2016 Wind River Systems, Inc.
+Copyright (c) 2017 Wind River Systems, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -155,7 +155,7 @@ class CryptoDetector(object):
         Returns:
             (string) version
         """
-        return "Crypto Detector " + str(CryptoDetector.VERSION) + " (c) 2016 Wind River Systems" \
+        return "Crypto Detector " + str(CryptoDetector.VERSION) + " (c) 2017 Wind River Systems" \
             + " -- Running python " + str(sys.version)
 
     def scan(self):

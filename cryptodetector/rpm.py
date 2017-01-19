@@ -3,7 +3,7 @@ Copyright (C) 1997,1998,1999, Roger Espel Llima
 Copyright (C) 2000, Sergey Babkin
 Copyright (C) 2009, Alex Kozlov
 Copyright (C) 2010, Anders F Bjorklund
-Copyright (C) 2016 Wind River Systems, Inc.
+Copyright (C) 2017 Wind River Systems, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and any associated documentation files (the "Software"), to
