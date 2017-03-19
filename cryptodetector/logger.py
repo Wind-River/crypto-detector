@@ -31,7 +31,7 @@ class Logger(object):
         Returns:
             None
         """
-        Logger.events += "[" + str(datetime.datetime.now()) + "] " + message + "\n"
+        Logger.events += "[" + str(datetime.datetime.now()) + "] " + str(message) + "\n"
 
     @staticmethod
     def log_error(message):
@@ -43,7 +43,7 @@ class Logger(object):
         Returns:
             None
         """
-        Logger.errors += "[" + str(datetime.datetime.now()) + "] ERROR: " + message + "\n"
+        Logger.errors += "[" + str(datetime.datetime.now()) + "] ERROR: " + str(message) + "\n"
 
     @staticmethod
     def write_log_files(output_directory):

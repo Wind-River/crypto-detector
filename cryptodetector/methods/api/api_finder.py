@@ -30,7 +30,7 @@ class APIFinder(Method):
     }
 
     def __init__(self):
-        self.regex = Regex(ignore_match_types=Method.ignore_match_types, whole_words=True)
+        self.regex = Regex(ignore_evidence_types=Method.ignore_evidence_types, whole_words=True)
         self.regex.read_keyword_list(APIFinder.options["kwlist_path"])
         APIFinder.options["keyword_list_version"] = self.regex.kwlist_version()
 

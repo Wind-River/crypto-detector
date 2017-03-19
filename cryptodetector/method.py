@@ -43,7 +43,9 @@ class MethodFactory(ABCMeta):
 class Method(metaclass=MethodFactory):
     """Abstract base class providing the interface for a method
     """
-    ignore_match_types = []
+
+    # list of evidence types of all methods should ignore
+    ignore_evidence_types = []
 
     @abstractmethod
     def supports_scanning_file(self, language):

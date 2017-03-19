@@ -22,7 +22,7 @@ from cryptodetector.exceptions import InvalidKeywordList
 class Regex(object):
     """Class for searching file contents for keywords using regular expressions
     """
-    def __init__(self, ignore_case=False, ignore_match_types=[], whole_words=False):
+    def __init__(self, ignore_case=False, ignore_evidence_types=[], whole_words=False):
         self.keywords = {}
         self.match_specs = {}
         self.flags = 0
@@ -30,7 +30,7 @@ class Regex(object):
         self.whole_words = whole_words
         if ignore_case:
             self.flags = re.IGNORECASE
-        self.ignore_match_types = ignore_match_types
+        self.ignore_evidence_types = ignore_evidence_types
         self.keyword_list_version = None
 
     def read_keyword_list(self, keyword_list_path):
@@ -85,12 +85,12 @@ class Regex(object):
                     + ", and in section " \
                     + "[" + match_spec_string + "]\n\n Invalid JSON string: '" \
                     + match_spec_string + "'\n"+ str(decode_error))
-            if "match_type" not in match_spec:
+            if "evidence_type" not in match_spec:
                 raise InvalidKeywordList("In file " + keyword_list_path \
                     + ", and in section " \
-                    + "[" + match_spec_string + "]\n\n, Missing key 'match_type'.")
+                    + "[" + match_spec_string + "]\n\n, Missing key 'evidence_type'.")
 
-            match_type = match_spec["match_type"]
+            evidence_type = match_spec["evidence_type"]
             if "language" in match_spec:
                 match_language = match_spec["language"]
             else:
@@ -102,7 +102,7 @@ class Regex(object):
                     + "[" + match_spec_string + "]\n\nInvalid language: '" + match_language \
                     + "'. It must be one of " + str(languages))
 
-            if match_type in self.ignore_match_types:
+            if evidence_type in self.ignore_evidence_types:
                 continue
 
             if not keywords[match_spec_string]:
@@ -219,22 +219,22 @@ class Regex(object):
         for line in lines:
             for match in re.finditer(found_regex[:-1], line, flags=self.flags):
                 match_dict = {
-                    "match_text": line[match.start(): match.end()],
-                     "line_text": line,
-                     "match_line_number": line_number + 1,
-                     "match_file_index_begin": chars_searched + match.start(),
-                     "match_file_index_end": chars_searched + match.end(),
-                     "match_line_index_begin": match.start(),
-                     "match_line_index_end": match.end(),
-                     "line_text_before_1": line_text_surrounding(line_number - 1, lines),
-                     "line_text_before_2": line_text_surrounding(line_number - 2, lines),
-                     "line_text_before_3": line_text_surrounding(line_number - 3, lines),
-                     "line_text_after_1": line_text_surrounding(line_number + 1, lines),
-                     "line_text_after_2": line_text_surrounding(line_number + 2, lines),
-                     "line_text_after_3": line_text_surrounding(line_number + 3, lines)
+                    "matched_text": line[match.start(): match.end()],
+                    "line_text": line,
+                    "line_number": line_number + 1,
+                    "file_index_begin": chars_searched + match.start(),
+                    "file_index_end": chars_searched + match.end(),
+                    "line_index_begin": match.start(),
+                    "line_index_end": match.end(),
+                    "line_text_before_1": line_text_surrounding(line_number - 1, lines),
+                    "line_text_before_2": line_text_surrounding(line_number - 2, lines),
+                    "line_text_before_3": line_text_surrounding(line_number - 3, lines),
+                    "line_text_after_1": line_text_surrounding(line_number + 1, lines),
+                    "line_text_after_2": line_text_surrounding(line_number + 2, lines),
+                    "line_text_after_3": line_text_surrounding(line_number + 3, lines)
                     }
 
-                match_spec = self.match_specs[match_dict["match_text"].lower()]
+                match_spec = self.match_specs[match_dict["matched_text"].lower()]
                 for key in match_spec:
                     if key != "language":
                         match_dict[key] = match_spec[key]

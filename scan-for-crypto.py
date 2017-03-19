@@ -32,7 +32,7 @@ if __name__ == '__main__':
 
     try:
         log_output_directory = None
-        options = Options(CryptoDetector.version()).read_all_options()
+        options = Options(CryptoDetector.VERSION).read_all_options()
         if "log" in options:
             if options["log"]:
                 log_output_directory = options["output"]

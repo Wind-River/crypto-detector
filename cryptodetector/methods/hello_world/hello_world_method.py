@@ -72,9 +72,9 @@ class HelloWorldScanner(Method):
 
         for match in re.finditer("Hello, World", content):
 
-            result.append({"match_type": "generic", \
-                           "match_text": "Hello, World", \
-                           "match_file_index_begin": match.start(), \
-                           "match_file_index_end": match.end()})
+            result.append({"evidence_type": "generic", \
+                           "matched_text": "Hello, World", \
+                           "file_index_begin": match.start(), \
+                           "file_index_end": match.end()})
 
         return result

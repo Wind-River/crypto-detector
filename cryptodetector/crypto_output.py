@@ -13,56 +13,30 @@ OR CONDITIONS OF ANY KIND, either express or implied.
 """
 
 import copy
+import hashlib
+import codecs
 
 class CryptoOutput(object):
     """Class for structuring the JSON data in the crypto output"""
 
-
-    # !!IMPORTANT: update this version whenever a change is made to this output format
-    CRYPTO_SPEC_VERSION = 1.0
+    # the version of the crypto specification with which this output format complies
+    CRYPTO_SPEC_VERSION = 2.0
 
 
     def __init__(self):
         self.__JSON_data = {
-            "crypto_output_spec_version": CryptoOutput.CRYPTO_SPEC_VERSION,
 
-            "crypto_detector_version": None,
+            "file_collection_verification_code": None,
+
+            "crypto_spec_version": CryptoOutput.CRYPTO_SPEC_VERSION,
 
             "package_name": None,
 
-            "stats": {
-                "bytes_of_binary_processed": None,
-                "bytes_of_text_processed": None,
-                "execution_time": None,
-                "file_count": None,
-                "lines_of_text_processed": None
-            },
-
-            "scan_settings": {
-                "ignore_match_types": None,
-                "log": None,
-                "output_existing": None,
-                "source_files_only": None,
-                "stop_after": None,
-                "methods": {
-                    "api": {
-                        "active": None,
-                        "keyword_list_version": None
-                    },
-                    "keyword": {
-                        "active": None,
-                        "ignore_case": None,
-                        "keyword_list_version": None
-                    }
-                }
-            },
-
-            "errors": [],
-
-            "report": {}
+            "crypto_evidence": {}
         }
 
-    def required_output_fields(self):
+    @staticmethod
+    def required_output_fields():
         """defines the output fields and what is required by a match object.
 
         If a field is required (has a true next to it) and is missing, the program will throw an
@@ -72,6 +46,12 @@ class CryptoOutput(object):
         will be added as blank.
 
         Every match will have at least these fields.
+
+        Args:
+            None
+
+        Returns:
+            (dict) key-value pair of field to a boolean indicating wether it is required.
         """
         return {
             "comments": False,
@@ -83,85 +63,73 @@ class CryptoOutput(object):
             "line_text_before_1": False,
             "line_text_before_2": False,
             "line_text_before_3": False,
-            "match_file_index_begin": True,
-            "match_file_index_end": True,
-            "match_line_index_begin": False,
-            "match_line_index_end": False,
-            "match_line_number": False,
-            "match_text": True,
-            "match_type": True,
-            "method": True
+            "file_index_begin": True,
+            "file_index_end": True,
+            "line_index_begin": False,
+            "line_index_end": False,
+            "line_number": False,
+            "matched_text": True,
+            "evidence_type": True,
+            "detection_method": True,
+            "encryption_api_usage": False,
+            "encryption_library": False
         }
 
-    def set_crypto_detector_version(self, version):
-        """Sets the version of the script"""
-        self.__JSON_data["crypto_detector_version"] = version
-
     def set_package_name(self, package_name):
-        """Set the package name"""
+        """Set the package name
+
+        Args:
+            package_name: (string)
+
+        Returns:
+            None
+        """
         self.__JSON_data["package_name"] = package_name
 
-    def set_scan_settings(self,
-                          ignore_match_types,
-                          log,
-                          output_existing,
-                          source_files_only,
-                          stop_after,
-                          method_api_active,
-                          method_api_kwlist_version,
-                          method_keyword_active,
-                          method_keyword_ignore_case,
-                          method_keyword_kwlist_version):
-        """Set the scan settings"""
-        self.__JSON_data["scan_settings"]["ignore_match_types"] = ignore_match_types
-        self.__JSON_data["scan_settings"]["log"] = log
-        self.__JSON_data["scan_settings"]["output_existing"] = output_existing
-        self.__JSON_data["scan_settings"]["source_files_only"] = source_files_only
-        self.__JSON_data["scan_settings"]["stop_after"] = stop_after
-        self.__JSON_data["scan_settings"]["methods"]["api"]["active"] = method_api_active
-        self.__JSON_data["scan_settings"]["methods"]["api"]["keyword_list_version"] \
-            = method_api_kwlist_version
-        self.__JSON_data["scan_settings"]["methods"]["keyword"]["active"] \
-            = method_keyword_active
-        self.__JSON_data["scan_settings"]["methods"]["keyword"]["ignore_case"] \
-            = method_keyword_ignore_case
-        self.__JSON_data["scan_settings"]["methods"]["keyword"]["keyword_list_version"] \
-            = method_keyword_kwlist_version
 
-    def set_stats(self,
-                  bytes_of_binary_processed,
-                  bytes_of_text_processed,
-                  execution_time,
-                  file_count,
-                  lines_of_text_processed):
-        """Sets scan statistics"""
-        self.__JSON_data["stats"]["bytes_of_binary_processed"] = bytes_of_binary_processed
-        self.__JSON_data["stats"]["bytes_of_text_processed"] = bytes_of_text_processed
-        self.__JSON_data["stats"]["execution_time"] = execution_time
-        self.__JSON_data["stats"]["file_count"] = file_count
-        self.__JSON_data["stats"]["lines_of_text_processed"] = lines_of_text_processed
+    def set_verif_code(self, sha1_list):
+        """Computes the file collection verification code as a means of uniquely identifying a set
+        of files. To this end, first sort the list of file SHA1's in ascending order, concatenate
+        this list to a single string, and take SHA1 of the resulting string.
 
-    def add_error(self, error_message):
-        """Adds an error message to the errors section"""
-        self.__JSON_data["errors"].append(error_message)
+        Args:
+            sha1_list: (list) of file SHA1's at the leaves of package file tree
 
-    def add_match(self,
-                  file_path,
-                  file_checksum,
-                  match_dict):
-        """Adds a match to the report for a given file"""
-        if file_path not in self.__JSON_data["report"]:
-            self.__JSON_data["report"][file_path] = {}
-            self.__JSON_data["report"][file_path]["SHA1_checksum"] = file_checksum
-            self.__JSON_data["report"][file_path]["matches"] = []
+        Returns
+            (string) verification code
+        """
 
-        self.__JSON_data["report"][file_path]["matches"].append(copy.copy(match_dict))
+        joined_sha1s = "".join(sorted(sha1_list))
+        checksum_calculator = hashlib.sha1()
+        checksum_calculator.update(codecs.encode(joined_sha1s, "utf-8"))
+        self.__JSON_data["file_collection_verification_code"] = checksum_calculator.hexdigest()
 
-    def reset_data(self):
-        """Clears out the report data"""
-        self.__JSON_data["report"] = {}
-        self.__JSON_data["errors"] = []
+    def add_hit(self, file_path, file_sha1, hit):
+        """Adds a hit in the file with the given SHA1 and path
+
+        Args:
+            file_path: (string)
+            file_sha1: (string)
+            hit: (dict)
+
+        Returns
+            None
+        """
+        if file_sha1 not in self.__JSON_data["crypto_evidence"]:
+            self.__JSON_data["crypto_evidence"][file_sha1] = {"file_paths": [], "hits": []}
+
+        if file_path not in self.__JSON_data["crypto_evidence"][file_sha1]["file_paths"]:
+            self.__JSON_data["crypto_evidence"][file_sha1]["file_paths"].append(file_path)
+
+        self.__JSON_data["crypto_evidence"][file_sha1]["hits"].append(copy.copy(hit))
 
     def get_crypto_data(self):
-        """Returns the JSON data"""
+        """Return the JSON data
+
+        Args:
+            None
+
+        Returns:
+            (string) JSON formatted data
+        """
         return self.__JSON_data

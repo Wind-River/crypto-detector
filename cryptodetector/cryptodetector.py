@@ -21,6 +21,7 @@ import json
 import copy
 import re
 import time
+import platform
 from cryptodetector import Method, MethodFactory, Languages, Output, FileLister, Logger, \
     CryptoOutput
 from cryptodetector.exceptions import InvalidOptionsException, FileWriteException, \
@@ -31,13 +32,13 @@ class CryptoDetector(object):
     """Cryptography Detector main class
     """
 
-    VERSION = 0.1
+    VERSION = "0.2 development"
 
 
     def __init__(self, options, skip_output=False):
         """
         Args:
-            options: (dict) all options
+            options: (dict)
             skip_output: (bool) whether we should skip writing or printing out the output (used only
                 for unit testing)
 
@@ -52,7 +53,7 @@ class CryptoDetector(object):
                 "pretty", "log", "source_files_only"]:
                 setattr(self, option, options[option])
             self.output_directory = self.output
-            Method.ignore_match_types = options["ignore_match_types"]
+            Method.ignore_evidence_types = options["ignore_evidence_types"]
             Output.verbose = options["verbose"]
             Output.suppress_warnings = options["suppress_warnings"]
             stop_after = options["stop_after"]
@@ -98,8 +99,6 @@ class CryptoDetector(object):
 
         method_instances = {}
 
-        # get method settings
-
         for method in method_classes:
 
             # instantiate method
@@ -111,13 +110,13 @@ class CryptoDetector(object):
                 method_options = method_instances[method].options
 
             if method == "keyword":
-                method_keyword_active = (method in methods)
-                method_keyword_ignore_case = method_options["ignore_case"]
-                method_keyword_kwlist_version = method_options["keyword_list_version"]
+                self.method_keyword_active = (method in methods)
+                self.method_keyword_ignore_case = method_options["ignore_case"]
+                self.method_keyword_kwlist_version = method_options["keyword_list_version"]
 
             elif method == "api":
-                method_api_active = (method in methods)
-                method_api_kwlist_version = method_options["keyword_list_version"]
+                self.method_api_active = (method in methods)
+                self.method_api_kwlist_version = method_options["keyword_list_version"]
 
         # active methods are the ones we use to scan the code
 
@@ -127,36 +126,6 @@ class CryptoDetector(object):
                 raise InvalidOptionsException("Invalid method " + method)
 
             self.active_methods[method] = method_instances[method]
-
-        self.crypto_output = CryptoOutput()
-        self.crypto_output.set_crypto_detector_version(CryptoDetector.VERSION)
-        self.crypto_output.set_scan_settings(Method.ignore_match_types,
-                                             self.log,
-                                             self.output_existing,
-                                             self.source_files_only,
-                                             self.stop_after,
-                                             method_api_active,
-                                             method_api_kwlist_version,
-                                             method_keyword_active,
-                                             method_keyword_ignore_case,
-                                             method_keyword_kwlist_version)
-
-        Logger.log("Starting a new crypto scanning job with the following options:")
-        for option, value in sorted(options.items()):
-            Logger.log("  " + option + " = " + str(value))
-
-    @staticmethod
-    def version():
-        """Version string
-
-        Args:
-            None
-
-        Returns:
-            (string) version
-        """
-        return "Crypto Detector " + str(CryptoDetector.VERSION) + " (c) 2017 Wind River Systems" \
-            + " -- Running python " + str(sys.version)
 
     def scan(self):
         """Main function to initiate the scanning job
@@ -169,6 +138,29 @@ class CryptoDetector(object):
         """
         if not self.packages:
             return
+
+        Logger.log("Crypto Detector " + CryptoDetector.VERSION + " (c) Wind River Systems")
+        Logger.log(("{} "*6).format(platform.system(), platform.node(), platform.release(), \
+            platform.version(), platform.machine(), platform.processor()))
+        Logger.log("Python " + str(platform.python_version()))
+        Logger.log("")
+        Logger.log("")
+        Logger.log("Starting a new crypto scanning job with the following options:")
+
+        Logger.log("source_files_only: " + str(self.source_files_only))
+        Logger.log("stop_after: "+ str(self.stop_after))
+        Logger.log("output_existing: "+ str(self.output_existing))
+        Logger.log("ignore_evidence_types: "+ str(Method.ignore_evidence_types))
+
+        if self.method_keyword_active:
+            Logger.log("keyword method is active keyword list version " \
+                + str(self.method_keyword_kwlist_version) + " and ignore_case set to " \
+                + str(self.method_keyword_ignore_case))
+
+        if self.method_api_active:
+            Logger.log("API method is active with api list version " \
+                + str(self.method_api_kwlist_version)
+            )
 
         package_count = 0
         total_execution_time = 0
@@ -183,16 +175,18 @@ class CryptoDetector(object):
                 package_name = package["package_name"]
                 package_root = package["package_root"]
                 file_list = package["file_list"]
+                sha1_list = []
                 package_count += 1
                 match_count = 0
                 checksums = {}
+                crypto_output = CryptoOutput()
 
                 self.current_package = package_name
                 self.package_text_bytes = 0
                 self.package_binary_bytes = 0
                 self.package_lines_of_text = 0
-                self.crypto_output.reset_data()
-                self.crypto_output.set_package_name(package_name)
+
+                crypto_output.set_package_name(package_name)
 
                 Output.print_information("Scanning package " + package_name + "\n")
 
@@ -207,6 +201,14 @@ class CryptoDetector(object):
 
                 for file_path in file_list:
                     content, language = self.read_file(file_path["physical_path"])
+
+                    checksum_calculator = hashlib.sha1()
+                    encoded_content = content
+                    if language != Languages.Binary:
+                        encoded_content = codecs.encode(content, "utf-8")
+                    checksum_calculator.update(encoded_content)
+                    hexdigest = checksum_calculator.hexdigest()
+                    sha1_list.append(hexdigest)
 
                     if not content:
                         continue
@@ -238,18 +240,15 @@ class CryptoDetector(object):
                                 found_matches = True
 
                             if file_path["display_path"] not in checksums:
-                                checksum_calculator = hashlib.sha1()
-                                checksum_calculator.update(codecs.encode(content, "utf-8"))
-                                hexdigest = checksum_calculator.hexdigest()
                                 checksums[file_path["display_path"]] = hexdigest
 
                             for match in result:
-                                match["method"] = method_id
+                                match["detection_method"] = method_id
                                 match = self.validate_match_fields(method_id, match)
-                                self.crypto_output.add_match(
+                                crypto_output.add_hit(
                                     file_path=file_path["display_path"],
-                                    file_checksum=checksums[file_path["display_path"]],
-                                    match_dict=match)
+                                    file_sha1=checksums[file_path["display_path"]],
+                                    hit=match)
                                 match_count += 1
 
                     if self.quick:
@@ -257,7 +256,7 @@ class CryptoDetector(object):
                             self.quick_scan_result[package_name] = True
                             break
                     else:
-                        self.full_scan_result[package_name] = self.crypto_output.get_crypto_data()
+                        self.full_scan_result[package_name] = crypto_output.get_crypto_data()
 
                     if self.stop_after and found_matches:
                         if self.stop_after == 1:
@@ -265,18 +264,14 @@ class CryptoDetector(object):
                         else:
                             self.stop_after -= 1
 
+
+                crypto_output.set_verif_code(sha1_list)
+
                 stats["execution_time"] = time.time() - start_time
                 stats["file_count"] = len(file_list)
                 stats["package_text_bytes"] = self.package_text_bytes
                 stats["package_binary_bytes"] = self.package_binary_bytes
                 stats["package_lines_of_text"] = self.package_lines_of_text
-
-                self.crypto_output.set_stats(
-                    bytes_of_binary_processed=stats["package_binary_bytes"],
-                    bytes_of_text_processed=stats["package_text_bytes"],
-                    execution_time=stats["execution_time"],
-                    file_count=stats["file_count"],
-                    lines_of_text_processed=stats["package_lines_of_text"])
 
                 if package_root != None and self.output_in_package_directory:
                     output_directory = package_root
@@ -286,7 +281,7 @@ class CryptoDetector(object):
                 # write the output to a file
 
                 if not self.skip_output and not self.quick:
-                    self.write_crypto_file(self.crypto_output.get_crypto_data(),
+                    self.write_crypto_file(crypto_output.get_crypto_data(),
                                            output_directory, package_name)
 
                 number_of_matches = "Did not find any matches"
@@ -377,9 +372,9 @@ class CryptoDetector(object):
         match_dict_with_missing_fields = copy.copy(match_dict)
         EMPTY_VALUE = ""
 
-        for required_field in self.crypto_output.required_output_fields():
+        for required_field in CryptoOutput.required_output_fields():
             if required_field not in match_dict:
-                if self.crypto_output.required_output_fields()[required_field]:
+                if CryptoOutput.required_output_fields()[required_field]:
                     raise InvalidMethodException("Invalid Method " + method_id \
                         + ". Missing required output field '" \
                         + required_field + "' in the match object.")
@@ -453,19 +448,6 @@ class CryptoDetector(object):
                 return str(round(size, 2)) + unit
             size /= 1024.0
 
-    def error(self, message):
-        """Keep track of errors that happened during processing of the current_package
-        and display the output.
-
-        Args:
-            message: (string) error message.
-
-        Returns:
-            None
-        """
-        self.crypto_output.add_error(message)
-        Output.print_error(message)
-
     @staticmethod
     def guess_language(path):
         """Guess the language of the file from its extension.
@@ -476,24 +458,24 @@ class CryptoDetector(object):
         Returns:
             (Language) the language of the file. See languages.py for Language data structure
         """
-        extension = path.split(".")[-1]
+        extension = path.split(".")[-1].lower()
 
-        if extension.lower() in ["c", "cc", "cp", "cpp", "c++", "cxx", "h", "hh", "hxx", "hpp"]:
+        if extension in ["c", "cc", "cp", "cpp", "c++", "cxx", "h", "hh", "hxx", "hpp"]:
             return Languages.C
 
-        elif extension.lower() in ["py", "rpy", "pyt", "pyw", "pym"]:
+        elif extension in ["py", "rpy", "pyt", "pyw", "pym"]:
             return Languages.Python
 
-        elif extension.lower() in ["sh", "ksh", "run", "bsh"]:
+        elif extension in ["sh", "ksh", "run", "bsh"]:
             return Languages.Shell
 
-        elif extension.lower() in ["java", "jsp", "j"]:
+        elif extension in ["java", "jsp", "j"]:
             return Languages.Java
 
-        elif extension.lower() == "php":
+        elif extension == "php":
             return Languages.PHP
 
-        elif extension.lower() == "patch":
+        elif extension == "patch":
             return Languages.Patch
 
         guess, _ = mimetypes.guess_type(path)
@@ -585,15 +567,15 @@ class CryptoDetector(object):
                 continue
 
             except (OSError, IOError) as expn:
-                self.error("Critical error while reading file " + path + "\n" + str(expn))
+                Output.print_error("Critical error while reading file " + path + "\n" + str(expn))
                 return
 
             except Exception as expn:
-                self.error("Exception while opening file " + path + "\n" + str(expn))
+                Output.print_error("Exception while opening file " + path + "\n" + str(expn))
                 return
 
         if content is None and print_error:
-            self.error("Couldn't decode the text file " + path + "using any " \
+            Output.print_error("Couldn't decode the text file " + path + "using any " \
                 + "of Unicode, Latin, ISO-8859, or EBCDIC encodings.")
 
         return content
@@ -631,22 +613,21 @@ class CryptoDetector(object):
                 content = content_file.read()
 
         except (OSError, IOError) as expn:
-            self.error("Critical error while reading file " + path + "\n" + str(expn))
+            Output.print_error("Critical error while reading file " + path + "\n" + str(expn))
             return
 
         except Exception as expn:
-            self.error("Couldn't open binary file " + path + "\n" + str(expn))
+            Output.print_error("Couldn't open binary file " + path + "\n" + str(expn))
             return
 
         return content
 
     def read_file(self, path):
-        """Reads a file in the given path
+        """Reads a file at the given path
 
-
-        If the extension didn't help to identify the type of file, try to open it
-        as plain text, and if failed, treat it as binary. If succeeded, check the
-        characters in the file to detect if it's actually a text file
+        If we couldn't guess the type of the file from its extension, try to open it
+        as plain text, and if that failed, treat it as binary. If that succeeded, check the
+        characters in the file to ensure it is actually a text file.
 
         Args:
             path: (string) file path

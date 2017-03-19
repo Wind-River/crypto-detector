@@ -33,7 +33,7 @@ class KeywordSearch(Method):
 
     def __init__(self):
         self.regex = Regex(ignore_case=KeywordSearch.options["ignore_case"], \
-            ignore_match_types=Method.ignore_match_types)
+            ignore_evidence_types=Method.ignore_evidence_types)
         self.regex.read_keyword_list(KeywordSearch.options["kwlist_path"])
         KeywordSearch.options["keyword_list_version"] = self.regex.kwlist_version()
 

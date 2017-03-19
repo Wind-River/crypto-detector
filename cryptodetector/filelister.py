@@ -13,7 +13,6 @@ OR CONDITIONS OF ANY KIND, either express or implied.
 """
 
 import shutil
-import hashlib
 import zipfile
 import tarfile
 import gzip

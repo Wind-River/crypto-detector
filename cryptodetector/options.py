@@ -43,7 +43,7 @@ class Options():
             "quick": False,
             "source_files_only": False,
             "packages": [],
-            "ignore_match_types": [],
+            "ignore_evidence_types": [],
             "suppress_warnings": False
             }
 
@@ -76,7 +76,7 @@ class Options():
                 + " directory, a compressed archive, a github address, or a URL pointing to a" \
                 + "remote archive.",
 
-            "ignore_match_types": "List of match types to ignore while searching for matches.",
+            "ignore_evidence_types": "List of evidence types that should be ignored",
 
             "suppress_warnings": "Option to not write warning messages",
 
