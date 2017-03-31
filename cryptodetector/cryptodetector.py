@@ -200,17 +200,15 @@ class CryptoDetector(object):
                     self.quick_scan_result[package_name] = False
 
                 for file_path in file_list:
-                    content, language = self.read_file(file_path["physical_path"])
+                    content, language, encoding = self.read_file(file_path["physical_path"])
 
-                    checksum_calculator = hashlib.sha1()
                     encoded_content = content
-                    if language != Languages.Binary:
-                        encoded_content = codecs.encode(content, "utf-8")
-                    checksum_calculator.update(encoded_content)
-                    hexdigest = checksum_calculator.hexdigest()
+                    if Languages.is_text(language) and encoding is not None:
+                        encoded_content = codecs.encode(content, encoding)
+                    hexdigest = hashlib.sha1(encoded_content).hexdigest()
                     sha1_list.append(hexdigest)
 
-                    if not content:
+                    if not content or language == Languages.Unsupported:
                         continue
 
                     found_matches = False
@@ -551,16 +549,18 @@ class CryptoDetector(object):
             print_error: (bool) should print an error if failed to open as a text file
 
         Returns:
-            (string) the content of the file
+            (string, string) the content of the file and its encoding
             None if it failed to read the file
         """
         text_encodings = ["utf-8", "latin-1", "iso-8859-1", "utf-16", "utf-32", "cp500"]
         content = None
+        encoding = None
 
-        for encoding in text_encodings:
+        for encoding_ in text_encodings:
             try:
-                with open(path, 'r', encoding=encoding) as content_file:
+                with open(path, 'r', encoding=encoding_) as content_file:
                     content = content_file.read()
+                    encoding = encoding_
                     break
 
             except ValueError as expn:
@@ -578,7 +578,7 @@ class CryptoDetector(object):
             Output.print_error("Couldn't decode the text file " + path + "using any " \
                 + "of Unicode, Latin, ISO-8859, or EBCDIC encodings.")
 
-        return content
+        return content, encoding
 
     @staticmethod
     def is_binary(content):
@@ -633,13 +633,14 @@ class CryptoDetector(object):
             path: (string) file path
 
         Returns:
-            a tuple (file content, language)
+            tuple (file content, language, encoding)
         """
         language = CryptoDetector.guess_language(path)
         content = None
+        encoding = None
 
         if language == Languages.Unknown:
-            content = self.read_text_file(path, print_error=False)
+            content, encoding = self.read_text_file(path, print_error=False)
 
             if content is None:
                 content = self.read_binary_file(path)
@@ -651,17 +652,13 @@ class CryptoDetector(object):
                 else:
                     language = Languages.Plain_text
 
-         # read the content
-
         if language != Languages.Unsupported:
 
             if language == Languages.Binary:
                 content = self.read_binary_file(path)
 
             else:
-                content = self.read_text_file(path)
-
-        # count the total bytes
+                content, encoding = self.read_text_file(path)
 
         if content != None:
             if language == Languages.Binary:
@@ -670,4 +667,8 @@ class CryptoDetector(object):
                 self.package_text_bytes += len(content)
                 self.package_lines_of_text += len(content.split("\n"))
 
-        return content, language
+        # open unsupported files as binary to compute their checksum
+        if language == Languages.Unsupported:
+            content = self.read_binary_file(path)
+
+        return content, language, encoding
