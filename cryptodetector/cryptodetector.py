@@ -203,8 +203,9 @@ class CryptoDetector(object):
                     content, language, encoding = self.read_file(file_path["physical_path"])
 
                     encoded_content = content
-                    if Languages.is_text(language) and encoding is not None:
+                    if isinstance(content, str) or (Languages.is_text(language) and encoding is not None):
                         encoded_content = codecs.encode(content, encoding)
+                        
                     hexdigest = hashlib.sha1(encoded_content).hexdigest()
                     sha1_list.append(hexdigest)
 
