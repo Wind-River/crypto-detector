@@ -39,6 +39,8 @@ class FileLister():
     GITHUB_REGEX = r"((?:git@github\.com\:)|(?:http[s]?://github.com/))" \
         + r"([^/]+)\/((?:(?!\.git)[^/])+)(?:\.git)?"
 
+    all_temp_dirs = []
+
     def __init__(self, packages,
                  skip_existing=False,
                  output_directory=None,
@@ -643,6 +645,7 @@ class FileLister():
                 + "\n" + str(expn))
         else:
             self.tmp_directories.append(tmp_dir)
+            FileLister.all_temp_dirs.append(tmp_dir)
 
         return tmp_dir
 
@@ -656,5 +659,14 @@ class FileLister():
             None
         """
         for tmp_dir in self.tmp_directories:
+            if exists(tmp_dir):
+                shutil.rmtree(tmp_dir)
+                FileLister.all_temp_dirs.remove(tmp_dir)
+        self.tmp_directories = []
+
+    @staticmethod
+    def cleanup_all_tmp_files():
+        """Clean up all temporary directories in case something went wrong during scan"""
+        for tmp_dir in FileLister.all_temp_dirs:
             if exists(tmp_dir):
                 shutil.rmtree(tmp_dir)

@@ -158,8 +158,7 @@ class CryptoDetector(object):
 
         if self.method_api_active:
             Logger.log("API method is active with api list version " \
-                + str(self.method_api_kwlist_version)
-            )
+                + str(self.method_api_kwlist_version))
 
         package_count = 0
         total_execution_time = 0

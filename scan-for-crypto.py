@@ -25,7 +25,7 @@ if sys.version_info[0] < 3 or (sys.version_info[0] == 3 and sys.version_info[1] 
     sys.exit(1)
 
 import traceback
-from cryptodetector import CryptoDetector, Output, Options, Logger
+from cryptodetector import CryptoDetector, Output, Options, Logger, FileLister
 from cryptodetector.exceptions import CryptoDetectorError
 
 if __name__ == '__main__':
@@ -43,10 +43,13 @@ if __name__ == '__main__':
     except CryptoDetectorError as expn:
         Output.print_error(str(expn))
         if log_output_directory: Logger.write_log_files(log_output_directory)
+        FileLister.cleanup_all_tmp_files()
 
     except KeyboardInterrupt:
+        FileLister.cleanup_all_tmp_files()
         raise
 
     except Exception as expn:
         Output.print_error("Unhandled exception.\n\n" + str(traceback.format_exc()))
         if log_output_directory: Logger.write_log_files(log_output_directory)
+        FileLister.cleanup_all_tmp_files()
