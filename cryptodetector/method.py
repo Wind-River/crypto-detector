@@ -44,7 +44,7 @@ class Method(metaclass=MethodFactory):
     """Abstract base class providing the interface for a method
     """
 
-    # list of evidence types of all methods should ignore
+    # list of evidence types that all methods should ignore
     ignore_evidence_types = []
 
     @abstractmethod
@@ -53,7 +53,7 @@ class Method(metaclass=MethodFactory):
         file in the given language
 
         Args:
-            language: (string) see langauges.py
+            language: language of the content (see langauges.py)
 
         Returns:
             (bool) whether it supports scanning a file in the given language
@@ -65,9 +65,9 @@ class Method(metaclass=MethodFactory):
         """Search and find all matches in the content
 
         Args:
-            content: the content to be scanned. Its type could be a string for text files or a raw
-                byte sequence for binary files.
-            language: (string) see langauges.py the language of the content
+            content: the content to be scanned. Its type is string for text files and raw
+                byte array for binary files.
+            language: language of the content (see langauges.py)
 
         Returns:
             (list) list of matches. A match is a dict object containing all the output fields.
@@ -79,9 +79,9 @@ class Method(metaclass=MethodFactory):
         """Quick search the content in the given language
 
         Args:
-            content: the content to be scanned. Its type could be a string for text files or a raw
-                byte sequence for binary files.
-            language: (string) see langauges.py the language of the content
+            content: the content to be scanned. Its type is string for text files and raw
+                byte array for binary files.
+            language: language of the content (see langauges.py)
 
         Returns:
             (bool) whether it found any matches in the content

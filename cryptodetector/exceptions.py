@@ -19,6 +19,11 @@ class CryptoDetectorError(Exception):
     """Crypto Detector application error"""
     pass
 
+class FailedFileRead(CryptoDetectorError):
+    """Failed to read a file. All files must be read so that verification code
+    could b ecomputed correctly"""
+    pass
+
 class InvalidMethodException(CryptoDetectorError):
     """Invalid method class"""
     pass

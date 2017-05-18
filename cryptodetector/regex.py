@@ -16,7 +16,7 @@ import re
 import json
 import os
 import configparser
-from cryptodetector import Languages
+from cryptodetector import Language
 from cryptodetector.exceptions import InvalidKeywordList
 
 class Regex(object):
@@ -70,7 +70,8 @@ class Regex(object):
                 + " is invalid. There should be one value in 'keyword_list_version' section.")
         self.keyword_list_version = config.items("keyword_list_version")[0][0]
 
-        languages = Languages.get_list()
+        languages = Language.text_languages()
+        languages.append("source")
         for language in languages:
             self.keywords[language] = []
 
@@ -143,12 +144,17 @@ class Regex(object):
                         + "]\n\nDuplicate keyword: '" + keyword_identifier + "'.")
                 self.match_specs[keyword_identifier] = match_spec
 
-                # apply 'source' and 'all' to all other languages
-                if match_language in ["source", "all"]:
+                # apply 'source' keywords to all the source code languages
+                if match_language == "source":
+                    for lang in Language.language_list():
+                        if lang.is_source_code:
+                            self.keywords[str(lang)].append((keyword_no_boundary, keyword_re_escaped))
+
+                # apply 'all' to all other languages
+                if match_language == "all":
                     for language in languages:
-                        if language not in ["source", "all"]:
-                            self.keywords[language].append( \
-                                (keyword_no_boundary, keyword_re_escaped))
+                        if language is not "all":
+                            self.keywords[language].append((keyword_no_boundary, keyword_re_escaped))
 
         # Sort keywords by length and alphabetically to make search behaviour well defined
         # when there exists keywords that are prefixes of one another (eg crypt and cryptEncrypt)
@@ -195,11 +201,11 @@ class Regex(object):
         found = []
         if self.ignore_case:
             content_lower = content.lower()
-            for keyword, keyword_re in self.keywords[language]:
+            for keyword, keyword_re in self.keywords[str(language)]:
                 if keyword in content_lower:
                     found.append(keyword_re)
         else:
-            for keyword, keyword_re in self.keywords[language]:
+            for keyword, keyword_re in self.keywords[str(language)]:
                 if keyword in content:
                     found.append(keyword_re)
 
@@ -256,9 +262,9 @@ class Regex(object):
         Returns:
             (bool) True if it found any matches in content, False otherwise
         """
-        for keyword in self.keywords[language]:
+        for keyword in self.keywords[str(language)]:
             if keyword in content:
                 # search again with re to account for boundary (\b) character
-                if re.search(self.keywords[language][keyword], content, flags=self.flags) != None:
+                if re.search(self.keywords[str(language)][keyword], content, flags=self.flags) != None:
                     return True
         return False

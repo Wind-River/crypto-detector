@@ -96,13 +96,12 @@ class CryptoOutput(object):
             sha1_list: (list) of file SHA1's at the leaves of package file tree
 
         Returns
-            (string) verification code
+            None
         """
 
         joined_sha1s = "".join(sorted(sha1_list))
-        checksum_calculator = hashlib.sha1()
-        checksum_calculator.update(codecs.encode(joined_sha1s, "utf-8"))
-        self.__JSON_data["file_collection_verification_code"] = checksum_calculator.hexdigest()
+        verif_code = hashlib.sha1(codecs.encode(joined_sha1s, "utf-8")).hexdigest()
+        self.__JSON_data["file_collection_verification_code"] = verif_code
 
     def add_hit(self, file_path, file_sha1, hit):
         """Adds a hit in the file with the given SHA1 and path

@@ -22,10 +22,10 @@ import copy
 import re
 import time
 import platform
-from cryptodetector import Method, MethodFactory, Languages, Output, FileLister, Logger, \
+from cryptodetector import Method, MethodFactory, Language, Output, FileLister, Logger, \
     CryptoOutput
 from cryptodetector.exceptions import InvalidOptionsException, FileWriteException, \
-    InvalidMethodException
+    InvalidMethodException, FailedFileRead
 
 
 class CryptoDetector(object):
@@ -65,7 +65,6 @@ class CryptoDetector(object):
         self.packages = packages
         self.quick_scan_result = {}
         self.full_scan_result = {}
-        self.languages = Languages.get_list()
         self.skip_output = skip_output
         self.current_package = None
         self.stop_after = None
@@ -200,17 +199,20 @@ class CryptoDetector(object):
                     self.quick_scan_result[package_name] = False
 
                 for file_path in file_list:
-                    content, language, encoding = self.read_file(file_path["physical_path"])
+                    content, language = self.read_file(file_path["physical_path"])
 
-                    encoded_content = content
-                    if isinstance(content, str) or (Languages.is_text(language) and encoding is not None):
-                        encoded_content = codecs.encode(content, encoding)
-                        
+                    if content is None:
+                        raise FailedFileRead("Failed to open the file '" + file_path["display_path"] \
+                            + "' to read its contents. Please run the scan with --log and open the log" \
+                            + " file for details of this error.")
+
+                    if isinstance(content, str):
+                        encoded_content = codecs.encode(content, "utf-8")
+                    else:
+                        encoded_content = content
+
                     hexdigest = hashlib.sha1(encoded_content).hexdigest()
                     sha1_list.append(hexdigest)
-
-                    if not content or language == Languages.Unsupported:
-                        continue
 
                     found_matches = False
 
@@ -220,7 +222,7 @@ class CryptoDetector(object):
                         if not method.supports_scanning_file(language):
                             continue
 
-                        if self.source_files_only and not Languages.is_source_code(language):
+                        if self.source_files_only and not language.is_source_code:
                             continue
 
                         Output.print_information("[" + method.method_id \
@@ -262,7 +264,6 @@ class CryptoDetector(object):
                             break
                         else:
                             self.stop_after -= 1
-
 
                 crypto_output.set_verif_code(sha1_list)
 
@@ -448,106 +449,24 @@ class CryptoDetector(object):
             size /= 1024.0
 
     @staticmethod
-    def guess_language(path):
-        """Guess the language of the file from its extension.
+    def has_nontext_characters(content):
+        """Determine if the characters in a file are outside the scope of text file characters as defined here:
+        https://github.com/file/file/blob/f2a6e7cb7db9b5fd86100403df6b2f830c7f22ba/src/encoding.c#L151-L228
 
         Args:
-            path: (string) file path
+            content: (string)
 
         Returns:
-            (Language) the language of the file. See languages.py for Language data structure
+            (bool)
         """
-        extension = path.split(".")[-1].lower()
+        text_chars = set([7, 8, 9, 10, 11, 12, 13, 27]) | set(range(0x20, 0x100)) - set([0x7f])
+        return bool(content.translate({c: None for c in bytearray(text_chars)}))
 
-        if extension in ["c", "cc", "cp", "cpp", "c++", "cxx", "h", "hh", "hxx", "hpp"]:
-            return Languages.C
-
-        elif extension in ["py", "rpy", "pyt", "pyw", "pym"]:
-            return Languages.Python
-
-        elif extension in ["sh", "ksh", "run", "bsh"]:
-            return Languages.Shell
-
-        elif extension in ["java", "jsp", "j"]:
-            return Languages.Java
-
-        elif extension == "php":
-            return Languages.PHP
-
-        elif extension == "patch":
-            return Languages.Patch
-
-        guess, _ = mimetypes.guess_type(path)
-
-        if guess is None:
-            # matches e.g. so.1.0.0 extention types
-            if re.compile(r"so(?:\.[0-9])+$").search(path):
-                return Languages.Binary
-
-            if extension == "real":
-                return Languages.Binary
-
-            return Languages.Unknown
-
-        category, filetype = guess.split("/")
-
-        if category in ["text", "message"]:
-
-            if filetype in ["x-c++hdr", "x-c++src", "x-chdr", "x-csrc", "x-moc"]:
-                language = Languages.C
-
-            elif filetype in ["x-csh", "x-sh"]:
-                language = Languages.Shell
-
-            elif filetype in ["x-haskell", "x-literate-haskell"]:
-                language = Languages.Haskell
-
-            elif filetype in ["x-java"]:
-                language = Languages.Java
-
-            elif filetype in ["x-pascal"]:
-                language = Languages.Pascal
-
-            elif filetype in ["x-perl"]:
-                language = Languages.Perl
-
-            elif filetype in ["x-python"]:
-                language = Languages.Python
-
-            elif filetype in ["x-scala"]:
-                language = Languages.Scala
-
-            else:
-                language = Languages.Plain_text
-
-        elif category in "application":
-
-            if filetype == "x-msdos-program":
-                if extension == "bat":
-                    language = Languages.MSDOS
-                else:
-                    language = Languages.Binary
-
-            elif filetype == "javascript":
-                language = Languages.Javascript
-
-            elif filetype in ["json", "xhtml+xml", "xml", "xslt+xml", "xspf+xml", "x-trash"]:
-                language = Languages.Plain_text
-
-            else:
-                language = Languages.Binary
-
-        else:
-            language = Languages.Unsupported
-
-        return language
-
-    def read_text_file(self, path, print_error=True):
+    def read_text_file(self, path):
         """Try multiple different text encodings to read a text file
 
         Args:
             path: (string) file path
-            print_error: (bool) should print an error if failed to open as a text file
 
         Returns:
             (string, string) the content of the file and its encoding
@@ -555,13 +474,11 @@ class CryptoDetector(object):
         """
         text_encodings = ["utf-8", "latin-1", "iso-8859-1", "utf-16", "utf-32", "cp500"]
         content = None
-        encoding = None
 
-        for encoding_ in text_encodings:
+        for encoding in text_encodings:
             try:
-                with open(path, 'r', encoding=encoding_) as content_file:
+                with open(path, 'r', encoding=encoding) as content_file:
                     content = content_file.read()
-                    encoding = encoding_
                     break
 
             except ValueError as expn:
@@ -569,33 +486,13 @@ class CryptoDetector(object):
 
             except (OSError, IOError) as expn:
                 Output.print_error("Critical error while reading file " + path + "\n" + str(expn))
-                return
+                return content
 
             except Exception as expn:
                 Output.print_error("Exception while opening file " + path + "\n" + str(expn))
-                return
+                return content
 
-        if content is None and print_error:
-            Output.print_error("Couldn't decode the text file " + path + "using any " \
-                + "of Unicode, Latin, ISO-8859, or EBCDIC encodings.")
-
-        return content, encoding
-
-    @staticmethod
-    def is_binary(content):
-        """Determine if the characters in a file are outside the scope of text file characters
-
-        Reference:
-        https://github.com/file/file/blob/f2a6e7cb7db9b5fd86100403df6b2f830c7f22ba/src/encoding.c#L151-L228
-
-        Args:
-            content: (string) the file content
-
-        Returns:
-            (bool) if there is a non-text character found in the file content
-        """
-        textchars = set([7, 8, 9, 10, 11, 12, 13, 27]) | set(range(0x20, 0x100)) - set([0x7f])
-        return bool(content.translate({c: None for c in bytearray(textchars)}))
+        return content
 
     def read_binary_file(self, path):
         """Read a binary file
@@ -615,61 +512,70 @@ class CryptoDetector(object):
 
         except (OSError, IOError) as expn:
             Output.print_error("Critical error while reading file " + path + "\n" + str(expn))
-            return
+            return content
 
         except Exception as expn:
             Output.print_error("Couldn't open binary file " + path + "\n" + str(expn))
-            return
+            return content
 
         return content
 
     def read_file(self, path):
-        """Reads a file at the given path
-
-        If we couldn't guess the type of the file from its extension, try to open it
-        as plain text, and if that failed, treat it as binary. If that succeeded, check the
-        characters in the file to ensure it is actually a text file.
+        """Reads a file at the given path to return its content and language
 
         Args:
             path: (string) file path
 
         Returns:
-            tuple (file content, language, encoding)
+            tuple (file content, language) file content is either a str or bytes array depending
+                on whether or not it is binary.
         """
-        language = CryptoDetector.guess_language(path)
         content = None
-        encoding = None
 
-        if language == Languages.Unknown:
-            content, encoding = self.read_text_file(path, print_error=False)
+        filename, file_extension = os.path.splitext(path)
+        file_extension = file_extension.split(".")[-1].lower()
+
+        language = Language.guess_language(file_extension)
+
+        if language == Language.Unknown:
+
+            # if we couldn't guess the type of the file from its extension, try to open it
+            # as plain text, and if that failed, treat it as binary, but if that succeeded,
+            # check the characters in the file to ensure it is a text file.
+
+            content = self.read_text_file(path)
 
             if content is None:
                 content = self.read_binary_file(path)
-                language = Languages.Binary
+                language = Language.Binary
 
             else:
-                if CryptoDetector.is_binary(content):
-                    language = Languages.Binary
+                if self.has_nontext_characters(content):
+                    content = self.read_binary_file(path)
+                    language = Language.Binary
                 else:
-                    language = Languages.Plain_text
+                    language = Language.PlainText
 
-        if language != Languages.Unsupported:
+        else:
+            if language.is_text:
+                content = self.read_text_file(path)
 
-            if language == Languages.Binary:
-                content = self.read_binary_file(path)
-
+                if content is None:
+                    Output.print_error("Couldn't decode the text file " + \
+                        path + "using any of Unicode, Latin, ISO-8859, or EBCDIC encodings." + \
+                        " Will treat as binary.")
+                    content = self.read_binary_file(path)
+                    language = Language.Binary
             else:
-                content, encoding = self.read_text_file(path)
+                content = self.read_binary_file(path)
+                language = Language.Binary
 
-        if content != None:
-            if language == Languages.Binary:
+
+        if content is not None:
+            if language == Language.Binary:
                 self.package_binary_bytes += len(content)
             else:
                 self.package_text_bytes += len(content)
                 self.package_lines_of_text += len(content.split("\n"))
 
-        # open unsupported files as binary to compute their checksum
-        if language == Languages.Unsupported:
-            content = self.read_binary_file(path)
-
-        return content, language, encoding
+        return content, language

@@ -13,7 +13,7 @@ OR CONDITIONS OF ANY KIND, either express or implied.
 """
 
 import re
-from cryptodetector import Method, Languages
+from cryptodetector import Method
 
 class HelloWorldScanner(Method):
     """Hello, World template method
@@ -44,7 +44,7 @@ class HelloWorldScanner(Method):
         Returns:
             (bool) whether it supports scanning a file in the given language
         """
-        return Languages.is_text(language)
+        return language.is_text
 
     def quick_search(self, content, language):
         """Quickly search the content for the string "Hello, World"

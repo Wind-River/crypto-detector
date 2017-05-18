@@ -16,7 +16,7 @@ from os.path import dirname, realpath, join, basename, isfile
 from os import listdir
 
 from cryptodetector.logger import Logger
-from cryptodetector.languages import Languages
+from cryptodetector.language import Language
 from cryptodetector.output import Output
 from cryptodetector.crypto_output import CryptoOutput
 from cryptodetector.regex import Regex

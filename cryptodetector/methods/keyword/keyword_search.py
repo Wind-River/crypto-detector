@@ -13,7 +13,7 @@ OR CONDITIONS OF ANY KIND, either express or implied.
 """
 
 from os.path import dirname, realpath, join
-from cryptodetector import Method, Regex, Languages
+from cryptodetector import Method, Regex
 
 class KeywordSearch(Method):
     """Class for searching files for a set of keywords
@@ -46,7 +46,7 @@ class KeywordSearch(Method):
         Returns:
             (bool)
         """
-        return Languages.is_text(language)
+        return language.is_text
 
     def search(self, content, language):
         """Search file content and find all matches
