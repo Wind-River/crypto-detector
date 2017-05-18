@@ -8,7 +8,7 @@
 
     "package_name": <string>,
 
-    "crypto_evidence": [
+    "crypto_evidence": {
 
         <file sha1>: {
 
@@ -63,7 +63,7 @@
         },
 
         ...
-    ]
+    }
 }
 
 ```
