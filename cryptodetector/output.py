@@ -34,7 +34,7 @@ class Output():
         """Explicitly encode the string, replacing non-unicode characters
         and write to standard output bufffer
         """
-        sys.stdout.buffer.write(codecs.encode(string, "utf-8", "replace"))
+        sys.stdout.buffer.write(codecs.encode(string + str("\n"), "utf-8", "replace"))
 
     @staticmethod
     def print_output(output):
