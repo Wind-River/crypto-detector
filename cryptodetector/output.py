@@ -14,6 +14,7 @@ OR CONDITIONS OF ANY KIND, either express or implied.
 
 import sys
 import os
+import codecs
 from cryptodetector import Logger
 
 class Output():
@@ -29,6 +30,13 @@ class Output():
     suppress_warnings = False
 
     @staticmethod
+    def print_string(string):
+        """Explicitly encode the string, replacing non-unicode characters
+        and write to standard output bufffer
+        """
+        sys.stdout.buffer.write(codecs.encode(string, "utf-8", "replace"))
+
+    @staticmethod
     def print_output(output):
         """Print output data
 
@@ -38,8 +46,8 @@ class Output():
         Returns:
             None
         """
-        print("\n\n")
-        print(output)
+        Output.print_string("\n\n")
+        Output.print_string(output)
 
     @staticmethod
     def print_information(text, ignore_verbose=False):
@@ -53,7 +61,7 @@ class Output():
             None
         """
         if ignore_verbose or Output.verbose:
-            print(text)
+            Output.print_string(text)
 
     @staticmethod
     def print_error(message):
