@@ -41,7 +41,7 @@
 
 
 [keyword_list_version]
-	4
+	5
 
 
 ####################################################################################################
@@ -3818,12 +3818,16 @@
 	"CryptAcquireContext"
 	"PROV_FORTEZZA"
 	"PROV_MS_EXCHANGE"
+	"CryptGenRandom"
+	"CryptReleaseContext"
 
 [{"encryption_library":"wincrypt", "evidence_type":"algorithm/asymmetric/RSA", "encryption_api_usage":"data_type", "language":"all"}]
 	"PROV_RSA_FULL"
 	"PROV_RSA_AES"
 	"PROV_RSA_SIG"
 	"PROV_RSA_SCHANNEL"
+	"HCRYPTPROV"
+	"CRYPT_VERIFYCONTEXT"
 
 [{"encryption_library":"wincrypt", "evidence_type":"algorithm/asymmetric/DSA", "encryption_api_usage":"data_type", "language":"all"}]
 	"PROV_DSS"
