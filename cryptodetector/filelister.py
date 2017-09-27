@@ -479,8 +479,20 @@ class FileLister():
             FileLister.extract_by_library(bz2, full_path, display_path, tmp_dir)
         elif archive_type == "lzma":
             FileLister.extract_by_library(lzma, full_path, display_path, tmp_dir)
-        # last step to ensure operation is atomic
-        os.rename(tmp_dir, tmp_dir)
+
+        # for some reason, when we get here, sometimes extraction is not fully finished, and
+        # somemtimes it is. The operating systems sometimes isn't fully ready to read all the files.
+        # Here we rename the parent directory to make extraction an atomic operation.
+        while True:
+            try:
+                os.rename(tmp_dir, tmp_dir)
+                break
+            except:
+                # This rename operating can fail. For example, when a file is still open
+                # by another process, Windows will not allow anyone to rename the directory in which
+                # that file resides. So here we sleep for one second to retry again.
+                time.sleep(1)
+
 
     @staticmethod
     def extract_zip(zip_file_path, display_path, output_directory):
