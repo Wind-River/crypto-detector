@@ -41,7 +41,7 @@
 
 
 [keyword_list_version]
-	5
+	6
 
 
 ####################################################################################################
@@ -1925,18 +1925,23 @@
 	"HMAC_Update"
 	"EVP_PKEY_get0_hmac"
 
-[{"encryption_library":"OpenSSL", "evidence_type":"algorithm/hash/MD", "encryption_api_usage":"call", "language":"all"}]
+[{"encryption_library":"OpenSSL", "evidence_type":"algorithm/hash/MD2", "encryption_api_usage":"call", "language":"all"}]
 	"MD2_Final"
 	"MD2_Init"
 	"MD2_Update"
+	"EVP_md2"
+
+[{"encryption_library":"OpenSSL", "evidence_type":"algorithm/hash/MD4", "encryption_api_usage":"call", "language":"all"}]
 	"MD4_Final"
 	"MD4_Init"
 	"MD4_Update"
+
+[{"encryption_library":"OpenSSL", "evidence_type":"algorithm/hash/MD5", "encryption_api_usage":"call", "language":"all"}]
 	"MD5_Final"
 	"MD5_Init"
 	"MD5_Update"
-	"EVP_md2"
 	"EVP_md5"
+	"EVP_MD"
 	"EVP_md_null"
 
 [{"encryption_library":"OpenSSL", "evidence_type":"algorithm/hash/MDC-2", "encryption_api_usage":"call", "language":"all"}]
@@ -2444,7 +2449,7 @@
 	"EVP_rc4"
 	"EVP_rc4_40"
 
-[{"encryption_library":"OpenSSL", "evidence_type":"algorithm/symmetric/block-cipher/CAST", "encryption_api_usage":"call", "language":"all"}]
+[{"encryption_library":"OpenSSL", "evidence_type":"algorithm/symmetric/block-cipher/CAST5", "encryption_api_usage":"call", "language":"all"}]
 	"EVP_cast5_cbc"
 	"EVP_cast5_cfb"
 	"EVP_cast5_ecb"
@@ -2591,20 +2596,32 @@
 	"d2i_Netscape_RSA"
 	"i2d_Netscape_RSA"
 
-[{"encryption_library":"OpenSSL", "evidence_type":"algorithm/hash/SHA", "encryption_api_usage":"call", "language":"all"}]
-	"SHA1_Final"
+[{"encryption_library":"OpenSSL", "evidence_type":"algorithm/hash/SHA1", "encryption_api_usage":"call", "language":"all"}]
 	"SHA1_Init"
 	"SHA1_Update"
-	"SHA224_Final"
+	"SHA1_Final"
+	"SHA1_Transform"
+	"EVP_sha1"
+	"SHA_Init"
+	"SHA_Update"
+	"SHA_Final"
+	"SHA_Transform"
+
+[{"encryption_library":"OpenSSL", "evidence_type":"algorithm/hash/SHA2", "encryption_api_usage":"call", "language":"all"}]
 	"SHA224_Init"
 	"SHA224_Update"
-	"SHA384_Final"
+	"SHA224_Final"
+	"SHA256_Init"
+	"SHA256_Update"
+	"SHA256_Final"
+	"SHA256_Transform"
 	"SHA384_Init"
 	"SHA384_Update"
-	"SHA512_Final"
+	"SHA384_Final"
 	"SHA512_Init"
 	"SHA512_Update"
-	"EVP_sha1"
+	"SHA512_Final"
+	"SHA512_Transform"
 	"EVP_sha224"
 	"EVP_sha256"
 	"EVP_sha384"
@@ -2936,8 +2953,10 @@
 [{"encryption_library":"Crypto++", "evidence_type":"algorithm/symmetric/block-cipher/Camellia", "encryption_api_usage":"data_type", "language":"all"}]
 	"Camellia_Info"
 
-[{"encryption_library":"Crypto++", "evidence_type":"algorithm/symmetric/block-cipher/CAST", "encryption_api_usage":"data_type", "language":"all"}]
+[{"encryption_library":"Crypto++", "evidence_type":"algorithm/symmetric/block-cipher/CAST5", "encryption_api_usage":"data_type", "language":"all"}]
 	"CAST128_Info"
+
+[{"encryption_library":"Crypto++", "evidence_type":"algorithm/symmetric/block-cipher/CAST6", "encryption_api_usage":"data_type", "language":"all"}]
 	"CAST256_Info"
 
 [{"encryption_library":"Crypto++", "evidence_type":"algorithm/symmetric/stream-cipher/ChaCha20", "encryption_api_usage":"data_type", "language":"all"}]
@@ -2977,10 +2996,6 @@
 	"ECFHMQV"
 	"ECHMQV"
 
-[{"encryption_library":"Crypto++", "evidence_type":"algorithm/symmetric/block-cipher/BTEA", "encryption_api_usage":"data_type", "language":"all"}]
-	"BTEA_Info"
-	"BTEA"
-
 [{"encryption_library":"Crypto++", "evidence_type":"algorithm/symmetric/block-cipher/GOST", "encryption_api_usage":"data_type", "language":"all"}]
 	"GOST_Info"
 
@@ -2993,7 +3008,7 @@
 [{"encryption_library":"Crypto++", "evidence_type":"algorithm/symmetric/block-cipher/MARS", "encryption_api_usage":"data_type", "language":"all"}]
 	"MARS_Info"
 
-[{"encryption_library":"Crypto++", "evidence_type":"algorithm/hash/MDC", "encryption_api_usage":"data_type", "language":"all"}]
+[{"encryption_library":"Crypto++", "evidence_type":"algorithm/hash/MDC-2", "encryption_api_usage":"data_type", "language":"all"}]
 	"MDC_Info"
 
 [{"encryption_library":"Crypto++", "evidence_type":"algorithm/symmetric/block-cipher/Twofish", "encryption_api_usage":"data_type", "language":"all"}]
@@ -3034,7 +3049,7 @@
 	"RSASSA_PKCS1v15_SHA_Signer"
 	"RSASSA_PKCS1v15_SHA_Verifier"
 
-[{"encryption_library":"Crypto++", "evidence_type":"algorithm/hash/SHA", "encryption_api_usage":"data_type", "language":"all"}]
+[{"encryption_library":"Crypto++", "evidence_type":"algorithm/hash/SHA3", "encryption_api_usage":"data_type", "language":"all"}]
 	"Keccak"
 	"Keccak_224"
 	"Keccak_256"
@@ -3096,7 +3111,7 @@
 [{"encryption_library":"Crypto++", "evidence_type":"algorithm/symmetric/block-cipher/RC6", "encryption_api_usage":"data_type", "language":"all"}]
 	"RC6_Info"
 
-[{"encryption_library":"Crypto++", "evidence_type":"algorithm/symmetric/block-cipher/Rijndael", "encryption_api_usage":"data_type", "language":"all"}]
+[{"encryption_library":"Crypto++", "evidence_type":"algorithm/symmetric/block-cipher/AES", "encryption_api_usage":"data_type", "language":"all"}]
 	"Rijndael_Info"
 
 [{"encryption_library":"Crypto++", "evidence_type":"algorithm/asymmetric/RabinWilliams", "encryption_api_usage":"data_type", "language":"all"}]
@@ -3298,6 +3313,8 @@
 	"make_space_ctx"
 	"pk_encoding_ctx"
 	"primepool_s"
+	"gcry_strerror"
+	"gcry_strsource"
 
 [{"encryption_library":"libgcrypt", "evidence_type":"algorithm/MAC/Poly1305", "encryption_api_usage":"data_type", "language":"all"}]
 	"poly1305_context_s"
@@ -3453,7 +3470,7 @@
 	"gcry_mac_get_algo_maclen"
 	"gcry_mac_get_algo_keylen"
 
-[{"encryption_library":"libgcrypt", "evidence_type":"algorithm/hash/MD", "encryption_api_usage":"call", "language":"all"}]
+[{"encryption_library":"libgcrypt", "evidence_type":"algorithm/hash/MD5", "encryption_api_usage":"call", "language":"all"}]
 	"gcry_md_open"
 	"gcry_md_enable"
 	"gcry_md_setkey"
@@ -3475,8 +3492,6 @@
 	"gcry_md_is_secure"
 	"gcry_md_is_enabled"
 	"gcry_md_debug"
-	"gcry_strerror"
-	"gcry_strsource"
 
 [{"encryption_library":"libgcrypt", "evidence_type":"algorithm/hybrid/PGP", "encryption_api_usage":"data_type", "language":"all"}]
 	"GPG_ERR_SOURCE_UNKNOWN"
@@ -3516,19 +3531,24 @@
 	"GCRY_MAC_HMAC_RMD160"
 	"hmac256_context"
 
-[{"encryption_library":"libgcrypt", "evidence_type":"algorithm/hash/MD", "encryption_api_usage":"data_type", "language":"all"}]
+[{"encryption_library":"libgcrypt", "evidence_type":"algorithm/hash/MD2", "encryption_api_usage":"data_type", "language":"all"}]
+	"GCRY_MD_MD2"
+	"MD2_CONTEXT"
+
+[{"encryption_library":"libgcrypt", "evidence_type":"algorithm/hash/MD4", "encryption_api_usage":"data_type", "language":"all"}]
+	"GCRY_MD_MD4"
+	"MD4_CONTEXT"
+
+[{"encryption_library":"libgcrypt", "evidence_type":"algorithm/hash/MD5", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_MD_NONE"
 	"GCRY_MD_RMD160"
 	"GCRY_MD_MD5"
-	"GCRY_MD_MD4"
-	"GCRY_MD_MD2"
 	"GCRY_MD_FLAG_SECURE"
 	"GCRY_MD_FLAG_BUGEMU1"
-	"MD4_CONTEXT"
 	"MD5_CONTEXT"
 	"RMD160_CONTEXT"
 
-[{"encryption_library":"libgcrypt", "evidence_type":"algorithm/hash/TIGER", "encryption_api_usage":"data_type", "language":"all"}]
+[{"encryption_library":"libgcrypt", "evidence_type":"algorithm/hash/Tiger", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_MD_TIGER"
 	"GCRY_MD_TIGER1"
 	"GCRY_MD_TIGER2"
@@ -3537,24 +3557,28 @@
 [{"encryption_library":"libgcrypt", "evidence_type":"algorithm/hash/HAVAL", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_MD_HAVAL"
 
-[{"encryption_library":"libgcrypt", "evidence_type":"algorithm/hash/SHA", "encryption_api_usage":"data_type", "language":"all"}]
+[{"encryption_library":"libgcrypt", "evidence_type":"algorithm/hash/SHA1", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_MD_SHA1"
+	"GCRY_MAC_HMAC_SHA1"
+	"SHA1_CONTEXT"
+
+[{"encryption_library":"libgcrypt", "evidence_type":"algorithm/hash/SHA2", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_MD_SHA224"
 	"GCRY_MD_SHA256"
 	"GCRY_MD_SHA384"
 	"GCRY_MD_SHA512"
+	"SHA256_CONTEXT"
+	"SHA512_CONTEXT"
+	"SHA512_STATE"
 	"GCRY_MAC_HMAC_SHA256"
 	"GCRY_MAC_HMAC_SHA224"
 	"GCRY_MAC_HMAC_SHA512"
 	"GCRY_MAC_HMAC_SHA384"
-	"GCRY_MAC_HMAC_SHA1"
+
+[{"encryption_library":"libgcrypt", "evidence_type":"algorithm/hash/SHA3", "encryption_api_usage":"data_type", "language":"all"}]
 	"KECCAK_CONTEXT_S"
 	"keccak_ops_t"
 	"KECCAK_STATE"
-	"SHA1_CONTEXT"
-	"SHA256_CONTEXT"
-	"SHA512_CONTEXT"
-	"SHA512_STATE"
 
 [{"encryption_library":"libgcrypt", "evidence_type":"algorithm/hash/Whirlpool", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_MD_WHIRLPOOL"
@@ -3613,7 +3637,7 @@
 	"_des_ctx"
 	"_tripledes_ctx"
 
-[{"encryption_library":"libgcrypt", "evidence_type":"algorithm/symmetric/block-cipher/CAST", "encryption_api_usage":"data_type", "language":"all"}]
+[{"encryption_library":"libgcrypt", "evidence_type":"algorithm/symmetric/block-cipher/CAST5", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_CIPHER_CAST5"
 	"GCRY_MAC_CMAC_CAST5"
 	"CAST5_context"
@@ -3666,7 +3690,7 @@
 	"GCRY_MAC_GMAC_SERPENT"
 	"serpent_context"
 
-[{"encryption_library":"libgcrypt", "evidence_type":"algorithm/symmetric/block-cipher/RFC2268", "encryption_api_usage":"data_type", "language":"all"}]
+[{"encryption_library":"libgcrypt", "evidence_type":"algorithm/symmetric/block-cipher/RC2", "encryption_api_usage":"data_type", "language":"all"}]
 	"GCRY_CIPHER_RFC2268_40"
 	"GCRY_CIPHER_RFC2268_128"
 	"GCRY_MAC_CMAC_RFC2268"
@@ -3702,30 +3726,39 @@
 
 [{"encryption_library":"BOTAN", "evidence_type":"library/Botan", "encryption_api_usage":"include", "language":"all"}]
 	"botan.h"
+	"define BOTAN BOTAN _H_"
 
 ####################################################################################################
 ### libMD
 ####################################################################################################
 
-[{"encryption_library":"libMD", "evidence_type":"algorithm/hash/SHA", "encryption_api_usage":"call", "language":"all"}]
-	"SHA_Init"
-	"SHA_Update"
-	"SHA_Final"
-	"SHA_End"
-	"SHA_File"
-	"SHA_FileChunk"
-	"SHA_Data"
+[{"encryption_library":"libMD", "evidence_type":"algorithm/hash/SHA1", "encryption_api_usage":"call", "language":"all"}]
 	"SHA1_End"
+	"SHA1_Data"
 	"SHA1_File"
 	"SHA1_FileChunk"
-	"SHA1_Data"
-	"SHA256_Init"
-	"SHA256_Update"
-	"SHA256_Final"
+	"SHA_End"
+	"SHA_Data"
+	"SHA_File"
+	"SHA_FileChunk"
+
+[{"encryption_library":"libMD", "evidence_type":"algorithm/hash/SHA2", "encryption_api_usage":"call", "language":"all"}]
+	"SHA224_End"
+	"SHA224_Data"
+	"SHA224_File"
+	"SHA224_FileChunk"
 	"SHA256_End"
+	"SHA256_Data"
 	"SHA256_File"
 	"SHA256_FileChunk"
-	"SHA256_Data"
+	"SHA384_End"
+	"SHA384_Data"
+	"SHA384_File"
+	"SHA384_FileChunk"
+	"SHA512_End"
+	"SHA512_Data"
+	"SHA512_File"
+	"SHA512_FileChunk"
 
 [{"encryption_library":"libMD", "evidence_type":"algorithm/hash/MD4", "encryption_api_usage":"call", "language":"all"}]
 	"MD4Init"
@@ -3760,7 +3793,7 @@
 ### GlibC
 ####################################################################################################
 
-[{"encryption_library":"glibc", "evidence_type":"algorithm/hash/generic", "encryption_api_usage":"call", "language":"all"}]
+[{"encryption_library":"glibc", "evidence_type":"algorithm/hash/Hash", "encryption_api_usage":"call", "language":"all"}]
 	"g_checksum_type_get_length"
 	"g_checksum_new"
 	"g_checksum_copy"
@@ -3777,9 +3810,8 @@
 ### QT
 ####################################################################################################
 
-[{"encryption_library":"QT", "evidence_type":"algorithm/hash/generic", "encryption_api_usage":"data_type", "language":"all"}]
+[{"encryption_library":"QT", "evidence_type":"algorithm/hash/Hash", "encryption_api_usage":"data_type", "language":"all"}]
 	"QCryptographicHash"
-
 
 [{"encryption_library":"QT", "evidence_type":"protocol/SSL", "encryption_api_usage":"data_type", "language":"all"}]
 	"QSslSocket"

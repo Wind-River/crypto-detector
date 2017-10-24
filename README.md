@@ -22,7 +22,7 @@ This script crudely detects the following cryptography schemes:
  >RSA, DSA, Diffie-Hellman, ECC, ElGamal, Rabin, XTR
 * Block ciphers
 
- >AES, DES, RC2, RC5, RC6, CAST, Blowfish, Twofish, Threefish, Rijndael, Camellia, IDEA, SEED, Serpent, SHACAL, GOST, TEA, XTEA, BTEA, SAFER, Feistel, IntelCascade, KASUMI, MISTY1, NOEKEON, SHARK, Skipjack, BEAR-LION, RFC2268, MARS, Diamond2, DFC, CSCipher
+ >AES, DES, RC2, RC5, RC6, CAST, Blowfish, Twofish, Threefish, Rijndael, Camellia, IDEA, SEED, Serpent, SHACAL, GOST, TEA, XTEA, BTEA, SAFER, Feistel, IntelCascade, KASUMI, MISTY1, NOEKEON, SHARK, Skipjack, BEAR-LION, RFC2268, MARS, DFC, CSCipher
 * Stream ciphers
 
  >RC4, Salsa20, XSalsa20, ChaCha20, PANAMA, SEAL, SOSEMANUK, WAKE

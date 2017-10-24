@@ -31,7 +31,7 @@
 # 	"pascal"
 
 [keyword_list_version]
-	4
+	5
 
 [{"evidence_type": "algorithm/asymmetric/DiffieHellman", "language": "all"}]
 	"Diffie Hellman"
@@ -111,8 +111,9 @@
 	"\bOAEP"
 	"\bSecurID\b"
 
-[{"evidence_type": "algorithm/hash/generic", "language": "all"}]
+[{"evidence_type": "algorithm/hash/Hash", "language": "all"}]
 	"\blhash"
+	"\brhash"
 	"\bhexdigest"
 
 [{"evidence_type": "algorithm/hash/BLAKE", "language": "all"}]
@@ -132,23 +133,27 @@
 	"\bTTMAC\b"
 	"\bVMAC"
 
-[{"evidence_type": "algorithm/hash/MD", "language": "all"}]
-	"\bmd5sum\b"
-	"\bmd4sum\b"
-	"\bmd2sum\b"
-	"\bdgstsum\b"
-	"\bMD2\b"
-	"\bMD4\b"
-	"\bMD5\b"
-	"_MD2\b"
-	"_MD4\b"
-	"_MD5\b"
-	"\bMD2_"
-	"\bMD4_"
-	"\bMD5_"
+[{"evidence_type": "algorithm/hash/MD2", "language": "all"}]
 	"_MD2_"
+	"_MD2\b"
+	"\bMD2\b"
+	"\bMD2_"
+	"\bmd2sum\b"
+
+[{"evidence_type": "algorithm/hash/MD4", "language": "all"}]
+	"\bmd4sum\b"
+	"\bMD4\b"
+	"_MD4\b"
+	"\bMD4_"
 	"_MD4_"
+
+[{"evidence_type": "algorithm/hash/MD5", "language": "all"}]
+	"\bmd5sum\b"
+	"\bMD5\b"
+	"_MD5\b"
+	"\bMD5_"
 	"_MD5_"
+	"\bdgstsum\b"
 	"\bmdString"
 	"0xd76aa478"
 	"0xe8c7b756"
@@ -165,12 +170,22 @@
 	"RIPEMD160"
 	"RIPEMD256"
 	"RIPEMD320"
+	"50A28BE6"
 
-[{"evidence_type": "algorithm/hash/SHA", "language": "all"}]
+[{"evidence_type": "algorithm/hash/SHA1", "language": "all"}]
 	"\bsha1sum\b"
 	"\bshasum\b"
 	"\bSHA1"
 	"\bSHA-1"
+	"\bSHA_Init"
+	"\bSHA_Update"
+	"\bSHA_End"
+	"\bSHA_Init"
+	"\bSHA_Init"
+	"\bSHA_Init"
+	"0x67452301"
+
+[{"evidence_type": "algorithm/hash/SHA2", "language": "all"}]
 	"\bSHA224"
 	"\bSHA-224"
 	"\bSHA_224"
@@ -185,9 +200,14 @@
 	"\bSHA_512"
 	"\bSHA2"
 	"\bSHA-2"
+	"0x428a2f98"
+
+[{"evidence_type": "algorithm/hash/SHA3", "language": "all"}]
 	"\bSHA3"
 	"\bSHA-3"
-	"0x67452301"
+	"\bkeccak"
+	"_keccak"
+	"8000000000008089"
 
 [{"evidence_type": "algorithm/hash/Tiger", "language": "all"}]
 	"0x02aab17cf7e90c5e"
@@ -235,22 +255,25 @@
 [{"evidence_type": "algorithm/symmetric/block-cipher/IntelCascade", "language": "all"}]
 	"cascade_cipher"
 
-[{"evidence_type": "algorithm/symmetric/block-cipher/CAST", "language": "all"}]
+[{"evidence_type": "algorithm/symmetric/block-cipher/CAST5", "language": "all"}]
 	"\bCAST5"
-	"\bCAST6"
 	"\bCAST128"
 	"\bCAST-128"
 	"\bCAST_128"
+	"0x30fb40d4"
+	"0x7EC90C04"
+
+[{"evidence_type": "algorithm/symmetric/block-cipher/CAST6", "language": "all"}]
+	"\bCAST6"
 	"\bCAST256"
 	"\bCAST-256"
 	"\bCAST_256"
-	"0x30fb40d4"
-	"0x7EC90C04"
 	"0x0F1946B8"
 
 [{"evidence_type": "algorithm/symmetric/block-cipher/DES", "language": "all"}]
 	"Data Encryption Standard"
 	"DES algorithm"
+	"\bDES_key"
 	"\bDES_"
 	"_DES\b"
 	"_DES_"
@@ -307,9 +330,6 @@
 
 [{"evidence_type": "algorithm/symmetric/block-cipher/DFC", "language": "all"}]
 	"\bDFCv2"
-
-[{"evidence_type": "algorithm/symmetric/block-cipher/Diamond2", "language": "all"}]
-	"\bDiamond2\b"
 
 [{"evidence_type": "algorithm/symmetric/block-cipher/Serpent", "language": "all"}]
 	"\bSerpent\b"
@@ -424,6 +444,7 @@
 
 [{"evidence_type": "library/BouncyCastle", "language": "source"}]
 	"bouncycastle"
+	"spongycastle"
 
 [{"evidence_type": "library/Botan", "language": "all"}]
 	"\bbotan\b"
@@ -452,9 +473,6 @@
 	"\blibssl"
 	"\bOpenSSL"
 	"_OpenSSL"
-
-[{"evidence_type": "library/SpongyCastle", "language": "all"}]
-	"spongycastle"
 
 [{"evidence_type": "protocol/kerberos", "language": "all"}]
 	"kerberos"
@@ -510,9 +528,6 @@
 	"\bROT13\b"
 	"\bROT13_"
 
-[{"evidence_type": "library/libXCrypt", "language": "all"}]
-	"libxcrypt"
-
 [{"evidence_type": "library/glibC", "language": "all"}]
 	"glibc/crypt"
 
@@ -525,15 +540,8 @@
 	"\bAdler32"
 
 #
-# TODO encryption modes
+# TODO encryption modes (CBC, ECB, CFB, OFB, CTR)
 #
-
-#[{"evidence_type": "encryption_mode/CBC", "language": "all"}]
-#	"_CBC3_"
-#	"-CBC3-"
-#	"\bCBC3_"
-#	"\bCBC3-"
-#	"_CBC3\b"
 
 [{"evidence_type": "generic", "language": "all"}]
 	"crypt"
