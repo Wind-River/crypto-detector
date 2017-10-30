@@ -180,9 +180,6 @@
 	"\bSHA_Init"
 	"\bSHA_Update"
 	"\bSHA_End"
-	"\bSHA_Init"
-	"\bSHA_Init"
-	"\bSHA_Init"
 	"0x67452301"
 
 [{"evidence_type": "algorithm/hash/SHA2", "language": "all"}]
