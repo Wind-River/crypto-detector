@@ -1,4 +1,4 @@
-# Crypto JSON Output Specification Version 2.0 #
+# Crypto JSON Output Specification Version 3.0 #
 
 ```
 {
@@ -13,7 +13,7 @@
         <file sha1>: {
 
             "file_paths": [<array of strings>],
-            
+
             "is_source_code": <boolean>,
 
             "hits": [
