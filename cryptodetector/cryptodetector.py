@@ -169,6 +169,7 @@ class CryptoDetector(object):
 
         for package_path in self.packages:
             package_filelist = self.file_lister.get_package_filelist(package_path)
+
             for package in package_filelist:
                 package_name = package["package_name"]
                 package_root = package["package_root"]
@@ -227,6 +228,7 @@ class CryptoDetector(object):
                         Output.print_information("[" + method.method_id \
                             + "] Scanning file " + file_path["display_path"])
 
+
                         if self.quick:
                             if method.quick_search(content, language):
                                 found_matches = True
@@ -248,6 +250,7 @@ class CryptoDetector(object):
                                 crypto_output.add_hit(
                                     file_path=file_path["display_path"],
                                     file_sha1=checksums[file_path["display_path"]],
+                                    file_language=language,
                                     hit=match)
                                 match_count += 1
 

@@ -16,11 +16,13 @@ import copy
 import hashlib
 import codecs
 
+from cryptodetector import Language
+
 class CryptoOutput(object):
     """Class for structuring the JSON data in the crypto output"""
 
     # the version of the crypto specification with which this output format complies
-    CRYPTO_SPEC_VERSION = 2.0
+    CRYPTO_SPEC_VERSION = 3.0
 
 
     def __init__(self):
@@ -103,7 +105,7 @@ class CryptoOutput(object):
         verif_code = hashlib.sha1(codecs.encode(joined_sha1s, "utf-8")).hexdigest()
         self.__JSON_data["file_collection_verification_code"] = verif_code
 
-    def add_hit(self, file_path, file_sha1, hit):
+    def add_hit(self, file_path, file_sha1, file_language, hit):
         """Adds a hit in the file with the given SHA1 and path
 
         Args:
@@ -115,10 +117,18 @@ class CryptoOutput(object):
             None
         """
         if file_sha1 not in self.__JSON_data["crypto_evidence"]:
-            self.__JSON_data["crypto_evidence"][file_sha1] = {"file_paths": [], "hits": []}
+            self.__JSON_data["crypto_evidence"][file_sha1] = {
+                "file_paths": [],
+                "hits": [],
+                "is_source_code": file_language.is_source_code
+                }
 
         if file_path not in self.__JSON_data["crypto_evidence"][file_sha1]["file_paths"]:
             self.__JSON_data["crypto_evidence"][file_sha1]["file_paths"].append(file_path)
+
+            if self.__JSON_data["crypto_evidence"][file_sha1]["is_source_code"] != \
+                file_language.is_source_code:
+                self.__JSON_data["crypto_evidence"][file_sha1]["is_source_code"] = True
 
         self.__JSON_data["crypto_evidence"][file_sha1]["hits"].append(copy.copy(hit))
 

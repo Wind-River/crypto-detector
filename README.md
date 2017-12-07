@@ -189,7 +189,7 @@ python3 scan-for-crypto.py /folder/*.tar.gz
 ```
 
 ### The Output ###
-This script creates a set of `<package>.crypto` files for each package that it scans. It writes a JSON object in this file. For specification of the output format, see [output specification](/crypto-output-specification/crypto-spec-2.0.md).
+This script creates a set of `<package>.crypto` files for each package that it scans. It writes a JSON object in this file. For specification of the output format, see [output specification](/crypto-output-specification/crypto-spec-3.0.md).
 
 ## FAQ ##
 
