@@ -31,7 +31,7 @@
 # 	"pascal"
 
 [keyword_list_version]
-	5
+	6
 
 [{"evidence_type": "algorithm/asymmetric/DiffieHellman", "language": "all"}]
 	"Diffie Hellman"
@@ -39,10 +39,14 @@
 	"Diffie_Hellman"
 	"Diffie.Hellman"
 	"DiffieHellman"
-	"\bDHParameterSpec"
-	"\bDHPublicKey"
-	"\bDHPrivateKey"
+	"DHParameterSpec"
 	"0xFFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD1"
+	"DHPublicKey"
+	"DHPubKey"
+	"DHPrivateKey"
+	"DHPrivKey"
+	"DH_generate_key"
+	"DH_compute_key"
 
 [{"evidence_type": "algorithm/asymmetric/DSA", "language": "all"}]
 	"Digital Signature Algorithm"
@@ -110,6 +114,11 @@
 	"\bX9.31"
 	"\bOAEP"
 	"\bSecurID\b"
+	"RSAPrivateKey"
+	"RSAPublicKey"
+	"RSAPrivKey"
+	"RSAPubKey"
+	"RSAKey"
 
 [{"evidence_type": "algorithm/hash/Hash", "language": "all"}]
 	"\blhash"
@@ -126,6 +135,12 @@
 [{"evidence_type": "algorithm/hash/HMAC", "language": "all"}]
 	"\bHMAC"
 	"\bHKDF"
+	"HMAX_MD5_Context"
+	"HMAC_SHA"
+	"HMAC_MD5"
+	"HMAC_MD4"
+	"HMAC_CTX"
+
 
 [{"evidence_type": "protocol/MAC", "language": "all"}]
 	"\bCMAC\b"
@@ -180,6 +195,8 @@
 	"\bSHA_Init"
 	"\bSHA_Update"
 	"\bSHA_End"
+	"_SHA1"
+	"_SHA-1"
 	"0x67452301"
 
 [{"evidence_type": "algorithm/hash/SHA2", "language": "all"}]
@@ -197,6 +214,20 @@
 	"\bSHA_512"
 	"\bSHA2"
 	"\bSHA-2"
+	"_SHA224"
+	"_SHA-224"
+	"_SHA_224"
+	"_SHA256"
+	"_SHA-256"
+	"_SHA_256"
+	"_SHA384"
+	"_SHA-384"
+	"_SHA_384"
+	"_SHA512"
+	"_SHA-512"
+	"_SHA_512"
+	"_SHA2"
+	"_SHA-2"
 	"0x428a2f98"
 
 [{"evidence_type": "algorithm/hash/SHA3", "language": "all"}]
@@ -235,6 +266,7 @@
 	"_AES_"
 	"\baes\b"
 	"AES128"
+	"AES256"
 	"\brijndael"
 	"\bBMGL"
 	"\baesKey\b"
@@ -280,6 +312,7 @@
 	"_3DES"
 	"DES-EDE"
 	"DES-XEX"
+	"DES3-KD"
 	"\bDESX"
 	"0x01010400"
 	"58, 50, 42, 34, 26, 18, 10"
@@ -370,6 +403,7 @@
 	"RC2_encrypt"
 	"RC2_decrypt"
 	"\bRC2Context"
+	"RC2_set_key"
 	"\brc2_cbc"
 	"\brc2_cfb"
 	"\brc2_ecb"
@@ -384,6 +418,7 @@
 
 [{"evidence_type": "algorithm/symmetric/stream-cipher/RC4", "language": "all"}]
 	"\bArcfour"
+	"\barcfour_"
 	"\bRC4_128"
 	"RC4_encrypt"
 	"RC4_decrypt"
@@ -396,8 +431,17 @@
 	"\brc4-cfb"
 	"\brc4-ecb"
 	"\brc4-ofb"
+	"_rc4_cbc"
+	"_rc4_cfb"
+	"_rc4_ecb"
+	"_rc4_ofb"
+	"_rc4-cbc"
+	"_rc4-cfb"
+	"_rc4-ecb"
+	"_rc4-ofb"
 	"\bRC4_KEY"
 	"RC4 algorithm"
+	"\bRC4_HMAC"
 
 [{"evidence_type": "algorithm/symmetric/block-cipher/RC5", "language": "all"}]
 	"0xb7e15163"
@@ -477,10 +521,6 @@
 	"\bkrb5\b"
 
 [{"evidence_type": "protocol/PKI", "language": "all"}]
-	"pkcs"
-	"\bx509"
-	"\bx.509"
-	"\bx-509"
 	"PublicKey"
 	"Public_Key"
 	"PrivateKey"
@@ -490,6 +530,24 @@
 	"_pubkey"
 	"priv_key"
 	"\bkeysym"
+
+[{"evidence_type": "protocol/PKCS", "language": "all"}]
+	"pkcs"
+	"\bx509"
+	"\bx.509"
+	"\bx-509"
+	"\bpkcs12.h\b"
+	"_X509_"
+	"_X509\b"
+	"\bX509_digest"
+
+[{"evidence_type":"protocol/ASN1", "language":"all"}]
+	"\bpkcs8_asn1.h\b"
+	"\bpkcs9_asn1.h\b"
+	"\bpkcs12_asn1.h\b"
+	"\bocsp_asn1.h\b"
+	"\basn1_err"
+	"\bpkinit_asn1.h\b"
 
 [{"evidence_type": "protocol/SSH", "language": "all"}]
 	"\bssh2"
@@ -505,6 +563,7 @@
 	"\bssl\b"
 	"\bossl_"
 	"SSLSocket"
+	"\bssl.h\b"
 
 [{"evidence_type": "protocol/TLS", "language": "all"}]
 	"TLSv1"
@@ -535,10 +594,6 @@
 [{"evidence_type": "algorithm/hash/Adler32", "language": "all"}]
 	"\bAdler-32"
 	"\bAdler32"
-
-#
-# TODO encryption modes (CBC, ECB, CFB, OFB, CTR)
-#
 
 [{"evidence_type": "generic", "language": "all"}]
 	"crypt"
