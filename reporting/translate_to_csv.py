@@ -64,7 +64,7 @@ def process_files():
             csv_filename = os.path.join(output_directory, filename + ".csv")
 
             try:
-                with open(csv_filename, 'w') as file:
+                with open(csv_filename, 'w', encoding = 'utf-8') as file:
                     writer = csv.writer(file)
 
                     writer.writerow(["File Paths", "Evidence Type", "Detection Method", "Match", \
