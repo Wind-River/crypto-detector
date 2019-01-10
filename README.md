@@ -254,11 +254,14 @@ In addition, a method class can have `options` and  `options_help` attributes, b
 We welcome your ideas and suggestions. Please create a fork of this project, make any edits to the
 code that you like, push them to a branch, and create a pull request from that branch by going here:
 https://github.com/Wind-River/crypto-detector/pulls. If you'd like to contact the maintainers,
-please email kamyar.kaviani@windriver.com or mark.gisi@windriver.com.
+please email mark.gisi@windriver.com.
 
 ## Project License ##
 
 Crypto Detector is free and distributed under the **Apache License, Version 2.0**. For further details, visit http://www.apache.org/licenses/LICENSE-2.0. Text for the crypto-detector and other applicable license notices can be found in the LICENSE file in the project top level directory. Different files may be under different licenses. Each source file should include a license notice that designates the licensing terms for the respective file.
+
+## Version ##
+Version 1.0 (kamyar)
 
 ## Legal Notices ##
 
