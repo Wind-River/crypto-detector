@@ -44,7 +44,8 @@ class Options():
             "source_files_only": False,
             "packages": [],
             "ignore_evidence_types": [],
-            "suppress_warnings": False
+            "suppress_warnings": False,
+            "pagination" : 0
             }
 
         self.options_help = {
@@ -91,7 +92,9 @@ class Options():
 
             "log": "Create event log and error log files at the end of each run.",
 
-            "source_files_only": "Only scan source code files; ignore all other text files"
+            "source_files_only": "Only scan source code files; ignore all other text files", 
+
+            "pagination": "Paginates based on integer threshold in MB"
         }
 
         self.cmd_flags = {

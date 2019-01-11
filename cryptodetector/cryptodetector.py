@@ -14,6 +14,7 @@ OR CONDITIONS OF ANY KIND, either express or implied.
 
 import os
 import sys
+import shutil
 import hashlib
 import codecs
 import mimetypes
@@ -26,7 +27,8 @@ from cryptodetector import Method, MethodFactory, Language, Output, FileLister, 
     CryptoOutput
 from cryptodetector.exceptions import InvalidOptionsException, FileWriteException, \
     InvalidMethodException, FailedFileRead
-
+from itertools import chain
+from collections import deque
 
 class CryptoDetector(object):
     """Cryptography Detector main class
@@ -50,7 +52,7 @@ class CryptoDetector(object):
         """
         try:
             for option in ["output", "quick", "output_in_package_directory", "output_existing", \
-                "pretty", "log", "source_files_only"]:
+                "pretty", "log", "source_files_only", "pagination"]:
                 setattr(self, option, options[option])
             self.output_directory = self.output
             Method.ignore_evidence_types = options["ignore_evidence_types"]
@@ -59,6 +61,7 @@ class CryptoDetector(object):
             stop_after = options["stop_after"]
             packages = options["packages"]
             methods = options["methods"]
+            pagination = options["pagination"]
         except KeyError as expn:
             raise InvalidOptionsException("Missing required option: \n" + str(expn))
 
@@ -202,9 +205,13 @@ class CryptoDetector(object):
                     content, language = self.read_file(file_path["physical_path"])
 
                     if content is None:
-                        raise FailedFileRead("Failed to open the file '" + file_path["display_path"] \
-                            + "' to read its contents. Please run the scan with --log and open the log" \
-                            + " file for details of this error.")
+                        try:
+                            raise FailedFileRead("Failed to open the file '" + file_path["display_path"] \
+                                + "' to read its contents. Please run the scan with --log and open the log" \
+                                + " file for details of this error.")
+                        except:
+                            continue
+
 
                     if isinstance(content, str):
                         encoded_content = codecs.encode(content, "utf-8")
@@ -384,6 +391,46 @@ class CryptoDetector(object):
                     match_dict_with_missing_fields[required_field] = EMPTY_VALUE
         return match_dict_with_missing_fields
 
+    @staticmethod
+    def total_size(o, handlers={}, verbose=False):
+        """ Returns the approximate memory footprint an object and all of its contents.
+
+        Automatically finds the contents of the following builtin containers and
+        their subclasses:  tuple, list, deque, dict, set and frozenset.
+        To search other containers, add handlers to iterate over their contents:
+
+            handlers = {SomeContainerClass: iter,
+                        OtherContainerClass: OtherContainerClass.get_elements}
+
+        """
+        dict_handler = lambda d: chain.from_iterable(d.items())
+        all_handlers = {tuple: iter,
+                        list: iter,
+                        deque: iter,
+                        dict: dict_handler,
+                        set: iter,
+                        frozenset: iter,
+                       }
+        all_handlers.update(handlers)     # user handlers take precedence
+        seen = set()                      # track which object id's have already been seen
+        default_size = sys.getsizeof(0)       # estimate sizeof object without __sizeof__
+
+        def sizeof(o):
+            if id(o) in seen:       # do not double count the same object
+                return 0
+            seen.add(id(o))
+            s = sys.getsizeof(o, default_size)
+
+            if verbose:
+                print(s, type(o), repr(o), file=stderr)
+
+            for typ, handler in all_handlers.items():
+                if isinstance(o, typ):
+                    s += sum(map(sizeof, handler(o)))
+                    break
+            return s
+
+        return sizeof(o)
 
     def write_crypto_file(self, json_data, output_directory, package_name):
         """Writes the crypto data to a file at the output_directory
@@ -398,6 +445,15 @@ class CryptoDetector(object):
             Raises:
                 FileWriteException
         """
+
+        print("1")
+
+        if int(self.pagination) > 0:
+            self.write_crypto_files(json_data, output_directory, package_name, int(self.pagination))
+            return
+
+        print("writing...")
+
         output_file = os.path.join(output_directory, package_name)
 
         if self.output_existing == "rename":
@@ -434,6 +490,83 @@ class CryptoDetector(object):
         if os.path.exists(crypto_file_path):
             os.remove(crypto_file_path)
         os.rename(output_file, crypto_file_path)
+
+
+    def write_crypto_files(self, json_data, output_directory, package_name, pagination):
+
+        # creates output directory for paginated .crypto files
+        output_directory = package_name + "_output"
+        if not os.path.exists(output_directory):
+            os.mkdir(output_directory)
+        else:
+            shutil.rmtree(output_directory)
+            os.mkdir(output_directory)
+
+        pagination = int(pagination)
+
+        # serialize json dictionary data into an indexable list of each hit
+        # while retaining information
+        crypto_evidence = list()
+        for file_SHA1 in json_data['crypto_evidence']:
+            file = json_data['crypto_evidence'][file_SHA1]
+            path = file['file_paths']
+            sc = file['is_source_code']
+            for hit in file['hits']:                
+                crypto_evidence.append([file_SHA1, path, hit, sc])
+
+        try:
+            ct = 1
+            output_file = open(os.path.join(output_directory, package_name + '.' + str(ct) + ".crypto"), 'w')
+            
+            output_size = 0
+            output_data = dict()
+
+            for e in ['crypto_spec_version', 'file_collection_verification_code', 'package_name']:
+                output_data[e] = json_data[e]
+
+            output_data['crypto_evidence'] = dict()
+
+            # write each hit to output_data. write data to file, reset output_data, and open a new .crypto file if output_size threshold is met.
+            for hit in crypto_evidence:
+                hit_size = self.total_size(hit[2])
+                if output_size != 0 and (output_size + hit_size > pagination*1000000):
+                    if self.pretty:
+                        output_file.write(json.dumps(output_data, sort_keys=True, indent=2))
+                    else:
+                        output_file.write(json.dumps(output_data))
+                    output_file.close()
+
+                    ct += 1
+                    output_file = open(os.path.join(output_directory, package_name + '.' + str(ct) + ".crypto"), 'w')
+                    
+                    output_size = 0
+                    output_data['crypto_evidence'] = dict()
+
+                output_size += hit_size
+                
+                # if the file id already exists, just add the hit
+                output_evidence = output_data['crypto_evidence']
+                if hit[0] not in output_evidence:
+                    output_evidence[hit[0]] = dict()
+                    output_item = output_evidence[hit[0]]
+                    # output_data['crypto_evidence'][hit[0]] = dict()
+                    # output_data['crypto_evidence'][hit[0]]['file path'] = hit[1]
+                    # output_data['crypto_evidence'][hit[0]]['hits'] = [hit[2]]
+                    # output_data['crypto_evidence'][hit[0]]['is_source_code'] = hit[3]
+                    output_item['file path'] = hit[1]
+                    output_item['hits'] = [hit[2]]
+                    output_item['is_source_code'] = hit[3]
+                else:
+                    output_evidence[hit[0]]['hits'].append(hit[2])
+
+            output_file.write(json.dumps(output_data, sort_keys=True, indent=2))
+            output_file.close()
+
+
+        except (OSError, IOError) as e:
+            raise FileWriteException("Failed to write result in the crypto file " + output_file \
+                + "\n" + str(e))
+
 
     @staticmethod
     def human_readable_filesize(size):
