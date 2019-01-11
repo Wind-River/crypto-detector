@@ -124,6 +124,9 @@ Comma-separated list of match types to ignore while searching files for matches.
 ##### --source-files-only or --source-files-only=`<True|False>` #####
 Specifies whether or not to scan only the files that are source code files (for example .cpp files, .py files, etc) The type of a file is guessed based on its extension (mime type).
 
+##### --pagination=`<int>` #####
+Paginates the output crypto file by approximately the specified threshold (in MB) into a folder in the current directory.
+
 ##### --pretty or --pretty=`<True|False>` #####
 Places indentation and additional spaces in the output crypto files to make them more readable (pretty) at the cost of producing larger files.
 
