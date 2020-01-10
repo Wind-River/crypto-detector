@@ -39,7 +39,7 @@ class FileLister():
     GITHUB_REGEX = r"((?:git@github\.com\:)|(?:http[s]?://github.com/))" \
         + r"([^/]+)\/((?:(?!\.git)[^/])+)(?:\.git)?"
 
-    all_temp_dirs = []
+    all_temp_dirs = set()
 
     def __init__(self, packages,
                  skip_existing=False,
@@ -58,7 +58,7 @@ class FileLister():
         Returns:
             None
         """
-        self.tmp_directories = []
+        self.tmp_directories = set()
         FileLister.validate_package_list(packages)
         self.skip_existing = skip_existing
         self.output_directory = output_directory
@@ -656,12 +656,12 @@ class FileLister():
             raise FileWriteException("Failed to create temporary directory " + tmp_dir \
                 + "\n" + str(expn))
         else:
-            self.tmp_directories.append(tmp_dir)
-            FileLister.all_temp_dirs.append(tmp_dir)
+            self.tmp_directories.add(tmp_dir)
+            FileLister.all_temp_dirs.add(tmp_dir)
 
         return tmp_dir
 
-    def cleaup_tmp_folder(self):
+    def cleanup_tmp_folder(self):
         """Clean up temporary folder
 
         Args:
@@ -670,15 +670,28 @@ class FileLister():
         Returns:
             None
         """
+        lose = set()
+        # do not modify tmp_directories during the loop
         for tmp_dir in self.tmp_directories:
             if exists(tmp_dir):
-                shutil.rmtree(tmp_dir)
-                FileLister.all_temp_dirs.remove(tmp_dir)
-        self.tmp_directories = []
+                try:
+                    shutil.rmtree(tmp_dir)
+                except Exception as e:
+                    Output.print_warning("Temp directory %s was not removed (%s)" % (tmp_dir,str(e)))
+                else:
+                    lose.add(tmp_dir)
+
+        FileLister.all_temp_dirs -= lose
+        self.tmp_directories -= lose
+        Output.print_information("Temp dir count is %s %s" % (len(self.tmp_directories),len(FileLister.all_temp_dirs)) )
 
     @staticmethod
     def cleanup_all_tmp_files():
         """Clean up all temporary directories in case something went wrong during scan"""
         for tmp_dir in FileLister.all_temp_dirs:
             if exists(tmp_dir):
-                shutil.rmtree(tmp_dir)
+                try: 
+                    shutil.rmtree(tmp_dir)
+                except:
+                    pass
+

@@ -310,7 +310,7 @@ class CryptoDetector(object):
                 total_lines_of_text += stats["package_lines_of_text"]
 
                 Output.print_information("\nCleaning up temporary files ...")
-                self.file_lister.cleaup_tmp_folder()
+                self.file_lister.cleanup_tmp_folder()
 
         # write quick scan output to stdout and some output file
 
