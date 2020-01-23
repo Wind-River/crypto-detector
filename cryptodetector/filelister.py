@@ -58,6 +58,8 @@ class FileLister():
         Returns:
             None
         """
+        self.base_tmp = join(tempfile.gettempdir(),"cryptodetector")
+        makedirs(self.base_tmp,exist_ok=True)
         self.tmp_directories = set()
         FileLister.validate_package_list(packages)
         self.skip_existing = skip_existing
@@ -644,14 +646,8 @@ class FileLister():
         Raises:
             FileWriteException
         """
-        tmp_dir_name = str(os.getpid()) + "-" + str(time.time())
-        tmp_dir_name = join("cryptodetector", tmp_dir_name)
-        tmp_dir = abspath(join(tempfile.gettempdir(), tmp_dir_name))
-
         try:
-            if exists(tmp_dir):
-                shutil.rmtree(tmp_dir)
-            makedirs(tmp_dir)
+            tmp_dir = tempfile.mkdtemp(dir=self.base_tmp)
         except Exception as expn:
             raise FileWriteException("Failed to create temporary directory " + tmp_dir \
                 + "\n" + str(expn))
@@ -660,6 +656,20 @@ class FileLister():
             FileLister.all_temp_dirs.add(tmp_dir)
 
         return tmp_dir
+
+    @staticmethod
+    def set_tree_perms(tdir):
+        """ Set permissions so we can delete files and directories"""
+        import stat
+
+        os.chmod(tdir,stat.S_IRWXU)
+        for root,dirs,files in os.walk(tdir):
+            for n in dirs:
+                dd = join(root,n)
+                os.chmod(dd,stat.S_IRWXU)
+            for n in files:
+                dd = join(root,n)
+                os.chmod(dd,(stat.S_IRUSR | stat.S_IWUSR))
 
     def cleanup_tmp_folder(self):
         """Clean up temporary folder
@@ -676,14 +686,20 @@ class FileLister():
             if exists(tmp_dir):
                 try:
                     shutil.rmtree(tmp_dir)
-                except Exception as e:
-                    Output.print_warning("Temp directory %s was not removed (%s)" % (tmp_dir,str(e)))
-                else:
-                    lose.add(tmp_dir)
+                except:
+                    # directories that cannot be searched cause problems
+                    try:
+                        FileLister.set_tree_perms(tmp_dir)
+                        shutil.rmtree(tmp_dir)
+                    except Exception as e:
+                        Output.print_warning("Temp directory %s was not removed (%s)" % (tmp_dir,str(e)))
+                        continue
+            lose.add(tmp_dir)
 
         FileLister.all_temp_dirs -= lose
         self.tmp_directories -= lose
         Output.print_information("Temp dir count is %s %s" % (len(self.tmp_directories),len(FileLister.all_temp_dirs)) )
+        # Output.print_information("tmp_tmp name is %s" % (self.tmp_tmp.name) )
 
     @staticmethod
     def cleanup_all_tmp_files():
